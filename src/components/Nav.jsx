@@ -11,7 +11,7 @@ const NAV_ITEMS = [
   { id: 'pricing',   label: 'Pricing',   icon: <DollarSign size={14} /> },
 ]
 
-export default function Nav({ currentPage, onNavigate }) {
+export default function Nav({ currentPage, onNavigate, session }) {
   const [scrolled, setScrolled] = useState(false)
   const [mobile, setMobile] = useState(false)
 
@@ -72,19 +72,45 @@ export default function Nav({ currentPage, onNavigate }) {
 
         {/* CTAs */}
         <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-          <button onClick={() => go('product')} style={f({
-            display: 'flex', alignItems: 'center', gap: 7,
-            fontSize: 14, color: C.teal, background: `${C.teal}12`,
-            border: `1px solid ${C.teal}30`, borderRadius: 9,
-            cursor: 'pointer', padding: '8px 16px', fontWeight: 600,
-            transition: 'all 0.2s',
-          })}
-          onMouseEnter={e => { e.currentTarget.style.background = `${C.teal}20`; e.currentTarget.style.borderColor = `${C.teal}60` }}
-          onMouseLeave={e => { e.currentTarget.style.background = `${C.teal}12`; e.currentTarget.style.borderColor = `${C.teal}30` }}
-          >
-            <LayoutDashboard size={14} />
-            Launch App
-          </button>
+          {session ? (
+            /* Logged-in pill: avatar + name → goes to app */
+            <button onClick={() => go('product')} style={f({
+              display: 'flex', alignItems: 'center', gap: 8,
+              fontSize: 13, color: C.t1, background: C.bg2,
+              border: `1px solid ${C.borderMid}`, borderRadius: 50,
+              cursor: 'pointer', padding: '5px 14px 5px 5px', fontWeight: 500,
+              transition: 'all 0.2s',
+            })}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = C.teal }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = C.borderMid }}
+            >
+              <div style={{
+                width: 28, height: 28, borderRadius: '50%',
+                background: `linear-gradient(135deg, ${C.blue}, ${C.teal})`,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: 12, fontWeight: 700, color: '#fff', flexShrink: 0,
+              }}>
+                {session.name?.[0] ?? '?'}
+              </div>
+              <span>{session.name}</span>
+              <LayoutDashboard size={13} color={C.teal} />
+            </button>
+          ) : (
+            /* Not logged in — show Launch App */
+            <button onClick={() => go('product')} style={f({
+              display: 'flex', alignItems: 'center', gap: 7,
+              fontSize: 14, color: C.teal, background: `${C.teal}12`,
+              border: `1px solid ${C.teal}30`, borderRadius: 9,
+              cursor: 'pointer', padding: '8px 16px', fontWeight: 600,
+              transition: 'all 0.2s',
+            })}
+            onMouseEnter={e => { e.currentTarget.style.background = `${C.teal}20`; e.currentTarget.style.borderColor = `${C.teal}60` }}
+            onMouseLeave={e => { e.currentTarget.style.background = `${C.teal}12`; e.currentTarget.style.borderColor = `${C.teal}30` }}
+            >
+              <LayoutDashboard size={14} />
+              Launch App
+            </button>
+          )}
           <button onClick={() => go('pricing')} style={f({
             fontSize: 14, fontWeight: 600, color: '#fff',
             background: C.blue, border: 'none', borderRadius: 9,

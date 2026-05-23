@@ -7,6 +7,7 @@ import Security from './pages/Security'
 import Pricing from './pages/Pricing'
 import Insights from './pages/Insights'
 import Product from './pages/Product'
+import Login, { loadSession, clearSession } from './pages/Login'
 import { C, FONT, GLOBAL_STYLES } from './tokens'
 
 const PAGES = {
@@ -55,10 +56,17 @@ function SharedFooter({ navigate }) {
 }
 
 export default function App() {
-  const [page, setPage] = useState('home')
+  const [page, setPage]       = useState('home')
   const [fadeOut, setFadeOut] = useState(false)
+  const [session, setSession] = useState(() => loadSession())   // null = logged out
+  const [showLogin, setShowLogin] = useState(false)             // login overlay
 
   const navigate = useCallback((to) => {
+    // Guard: product requires auth
+    if (to === 'product' && !loadSession()) {
+      setShowLogin(true)
+      return
+    }
     if (to === page) return
     setFadeOut(true)
     setTimeout(() => {
@@ -68,16 +76,51 @@ export default function App() {
     }, 180)
   }, [page])
 
+  function handleLoginSuccess(user) {
+    setSession(user)
+    setShowLogin(false)
+    setFadeOut(true)
+    setTimeout(() => {
+      setPage('product')
+      setFadeOut(false)
+      window.scrollTo({ top: 0, behavior: 'instant' })
+    }, 180)
+  }
+
+  function handleLogout() {
+    clearSession()
+    setSession(null)
+    setFadeOut(true)
+    setTimeout(() => {
+      setPage('home')
+      setFadeOut(false)
+      window.scrollTo({ top: 0, behavior: 'instant' })
+    }, 180)
+  }
+
   const Page = PAGES[page] || Home
-  const isHome = page === 'home'
+  const isHome    = page === 'home'
   const isProduct = page === 'product'
+
+  // If login overlay is active, render only the Login page
+  if (showLogin) {
+    return (
+      <div style={{ background: C.bg0, minHeight: '100vh', fontFamily: FONT }}>
+        <style>{GLOBAL_STYLES}</style>
+        <Login
+          onSuccess={handleLoginSuccess}
+          onBack={() => setShowLogin(false)}
+        />
+      </div>
+    )
+  }
 
   return (
     <div style={{ background: C.bg0, minHeight: '100vh', fontFamily: FONT }}>
       <style>{GLOBAL_STYLES}</style>
 
       {/* Shared Nav — hidden inside the product app (it has its own sidebar) */}
-      {!isProduct && <Nav currentPage={page} onNavigate={navigate} />}
+      {!isProduct && <Nav currentPage={page} onNavigate={navigate} session={session} />}
 
       {/* Page transition wrapper */}
       <div style={{
@@ -85,7 +128,7 @@ export default function App() {
         transform: fadeOut ? 'translateY(8px)' : 'translateY(0)',
         transition: 'opacity 0.18s ease, transform 0.18s ease',
       }}>
-        <Page navigate={navigate} />
+        <Page navigate={navigate} onLogout={handleLogout} session={session} />
       </div>
 
       {/* Shared footer for sub-pages (not home, not product app) */}

@@ -6,7 +6,7 @@ import {
   SlidersHorizontal, Building2, Clock, BarChart3, Zap,
   ArrowLeft, Eye, Filter, MoreHorizontal, X,
   BookOpen, ChevronDown, Key, Copy, Check, Globe, Lock,
-  Database, Link2, HelpCircle, PlayCircle, Shield, Users,
+  Database, Link2, HelpCircle, PlayCircle, Shield, Users, LogOut,
 } from 'lucide-react'
 import { C, f, FONT } from '../tokens'
 
@@ -731,7 +731,8 @@ function Sidebar({ view, setView, navigate }) {
 }
 
 /* ─── TOP BAR ────────────────────────────────────────────── */
-function TopBar({ view, lastSync, importedData }) {
+function TopBar({ view, lastSync, importedData, session, onLogout }) {
+  const [showUserMenu, setShowUserMenu] = useState(false)
   const titles = {
     overview:'Executive Overview', forecasting:'Forecasting & Scenarios',
     reports:'Reports & Board Packs', 'ai-brief':'AI Intelligence Brief',
@@ -776,7 +777,65 @@ function TopBar({ view, lastSync, importedData }) {
           <div style={{ position:'absolute',top:-3,right:-3,width:8,height:8,
             borderRadius:'50%',background:C.red,border:`1px solid ${C.bg0}` }}/>
         </div>
-        <div style={f({ fontSize:12,color:C.t2 })}>8:07 AM</div>
+
+        {/* User avatar + dropdown */}
+        <div style={{ position:'relative' }}>
+          <button
+            onClick={() => setShowUserMenu(v => !v)}
+            style={f({
+              display:'flex',alignItems:'center',gap:8,
+              background:C.bg2,border:`1px solid ${C.borderMid}`,
+              borderRadius:50,padding:'4px 12px 4px 4px',cursor:'pointer',
+              transition:'border-color 0.2s',
+            })}
+            onMouseEnter={e => e.currentTarget.style.borderColor = C.teal}
+            onMouseLeave={e => e.currentTarget.style.borderColor = C.borderMid}
+          >
+            <div style={{
+              width:26,height:26,borderRadius:'50%',flexShrink:0,
+              background:`linear-gradient(135deg,${C.blue},${C.teal})`,
+              display:'flex',alignItems:'center',justifyContent:'center',
+              fontSize:11,fontWeight:700,color:'#fff',
+            }}>
+              {session?.name?.[0] ?? 'U'}
+            </div>
+            <span style={f({ fontSize:12,color:C.t1,fontWeight:500 })}>
+              {session?.name ?? 'User'}
+            </span>
+            <ChevronDown size={12} color={C.t3}/>
+          </button>
+
+          {showUserMenu && (
+            <div style={{
+              position:'absolute',top:'calc(100% + 8px)',right:0,width:200,
+              background:C.bg2,border:`1px solid ${C.borderMid}`,
+              borderRadius:12,padding:8,zIndex:100,
+              boxShadow:'0 16px 40px #00000060',
+              animation:'fadeIn 0.15s ease both',
+            }}>
+              {/* User info */}
+              <div style={{ padding:'8px 12px 10px', borderBottom:`1px solid ${C.border}`, marginBottom:6 }}>
+                <div style={f({ fontSize:13,fontWeight:600,color:C.t1 })}>{session?.name}</div>
+                <div style={f({ fontSize:11,color:C.t3 })}>{session?.email}</div>
+                <div style={f({ fontSize:10,color:C.t4,marginTop:2 })}>{session?.org}</div>
+              </div>
+              {/* Logout */}
+              <button
+                onClick={() => { setShowUserMenu(false); onLogout?.() }}
+                style={f({
+                  width:'100%',display:'flex',alignItems:'center',gap:8,
+                  padding:'9px 12px',borderRadius:8,border:'none',cursor:'pointer',
+                  background:'transparent',color:C.red,fontSize:13,fontWeight:500,
+                  textAlign:'left',transition:'background 0.15s',
+                })}
+                onMouseEnter={e => e.currentTarget.style.background = `${C.red}12`}
+                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+              >
+                <LogOut size={13}/> Sign out
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )
@@ -1656,7 +1715,7 @@ function AppSettings() {
 }
 
 /* ─── PRODUCT ROOT ───────────────────────────────────────── */
-export default function Product({ navigate }) {
+export default function Product({ navigate, onLogout, session }) {
   const [view, setView]             = useState('overview')
   const [lastSync, setLastSync]     = useState('2 min ago')
   const [importedData, setImportedData] = useState(null)
@@ -1696,7 +1755,7 @@ export default function Product({ navigate }) {
       <Sidebar view={view} setView={v=>{setView(v)}} navigate={navigate}/>
 
       <div style={{ marginLeft:224,flex:1,display:'flex',flexDirection:'column' }}>
-        <TopBar view={view} lastSync={lastSync} importedData={importedData}/>
+        <TopBar view={view} lastSync={lastSync} importedData={importedData} session={session} onLogout={onLogout}/>
         <main style={{ marginTop:56,padding:'28px',minHeight:'calc(100vh - 56px)',overflowY:'auto' }}>
           <div key={view} style={{ animation:'fadeIn 0.25s ease' }}>
             {VIEWS[view]}
