@@ -230,6 +230,7 @@ function SignUpForm({ onSuccess }) {
   const [showPwd, setShowPwd]     = useState(false)
   const [showConf, setShowConf]   = useState(false)
   const [loading, setLoading]     = useState(false)
+  const [agreed, setAgreed]       = useState(false)
   const [err, setErr]             = useState({})
 
   const set = field => e => {
@@ -246,6 +247,7 @@ function SignUpForm({ onSuccess }) {
     else if (!/[A-Z]/.test(form.password)) e.password = 'Must include uppercase letter'
     else if (!/\d/.test(form.password))    e.password = 'Must include a number'
     if (form.confirm !== form.password)    e.confirm  = 'Passwords do not match'
+    if (!agreed) e.agreed = 'You must accept the disclaimer to continue'
     setErr(e)
     return Object.keys(e).length === 0
   }
@@ -312,6 +314,44 @@ function SignUpForm({ onSuccess }) {
               {showConf ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>
           } />
+
+        {/* Disclaimer checkbox */}
+        <div style={{
+          background: `${C.amber}0d`, border: `1px solid ${err.agreed ? C.red : `${C.amber}30`}`,
+          borderRadius: 10, padding: '14px 16px',
+          transition: 'border-color 0.2s',
+        }}>
+          <label style={{ display: 'flex', gap: 12, cursor: 'pointer', alignItems: 'flex-start' }}>
+            <div style={{ position: 'relative', flexShrink: 0, marginTop: 1 }}>
+              <input
+                type="checkbox"
+                checked={agreed}
+                onChange={e => { setAgreed(e.target.checked); setErr(p => ({ ...p, agreed: '' })) }}
+                style={{ position: 'absolute', opacity: 0, width: 18, height: 18, cursor: 'pointer', margin: 0 }}
+              />
+              <div style={{
+                width: 18, height: 18, borderRadius: 5,
+                background: agreed ? C.blue : C.bg3,
+                border: `1.5px solid ${agreed ? C.blue : (err.agreed ? C.red : C.borderMid)}`,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                transition: 'all 0.15s',
+              }}>
+                {agreed && <Check size={11} color="#fff" strokeWidth={3} />}
+              </div>
+            </div>
+            <span style={f({ fontSize: 12, color: C.t2, lineHeight: 1.6 })}>
+              Я понимаю, что Vantoryn является{' '}
+              <span style={{ color: C.amber, fontWeight: 600 }}>инструментом поддержки принятия решений</span>,
+              а не финансовым консультантом. Все финансовые решения принимаются мной самостоятельно.
+              Компания{' '}
+              <span style={{ color: C.t1, fontWeight: 600 }}>не несёт ответственности</span>{' '}
+              за последствия решений, принятых на основе данных платформы.
+            </span>
+          </label>
+          {err.agreed && (
+            <p style={f({ fontSize: 11, color: C.red, margin: '8px 0 0 30px' })}>{err.agreed}</p>
+          )}
+        </div>
 
         <button type="submit" disabled={loading} style={f({
           width: '100%', padding: '13px', borderRadius: 11, border: 'none',
