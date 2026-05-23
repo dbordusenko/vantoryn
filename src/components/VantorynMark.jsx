@@ -1,93 +1,108 @@
+/**
+ * VantorynMark — точная копия финального логотипа
+ * Круг · 3 ромба-акцента (12, 9, 3 часа) · двойной V · центральный ромб
+ */
 import { C } from '../tokens'
 
 export default function VantorynMark({ size = 36, mono = false }) {
   const id = `vm${size}`
-  const g  = mono ? C.t1  : '#e8d070'
-  const g2 = mono ? C.t2  : '#c9a84c'
-  const g3 = mono ? C.t3  : '#8a6520'
+
+  // Gold palette
+  const hi  = mono ? C.t1  : '#e2c45a'   // светлое золото
+  const mid = mono ? C.t2  : '#b8922e'   // среднее
+  const lo  = mono ? C.t3  : '#7a5c18'   // тёмное
+
+  const GA = `url(#${id}A)`  // основной градиент
+  const GB = `url(#${id}B)`  // внутренний V
+  const GR = `url(#${id}R)`  // кольцо
+  const GD = `url(#${id}D)`  // ромб-центр
+
+  // Геометрия — viewBox 0 0 200 210
+  // Центр круга: (100, 108), радиус: 80
+  const cx = 100, cy = 108, r = 80
+
+  // Координаты верхушек V: они касаются верхней дуги круга ~(100, 28)
+  // Левый верх V: (32, 55)  Правый верх V: (168, 55)  Кончик: (100, 178)
+  // Внутренний V (чуть уже): (52, 55) → (100, 152) ← (148, 55)
 
   return (
-    <svg width={size} height={size} viewBox="0 0 200 200"
-      fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Vantoryn">
+    <svg width={size} height={size * 210 / 200}
+      viewBox="0 0 200 210" fill="none"
+      xmlns="http://www.w3.org/2000/svg" aria-label="Vantoryn">
       <defs>
-        {/* Gold diagonal */}
-        <linearGradient id={`${id}a`} x1="20" y1="10" x2="180" y2="190" gradientUnits="userSpaceOnUse">
-          <stop offset="0%"   stopColor={g}/>
-          <stop offset="50%"  stopColor={g2}/>
-          <stop offset="100%" stopColor={g3}/>
+        {/* Основной золотой */}
+        <linearGradient id={`${id}A`} x1="30" y1="20" x2="170" y2="190" gradientUnits="userSpaceOnUse">
+          <stop offset="0%"   stopColor={hi}/>
+          <stop offset="45%"  stopColor={mid}/>
+          <stop offset="100%" stopColor={lo}/>
         </linearGradient>
-        {/* Inner V — lighter */}
-        <linearGradient id={`${id}b`} x1="60" y1="20" x2="140" y2="160" gradientUnits="userSpaceOnUse">
-          <stop offset="0%"   stopColor={g}  stopOpacity="0.95"/>
-          <stop offset="100%" stopColor={g2} stopOpacity="0.4"/>
+        {/* Внутренний V — немного светлее */}
+        <linearGradient id={`${id}B`} x1="52" y1="55" x2="148" y2="155" gradientUnits="userSpaceOnUse">
+          <stop offset="0%"   stopColor={hi}  stopOpacity="1"/>
+          <stop offset="100%" stopColor={mid} stopOpacity="0.5"/>
         </linearGradient>
-        {/* Ring — fades bottom */}
-        <linearGradient id={`${id}c`} x1="100" y1="0" x2="100" y2="200" gradientUnits="userSpaceOnUse">
-          <stop offset="0%"   stopColor={g}  stopOpacity="0.9"/>
-          <stop offset="60%"  stopColor={g2} stopOpacity="0.6"/>
-          <stop offset="100%" stopColor={g3} stopOpacity="0.15"/>
+        {/* Кольцо — ярче сверху, затухает снизу */}
+        <linearGradient id={`${id}R`} x1="100" y1="28" x2="100" y2="188" gradientUnits="userSpaceOnUse">
+          <stop offset="0%"   stopColor={hi}  stopOpacity="1"/>
+          <stop offset="50%"  stopColor={mid} stopOpacity="0.8"/>
+          <stop offset="100%" stopColor={lo}  stopOpacity="0.3"/>
         </linearGradient>
-        {/* Side arc — fades top & bottom */}
-        <linearGradient id={`${id}d`} x1="0" y1="30" x2="0" y2="170" gradientUnits="userSpaceOnUse">
-          <stop offset="0%"   stopColor={g}  stopOpacity="0.15"/>
-          <stop offset="35%"  stopColor={g2} stopOpacity="0.8"/>
-          <stop offset="65%"  stopColor={g2} stopOpacity="0.8"/>
-          <stop offset="100%" stopColor={g3} stopOpacity="0.15"/>
+        {/* Центральный ромб */}
+        <linearGradient id={`${id}D`} x1="100" y1="82" x2="100" y2="114" gradientUnits="userSpaceOnUse">
+          <stop offset="0%"   stopColor={hi}/>
+          <stop offset="100%" stopColor={lo}/>
         </linearGradient>
       </defs>
 
-      {/* ── Main circle ring — center (100,95) r=88 ─────────────────────── */}
-      <circle cx="100" cy="95" r="88"
-        stroke={`url(#${id}c)`} strokeWidth="3" fill="none"/>
+      {/* ══ КОЛЬЦО ═══════════════════════════════════════════════════════ */}
+      <circle cx={cx} cy={cy} r={r}
+        stroke={GR} strokeWidth="4" fill="none"/>
 
-      {/* ── Left side arc (outside or along the circle, left sweep) ─────── */}
-      {/* A tighter arc on the left, from ~(20,50) sweeping down to ~(20,150) */}
-      <path d="M 28 42 A 72 72 0 0 0 28 158"
-        stroke={`url(#${id}d)`} strokeWidth="2" strokeLinecap="round" fill="none"/>
+      {/* ══ АКЦЕНТ СВЕРХУ — вытянутый 4-лучевой ромб на 12 часов ════════ */}
+      {/* Центр верхней точки кольца: (100, 28) */}
+      {/* Вертикальный ромб: вверх 14, вниз 14, стороны 5 */}
+      <path d="M 100 10 L 105 28 L 100 46 L 95 28 Z"
+        fill={GA}/>
+      {/* Горизонтальная перекладина (4-й луч) */}
+      <path d="M 90 28 L 100 32 L 110 28 L 100 24 Z"
+        fill={GA} opacity="0.7"/>
 
-      {/* ── Right side arc (mirror) ──────────────────────────────────────── */}
-      <path d="M 172 42 A 72 72 0 0 1 172 158"
-        stroke={`url(#${id}d)`} strokeWidth="2" strokeLinecap="round" fill="none"/>
+      {/* ══ АКЦЕНТ СЛЕВА — горизонтальный ромб на 9 часов ═══════════════ */}
+      {/* Левая точка кольца: (20, 108) */}
+      <path d="M 2  108 L 20 113 L 38 108 L 20 103 Z"
+        fill={GA}/>
+      <path d="M 20 96 L 24 108 L 20 120 L 16 108 Z"
+        fill={GA} opacity="0.7"/>
 
-      {/* ── Outer V — thick bold ─────────────────────────────────────────── */}
-      {/* Left arm: (18,18) → tip (100,168) */}
-      {/* Right arm: tip (100,168) → (182,18) */}
-      <path d="M 18 18 L 100 168 L 182 18"
-        stroke={`url(#${id}a)`} strokeWidth="14"
+      {/* ══ АКЦЕНТ СПРАВА — горизонтальный ромб на 3 часа ═══════════════ */}
+      {/* Правая точка кольца: (180, 108) */}
+      <path d="M 162 108 L 180 113 L 198 108 L 180 103 Z"
+        fill={GA}/>
+      <path d="M 180 96 L 184 108 L 180 120 L 176 108 Z"
+        fill={GA} opacity="0.7"/>
+
+      {/* ══ ВНЕШНИЙ V — толстый ══════════════════════════════════════════ */}
+      {/* Левый верх (32,55) → кончик (100,178) → правый верх (168,55) */}
+      <path d="M 32 55 L 100 178 L 168 55"
+        stroke={GA} strokeWidth="13"
         strokeLinecap="round" strokeLinejoin="round"/>
 
-      {/* ── Inner V — thinner, inset ─────────────────────────────────────── */}
-      <path d="M 48 18 L 100 138 L 152 18"
-        stroke={`url(#${id}b)`} strokeWidth="5"
+      {/* ══ ВНУТРЕННИЙ V — тонкий, создаёт двойной штрих ════════════════ */}
+      {/* (52,55) → (100,152) → (148,55) */}
+      <path d="M 52 55 L 100 152 L 148 55"
+        stroke={GB} strokeWidth="4.5"
         strokeLinecap="round" strokeLinejoin="round"/>
 
-      {/* ── 4-pointed star at top of left arm ───────────────────────────── */}
-      {/* Center ~(18,18) */}
-      <path d="M 18 4  L 22 18 L 18 32 L 14 18 Z" fill={`url(#${id}a)`}/>
-      <path d="M 4  18 L 18 22 L 32 18 L 18 14 Z" fill={`url(#${id}a)`} opacity="0.6"/>
-
-      {/* ── 4-pointed star at top of right arm ──────────────────────────── */}
-      {/* Center ~(182,18) */}
-      <path d="M 182 4  L 186 18 L 182 32 L 178 18 Z" fill={`url(#${id}a)`}/>
-      <path d="M 168 18 L 182 22 L 196 18 L 182 14 Z" fill={`url(#${id}a)`} opacity="0.6"/>
-
-      {/* ── Center diamond at V tip ──────────────────────────────────────── */}
-      {/* Center (100, 160) — sits at bottom of the V */}
-      <path d="M 100 144 L 114 162 L 100 180 L 86 162 Z"
-        fill={`url(#${id}a)`} opacity="0.95"/>
-      {/* Inner facet — shadow */}
-      <path d="M 100 150 L 110 162 L 100 174 L 90 162 Z"
-        fill={g3} opacity="0.5"/>
-      {/* Top highlight */}
-      <path d="M 100 144 L 114 162 L 100 154 L 86 162 Z"
-        fill={g} opacity="0.35"/>
-
-      {/* ── Horizontal cap lines at top of each arm ──────────────────────── */}
-      {/* These mirror the reference — short lines bridging from the arm top outward */}
-      <line x1="2"   y1="18" x2="36"  y2="18"
-        stroke={`url(#${id}a)`} strokeWidth="4" strokeLinecap="round" opacity="0.5"/>
-      <line x1="164" y1="18" x2="198" y2="18"
-        stroke={`url(#${id}a)`} strokeWidth="4" strokeLinecap="round" opacity="0.5"/>
+      {/* ══ ЦЕНТРАЛЬНЫЙ РОМБ — в месте пересечения внутренних плеч ══════ */}
+      {/* Примерно на 40% высоты V: (100, 98) */}
+      <path d="M 100 82 L 110 98 L 100 114 L 90 98 Z"
+        fill={GD} opacity="0.95"/>
+      {/* Внутренняя грань — тёмнее */}
+      <path d="M 100 87 L 107 98 L 100 109 L 93 98 Z"
+        fill={lo} opacity="0.5"/>
+      {/* Верхний блик */}
+      <path d="M 100 82 L 110 98 L 100 92 L 90 98 Z"
+        fill={hi} opacity="0.3"/>
     </svg>
   )
 }
