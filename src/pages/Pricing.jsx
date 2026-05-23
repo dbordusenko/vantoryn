@@ -227,7 +227,7 @@ export default function Pricing({ navigate, onBookDemo }) {
                   ))}
                 </div>
 
-                <button onClick={() => navigate('home')} style={f({
+                <button onClick={onBookDemo} style={f({
                   width: '100%', fontSize: 14, fontWeight: 700,
                   color: plan.highlighted ? '#fff' : C.t1,
                   background: plan.highlighted ? plan.color : 'transparent',

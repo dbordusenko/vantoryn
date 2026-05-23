@@ -75,7 +75,7 @@ function FAQItem({ item }) {
   )
 }
 
-export default function Security({ navigate }) {
+export default function Security({ navigate, onBookDemo }) {
   return (
     <div style={{ background: C.bg0, minHeight: '100vh', paddingTop: 66, animation: 'pageFade 0.3s ease' }}>
       <style>{`@keyframes pageFade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}} @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}`}</style>
@@ -105,7 +105,7 @@ export default function Security({ navigate }) {
                 Vantoryn was built for organizations where financial data integrity, auditability, and access control are non-negotiable. Security is not a feature — it is the foundation.
               </p>
               <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-                <button onClick={() => navigate('pricing')} style={f({
+                <button onClick={onBookDemo} style={f({
                   fontSize: 14, fontWeight: 700, color: '#fff', background: C.green,
                   border: 'none', borderRadius: 10, padding: '12px 24px', cursor: 'pointer',
                   display: 'flex', alignItems: 'center', gap: 8, transition: 'all 0.2s',
@@ -264,7 +264,7 @@ export default function Security({ navigate }) {
           <p style={f({ fontSize: 15, color: C.t2, lineHeight: 1.7, margin: '0 0 32px' })}>
             Our security team is available for enterprise security reviews, penetration test result discussions, and compliance questionnaires.
           </p>
-          <button onClick={() => navigate('pricing')} style={f({
+          <button onClick={onBookDemo} style={f({
             fontSize: 15, fontWeight: 700, color: '#fff', background: C.green,
             border: 'none', borderRadius: 10, padding: '14px 32px', cursor: 'pointer',
             display: 'inline-flex', alignItems: 'center', gap: 8, transition: 'all 0.2s',
