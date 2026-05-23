@@ -12,7 +12,7 @@ const NAV_ITEMS = [
   { id: 'pricing',   label: 'Pricing',   icon: <DollarSign size={14} /> },
 ]
 
-export default function Nav({ currentPage, onNavigate, session, onBookDemo }) {
+export default function Nav({ currentPage, onNavigate, session, onBookDemo, onWaitlist }) {
   const [scrolled, setScrolled] = useState(false)
   const [mobile, setMobile] = useState(false)
 
@@ -104,6 +104,17 @@ export default function Nav({ currentPage, onNavigate, session, onBookDemo }) {
               Sign In
             </button>
           )}
+          <button onClick={onWaitlist} style={f({
+            fontSize: 14, fontWeight: 500, color: C.teal,
+            background: `${C.teal}10`, border: `1px solid ${C.teal}35`,
+            borderRadius: 9, padding: '9px 18px', cursor: 'pointer',
+            transition: 'all 0.2s',
+          })}
+          onMouseEnter={e => { e.currentTarget.style.background = `${C.teal}20`; e.currentTarget.style.transform = 'translateY(-1px)' }}
+          onMouseLeave={e => { e.currentTarget.style.background = `${C.teal}10`; e.currentTarget.style.transform = 'translateY(0)' }}
+          >
+            Join Waitlist
+          </button>
           <button onClick={onBookDemo} style={f({
             fontSize: 14, fontWeight: 600, color: '#fff',
             background: C.blue, border: 'none', borderRadius: 9,
@@ -149,6 +160,14 @@ export default function Nav({ currentPage, onNavigate, session, onBookDemo }) {
             fontSize: 15, fontWeight: 500, textAlign: 'left', marginTop: 8,
           })}>
             {session ? session.name : 'Sign In'}
+          </button>
+          <button onClick={() => { onWaitlist?.(); setMobile(false) }} style={f({
+            display: 'flex', alignItems: 'center', gap: 10, padding: '12px 14px',
+            borderRadius: 9, border: `1px solid ${C.teal}35`, cursor: 'pointer',
+            background: `${C.teal}10`, color: C.teal,
+            fontSize: 15, fontWeight: 500, textAlign: 'left',
+          })}>
+            Join Waitlist
           </button>
         </div>
       )}

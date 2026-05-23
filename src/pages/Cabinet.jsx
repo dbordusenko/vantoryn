@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { C, f, FONT } from '../tokens'
 import VantorynMark from '../components/VantorynMark'
+import { getWaitlistData } from '../components/WaitlistModal'
 import {
   LayoutDashboard, LogOut, Settings, Shield, Database,
   Clock, CheckCircle2, AlertTriangle, ChevronRight,
-  Building2, Globe, Bell, Activity, User, Key,
+  Building2, Globe, Bell, Activity, User, Key, Users,
 } from 'lucide-react'
 
 const INTEGRATIONS = [
@@ -61,10 +62,12 @@ export default function Cabinet({ navigate, onLogout, session }) {
   const org   = session?.org  ?? 'Your Organization'
   const initials = name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
 
+  const isAdmin = email === 'admin@vantoryn.ai'
   const TABS = [
     { id: 'overview',  label: 'Overview'  },
     { id: 'profile',   label: 'Profile'   },
     { id: 'security',  label: 'Security'  },
+    ...(isAdmin ? [{ id: 'waitlist', label: 'Waitlist ✦' }] : []),
   ]
 
   return (
@@ -423,6 +426,77 @@ export default function Cabinet({ navigate, onLogout, session }) {
             </Card>
           </div>
         )}
+
+        {/* ═══ WAITLIST TAB (admin only) ══════════════════════════════════ */}
+        {tab === 'waitlist' && isAdmin && (() => {
+          const entries = getWaitlistData()
+          return (
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <Users size={18} color={C.teal} />
+                  <span style={f({ fontSize: 18, fontWeight: 700, color: C.t1 })}>Waitlist</span>
+                  <div style={{
+                    background: `${C.teal}15`, border: `1px solid ${C.teal}30`,
+                    borderRadius: 20, padding: '2px 10px',
+                  }}>
+                    <span style={f({ fontSize: 12, color: C.teal, fontWeight: 700 })}>{entries.length} entries</span>
+                  </div>
+                </div>
+              </div>
+
+              {entries.length === 0 ? (
+                <Card>
+                  <div style={{ textAlign: 'center', padding: '40px 0' }}>
+                    <Users size={36} color={C.t4} style={{ margin: '0 auto 16px' }} />
+                    <div style={f({ fontSize: 15, color: C.t3 })}>No waitlist entries yet.</div>
+                    <div style={f({ fontSize: 13, color: C.t4, marginTop: 6 })}>Entries will appear here once people sign up.</div>
+                  </div>
+                </Card>
+              ) : (
+                <Card style={{ padding: 0, overflow: 'hidden' }}>
+                  <div style={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: FONT }}>
+                      <thead>
+                        <tr style={{ background: C.bg2, borderBottom: `1px solid ${C.borderMid}` }}>
+                          {['#', 'Name', 'Email', 'Company', 'Revenue', 'Role', 'Joined'].map((h, i) => (
+                            <th key={h} style={f({
+                              padding: '12px 16px', textAlign: 'left',
+                              fontSize: 11, fontWeight: 700, color: C.t3,
+                              letterSpacing: '0.08em', textTransform: 'uppercase',
+                              borderRight: i < 6 ? `1px solid ${C.border}` : 'none',
+                            })}>{h}</th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {entries.map((e, i) => (
+                          <tr key={i} style={{
+                            borderBottom: i < entries.length - 1 ? `1px solid ${C.border}` : 'none',
+                            transition: 'background 0.15s',
+                          }}
+                          onMouseEnter={ev => ev.currentTarget.style.background = C.bg2}
+                          onMouseLeave={ev => ev.currentTarget.style.background = 'transparent'}
+                          >
+                            <td style={f({ padding: '12px 16px', fontSize: 13, color: C.t4, borderRight: `1px solid ${C.border}` })}>{i + 1}</td>
+                            <td style={f({ padding: '12px 16px', fontSize: 13, color: C.t1, fontWeight: 500, borderRight: `1px solid ${C.border}` })}>{e.name}</td>
+                            <td style={f({ padding: '12px 16px', fontSize: 13, color: C.t2, borderRight: `1px solid ${C.border}` })}>{e.email}</td>
+                            <td style={f({ padding: '12px 16px', fontSize: 13, color: C.t2, borderRight: `1px solid ${C.border}` })}>{e.company}</td>
+                            <td style={f({ padding: '12px 16px', fontSize: 12, color: e.revenue ? C.teal : C.t4, borderRight: `1px solid ${C.border}` })}>{e.revenue || '—'}</td>
+                            <td style={f({ padding: '12px 16px', fontSize: 13, color: C.t2, borderRight: `1px solid ${C.border}` })}>{e.role}</td>
+                            <td style={f({ padding: '12px 16px', fontSize: 11, color: C.t3 })}>
+                              {new Date(e.at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </Card>
+              )}
+            </div>
+          )
+        })()}
 
       </div>
     </div>

@@ -44,7 +44,7 @@ const FONT = "'Inter', system-ui, -apple-system, sans-serif"
 const f = s => ({ fontFamily: FONT, ...s })
 
 /* ─── NAV ────────────────────────────────────────────────── */
-function Nav({ navigate, onBookDemo = () => {} }) {
+function Nav({ navigate, onBookDemo = () => {}, onWaitlist = () => {} }) {
   const [scrolled, setScrolled] = useState(false)
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 32)
@@ -100,6 +100,17 @@ function Nav({ navigate, onBookDemo = () => {} }) {
           onMouseLeave={e => e.currentTarget.style.color = C.t2}
           >
             Sign in
+          </button>
+          <button onClick={onWaitlist} style={f({
+            fontSize: 14, fontWeight: 500, color: C.teal,
+            background: `${C.teal}10`, border: `1px solid ${C.teal}35`,
+            borderRadius: 9, padding: '9px 18px', cursor: 'pointer',
+            transition: 'all 0.2s',
+          })}
+          onMouseEnter={e => { e.currentTarget.style.background = `${C.teal}20`; e.currentTarget.style.transform = 'translateY(-1px)' }}
+          onMouseLeave={e => { e.currentTarget.style.background = `${C.teal}10`; e.currentTarget.style.transform = 'translateY(0)' }}
+          >
+            Join Waitlist
           </button>
           <button onClick={onBookDemo} style={f({
             fontSize: 14, fontWeight: 600, color: '#fff',
@@ -315,7 +326,7 @@ function DashboardMockup() {
 }
 
 /* ─── HERO ───────────────────────────────────────────────── */
-function Hero({ navigate, onBookDemo }) {
+function Hero({ navigate, onBookDemo, onWaitlist }) {
   return (
     <section style={{
       minHeight: '100vh', display: 'flex', alignItems: 'center',
@@ -403,17 +414,17 @@ function Hero({ navigate, onBookDemo }) {
               >
                 See Predictive Finance in Action <ArrowRight size={16} />
               </button>
-              <button onClick={() => navigate('platform')} style={f({
-                fontSize: 14, fontWeight: 500, color: C.t2,
-                background: 'transparent', border: `1px solid ${C.borderMid}`,
+              <button onClick={onWaitlist} style={f({
+                fontSize: 14, fontWeight: 500, color: C.teal,
+                background: `${C.teal}10`, border: `1px solid ${C.teal}35`,
                 borderRadius: 11, padding: '14px 24px', cursor: 'pointer',
                 display: 'flex', alignItems: 'center', gap: 8,
                 transition: 'all 0.2s',
               })}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = C.borderHi; e.currentTarget.style.color = C.t1 }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = C.borderMid; e.currentTarget.style.color = C.t2 }}
+              onMouseEnter={e => { e.currentTarget.style.background = `${C.teal}20`; e.currentTarget.style.transform = 'translateY(-2px)' }}
+              onMouseLeave={e => { e.currentTarget.style.background = `${C.teal}10`; e.currentTarget.style.transform = 'translateY(0)' }}
               >
-                <Play size={13} fill={C.t2} /> Watch 3-min Overview
+                <Users size={14} /> Join Waitlist
               </button>
             </div>
 
@@ -1167,11 +1178,11 @@ function Footer({ navigate }) {
 }
 
 /* ─── ROOT ───────────────────────────────────────────────── */
-export default function VantorynLanding({ navigate = () => {}, onBookDemo = () => {} }) {
+export default function VantorynLanding({ navigate = () => {}, onBookDemo = () => {}, onWaitlist = () => {} }) {
   return (
     <div style={{ background: C.bg0, minHeight: '100vh', fontFamily: FONT }}>
       {/* Nav is handled by App.jsx router — no double nav */}
-      <Hero navigate={navigate} onBookDemo={onBookDemo} />
+      <Hero navigate={navigate} onBookDemo={onBookDemo} onWaitlist={onWaitlist} />
       <TrustBar />
       <FinancialAnxietySection navigate={navigate} />
       <PlatformSection />
