@@ -340,12 +340,12 @@ function SignUpForm({ onSuccess }) {
               </div>
             </div>
             <span style={f({ fontSize: 12, color: C.t2, lineHeight: 1.6 })}>
-              Я понимаю, что Vantoryn является{' '}
-              <span style={{ color: C.amber, fontWeight: 600 }}>инструментом поддержки принятия решений</span>,
-              а не финансовым консультантом. Все финансовые решения принимаются мной самостоятельно.
-              Компания{' '}
-              <span style={{ color: C.t1, fontWeight: 600 }}>не несёт ответственности</span>{' '}
-              за последствия решений, принятых на основе данных платформы.
+              I understand that Vantoryn is a{' '}
+              <span style={{ color: C.amber, fontWeight: 600 }}>decision-support tool</span>,
+              not a financial advisor. All financial decisions remain my sole responsibility.
+              Vantoryn{' '}
+              <span style={{ color: C.t1, fontWeight: 600 }}>accepts no liability</span>{' '}
+              for outcomes resulting from decisions made using this platform.
             </span>
           </label>
           {err.agreed && (
