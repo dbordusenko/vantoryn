@@ -12,7 +12,7 @@ const NAV_ITEMS = [
   { id: 'pricing',   label: 'Pricing',   icon: <DollarSign size={14} /> },
 ]
 
-export default function Nav({ currentPage, onNavigate, session }) {
+export default function Nav({ currentPage, onNavigate, session, onBookDemo }) {
   const [scrolled, setScrolled] = useState(false)
   const [mobile, setMobile] = useState(false)
 
@@ -104,7 +104,7 @@ export default function Nav({ currentPage, onNavigate, session }) {
               Sign In
             </button>
           )}
-          <button onClick={() => go('pricing')} style={f({
+          <button onClick={onBookDemo} style={f({
             fontSize: 14, fontWeight: 600, color: '#fff',
             background: C.blue, border: 'none', borderRadius: 9,
             padding: '10px 22px', cursor: 'pointer',

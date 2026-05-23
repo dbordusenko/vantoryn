@@ -111,7 +111,7 @@ const PERSONAS = [
   },
 ]
 
-export default function Solutions({ navigate }) {
+export default function Solutions({ navigate, onBookDemo }) {
   const [active, setActive] = useState('cfo')
   const persona = PERSONAS.find(p => p.id === active)
 
@@ -184,7 +184,7 @@ export default function Solutions({ navigate }) {
                   margin: '0 0 12px', letterSpacing: '-0.03em', lineHeight: 1.2 })}>{persona.headline}</h2>
                 <p style={f({ fontSize: 16, color: persona.color, fontWeight: 600, margin: '0 0 20px' })}>{persona.subheadline}</p>
                 <p style={f({ fontSize: 15, color: C.t2, lineHeight: 1.75, margin: '0 0 28px' })}>{persona.solution}</p>
-                <button onClick={() => navigate('pricing')} style={f({
+                <button onClick={onBookDemo} style={f({
                   fontSize: 15, fontWeight: 700, color: '#fff',
                   background: persona.color, border: 'none', borderRadius: 10,
                   padding: '13px 28px', cursor: 'pointer',

@@ -11,6 +11,7 @@ import Cabinet from './pages/Cabinet'
 import LogoShowcase from './pages/LogoShowcase'
 import Login, { loadSession, clearSession } from './pages/Login'
 import VantorynMark from './components/VantorynMark'
+import BookDemoModal from './components/BookDemoModal'
 import { C, FONT, GLOBAL_STYLES } from './tokens'
 
 const PAGES = {
@@ -66,6 +67,7 @@ export default function App() {
   const [fadeOut, setFadeOut] = useState(false)
   const [session, setSession] = useState(() => loadSession())   // null = logged out
   const [showLogin, setShowLogin] = useState(false)             // login overlay
+  const [showBookDemo, setShowBookDemo] = useState(false)       // book demo modal
 
   const navigate = useCallback((to) => {
     // Guard: protected pages require auth
@@ -128,7 +130,10 @@ export default function App() {
       <style>{GLOBAL_STYLES}</style>
 
       {/* Shared Nav — hidden inside the product app (it has its own sidebar) */}
-      {!isProduct && <Nav currentPage={page} onNavigate={navigate} session={session} />}
+      {!isProduct && <Nav currentPage={page} onNavigate={navigate} session={session} onBookDemo={() => setShowBookDemo(true)} />}
+
+      {/* Book Demo modal */}
+      {showBookDemo && <BookDemoModal onClose={() => setShowBookDemo(false)} />}
 
 
       {/* Page transition wrapper */}
@@ -137,7 +142,7 @@ export default function App() {
         transform: fadeOut ? 'translateY(8px)' : 'translateY(0)',
         transition: 'opacity 0.18s ease, transform 0.18s ease',
       }}>
-        <Page navigate={navigate} onLogout={handleLogout} session={session} />
+        <Page navigate={navigate} onLogout={handleLogout} session={session} onBookDemo={() => setShowBookDemo(true)} />
       </div>
 
       {/* Shared footer for sub-pages (not home, not product, not cabinet) */}

@@ -138,7 +138,7 @@ function ROICalc() {
   )
 }
 
-export default function Pricing({ navigate }) {
+export default function Pricing({ navigate, onBookDemo }) {
   const [showTable, setShowTable] = useState(false)
 
   return (
@@ -325,7 +325,7 @@ export default function Pricing({ navigate }) {
           <p style={f({ fontSize: 15, color: C.t2, lineHeight: 1.7, margin: '0 0 32px' })}>
             A 30-minute executive demo shows Vantoryn with your actual ERP data. No commitment, no pressure — just the platform working for your finance operation.
           </p>
-          <button onClick={() => navigate('home')} style={f({
+          <button onClick={onBookDemo} style={f({
             fontSize: 15, fontWeight: 700, color: '#fff', background: C.blue,
             border: 'none', borderRadius: 11, padding: '14px 32px', cursor: 'pointer',
             display: 'inline-flex', alignItems: 'center', gap: 8, transition: 'all 0.2s',

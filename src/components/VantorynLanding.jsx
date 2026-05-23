@@ -101,7 +101,7 @@ function Nav() {
           >
             Sign in
           </button>
-          <button onClick={() => navigate('pricing')} style={f({
+          <button onClick={onBookDemo} style={f({
             fontSize: 14, fontWeight: 600, color: '#fff',
             background: C.blue, border: 'none', borderRadius: 9,
             padding: '10px 22px', cursor: 'pointer',
@@ -390,7 +390,7 @@ function Hero({ navigate }) {
 
             {/* CTAs */}
             <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap', marginBottom: 48 }}>
-              <button onClick={() => navigate('pricing')} style={f({
+              <button onClick={onBookDemo} style={f({
                 fontSize: 15, fontWeight: 700, color: '#fff',
                 background: C.blue, border: 'none', borderRadius: 11,
                 padding: '15px 32px', cursor: 'pointer',
@@ -1079,7 +1079,7 @@ function FinalCTA({ navigate }) {
           Join finance teams that have moved from spreadsheet-driven reporting to real-time AI intelligence. See Vantoryn in action with your actual data stack.
         </p>
         <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 36 }}>
-          <button onClick={() => navigate('pricing')} style={f({
+          <button onClick={onBookDemo} style={f({
             fontSize: 16, fontWeight: 700, color: '#fff',
             background: C.blue, border: 'none', borderRadius: 12,
             padding: '17px 40px', cursor: 'pointer',
@@ -1167,7 +1167,7 @@ function Footer({ navigate }) {
 }
 
 /* ─── ROOT ───────────────────────────────────────────────── */
-export default function VantorynLanding({ navigate = () => {} }) {
+export default function VantorynLanding({ navigate = () => {}, onBookDemo = () => {} }) {
   return (
     <div style={{ background: C.bg0, minHeight: '100vh', fontFamily: FONT }}>
       {/* Nav is handled by App.jsx router — no double nav */}

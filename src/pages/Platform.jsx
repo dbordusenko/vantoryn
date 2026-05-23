@@ -191,7 +191,7 @@ function DashboardPreview({ title, subtitle, color, children }) {
 }
 
 /* ─── MAIN ───────────────────────────────────────────────── */
-export default function Platform({ navigate }) {
+export default function Platform({ navigate, onBookDemo }) {
   const [openMod, setOpenMod] = useState(0)
 
   const modules = [
@@ -274,7 +274,7 @@ export default function Platform({ navigate }) {
               Vantoryn connects reporting, forecasting, operational workflows, and financial analytics into a unified executive intelligence platform.
             </p>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-              <button onClick={() => navigate('pricing')} style={f({
+              <button onClick={onBookDemo} style={f({
                 fontSize: 15, fontWeight: 700, color: '#fff', background: C.blue,
                 border: 'none', borderRadius: 10, padding: '13px 28px', cursor: 'pointer',
                 display: 'flex', alignItems: 'center', gap: 8, transition: 'all 0.2s',
@@ -454,7 +454,7 @@ export default function Platform({ navigate }) {
           <p style={f({ fontSize: 16, color: C.t2, lineHeight: 1.7, margin: '0 0 32px' })}>
             A 30-minute executive demo shows Vantoryn working with your actual ERP and accounting data.
           </p>
-          <button onClick={() => navigate('pricing')} style={f({
+          <button onClick={onBookDemo} style={f({
             fontSize: 15, fontWeight: 700, color: '#fff', background: C.blue,
             border: 'none', borderRadius: 11, padding: '14px 32px', cursor: 'pointer',
             display: 'inline-flex', alignItems: 'center', gap: 8, transition: 'all 0.2s',
