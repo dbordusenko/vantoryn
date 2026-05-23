@@ -1,30 +1,37 @@
 <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="gold" x1="10" y1="5" x2="90" y2="95" gradientUnits="userSpaceOnUse">
-      <stop offset="0%"   stop-color="#e8c96a"/>
-      <stop offset="45%"  stop-color="#c9a84c"/>
+    <linearGradient id="g" x1="10" y1="5" x2="90" y2="95" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"   stop-color="#e8d070"/>
+      <stop offset="50%"  stop-color="#c9a84c"/>
       <stop offset="100%" stop-color="#a07828"/>
     </linearGradient>
-    <linearGradient id="inner" x1="30" y1="15" x2="70" y2="80" gradientUnits="userSpaceOnUse">
-      <stop offset="0%"   stop-color="#e8c96a" stop-opacity="0.9"/>
-      <stop offset="100%" stop-color="#c9a84c" stop-opacity="0.5"/>
+    <linearGradient id="gi" x1="30" y1="10" x2="70" y2="85" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"   stop-color="#e8d070" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#c9a84c" stop-opacity="0.35"/>
     </linearGradient>
-    <linearGradient id="arc" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%"   stop-color="#e8c96a" stop-opacity="0.9"/>
-      <stop offset="100%" stop-color="#c9a84c" stop-opacity="0.2"/>
+    <linearGradient id="ga" x1="50" y1="0" x2="50" y2="100" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"   stop-color="#e8d070" stop-opacity="0.75"/>
+      <stop offset="65%"  stop-color="#c9a84c" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#a07828" stop-opacity="0.1"/>
     </linearGradient>
   </defs>
+  <!-- Circle ring -->
+  <circle cx="50" cy="48" r="46" stroke="url(#ga)" stroke-width="1.6" fill="none"/>
+  <!-- Corner guides: top-left -->
+  <line x1="6"  y1="4"  x2="6"  y2="20" stroke="url(#g)" stroke-width="2.2" stroke-linecap="round" opacity="0.65"/>
+  <line x1="6"  y1="4"  x2="22" y2="4"  stroke="url(#g)" stroke-width="2.2" stroke-linecap="round" opacity="0.65"/>
+  <!-- Corner guides: top-right -->
+  <line x1="94" y1="4"  x2="94" y2="20" stroke="url(#g)" stroke-width="2.2" stroke-linecap="round" opacity="0.65"/>
+  <line x1="78" y1="4"  x2="94" y2="4"  stroke="url(#g)" stroke-width="2.2" stroke-linecap="round" opacity="0.65"/>
+  <!-- Arm tip diamonds -->
+  <path d="M 10 7  L 15 12 L 10 17 L 5  12 Z" fill="url(#g)" opacity="0.8"/>
+  <path d="M 90 7  L 95 12 L 90 17 L 85 12 Z" fill="url(#g)" opacity="0.8"/>
   <!-- Outer V -->
-  <path d="M 10 12 L 50 82 L 90 12" stroke="url(#gold)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M 10 12 L 50 83 L 90 12" stroke="url(#g)"  stroke-width="7.5" stroke-linecap="round" stroke-linejoin="round"/>
   <!-- Inner V -->
-  <path d="M 22 12 L 50 68 L 78 12" stroke="url(#inner)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-  <!-- Diamond -->
-  <path d="M 50 60 L 56 72 L 50 84 L 44 72 Z" fill="url(#gold)" opacity="0.9"/>
-  <!-- Left arc -->
-  <path d="M 9 35 A 42 42 0 0 1 46 88" stroke="url(#arc)" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.7"/>
-  <!-- Right arc -->
-  <path d="M 54 88 A 42 42 0 0 1 91 35" stroke="url(#arc)" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.7"/>
-  <!-- Cap ticks -->
-  <line x1="6" y1="12" x2="24" y2="12" stroke="url(#gold)" stroke-width="3" stroke-linecap="round" opacity="0.55"/>
-  <line x1="76" y1="12" x2="94" y2="12" stroke="url(#gold)" stroke-width="3" stroke-linecap="round" opacity="0.55"/>
+  <path d="M 21 12 L 50 69 L 79 12" stroke="url(#gi)" stroke-width="3"   stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Center diamond -->
+  <path d="M 50 61 L 57 72 L 50 83 L 43 72 Z" fill="url(#g)" opacity="0.95"/>
+  <path d="M 50 65 L 54 72 L 50 79 L 46 72 Z" fill="#a07828" opacity="0.45"/>
+  <path d="M 50 61 L 57 72 L 50 67 L 43 72 Z" fill="#e8d070" opacity="0.3"/>
 </svg>

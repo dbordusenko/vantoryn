@@ -37,8 +37,8 @@ export default function Nav({ currentPage, onNavigate, session }) {
 
         {/* Logo */}
         <div onClick={() => go('home')} style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
-          <VantorynMark size={36} />
-          <span style={f({ fontSize: 17, fontWeight: 700, color: C.t1, letterSpacing: '-0.025em' })}>
+          <VantorynMark size={48} />
+          <span style={f({ fontSize: 22, fontWeight: 700, color: C.t1, letterSpacing: '-0.03em' })}>
             Vantoryn
           </span>
         </div>
