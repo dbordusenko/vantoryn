@@ -99,6 +99,9 @@ const CATEGORY_COLORS = {
 
 export default function Insights({ navigate }) {
   const [category, setCategory] = useState('All')
+  const [expandedArticle, setExpandedArticle] = useState(null)
+  const [subscribed, setSubscribed] = useState(false)
+  const [subEmail, setSubEmail] = useState('')
   const filtered = category === 'All' ? ARTICLES : ARTICLES.filter(a => a.category === category)
   const featured = filtered.find(a => a.featured) || filtered[0]
   const rest = filtered.filter(a => !a.featured || a !== featured)
@@ -196,17 +199,36 @@ export default function Insights({ navigate }) {
                     </div>
                   ))}
                 </div>
-                <button style={f({
-                  display: 'flex', alignItems: 'center', gap: 8, marginTop: 24,
-                  background: featured.color, border: 'none', borderRadius: 9,
-                  padding: '11px 22px', cursor: 'pointer', color: '#fff', fontWeight: 700, fontSize: 14,
-                  boxShadow: `0 4px 16px ${featured.color}40`, transition: 'all 0.2s',
-                })}
-                onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
-                onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
+                <button onClick={() => setExpandedArticle(expandedArticle === featured.title ? null : featured.title)}
+                  style={f({
+                    display: 'flex', alignItems: 'center', gap: 8, marginTop: 24,
+                    background: featured.color, border: 'none', borderRadius: 9,
+                    padding: '11px 22px', cursor: 'pointer', color: '#fff', fontWeight: 700, fontSize: 14,
+                    boxShadow: `0 4px 16px ${featured.color}40`, transition: 'all 0.2s',
+                  })}
+                  onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
+                  onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
                 >
-                  Read Article <ArrowRight size={15} />
+                  {expandedArticle === featured.title ? 'Close Article ↑' : 'Read Article'}
+                  {expandedArticle !== featured.title && <ArrowRight size={15} />}
                 </button>
+                {expandedArticle === featured.title && (
+                  <div style={{ marginTop: 24, padding: '20px 24px', background: C.bg3,
+                    border: `1px solid ${C.borderMid}`, borderRadius: 12, animation: 'pageFade 0.25s ease' }}>
+                    {featured.points.map((pt, i) => (
+                      <p key={i} style={f({ fontSize: 14, color: C.t2, lineHeight: 1.8, margin: '0 0 12px' })}>
+                        {pt}
+                      </p>
+                    ))}
+                    <p style={f({ fontSize: 13, color: C.t3, marginTop: 16 })}>
+                      Full article available to Vantoryn subscribers. <button onClick={() => navigate('pricing')}
+                        style={f({ background: 'none', border: 'none', color: featured.color, cursor: 'pointer',
+                          fontWeight: 600, fontSize: 13, padding: 0 })}>
+                        Access full library →
+                      </button>
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -272,28 +294,45 @@ export default function Insights({ navigate }) {
               One email, every Monday. Practical frameworks, benchmarks, and research on predictive finance and FP&A. No fluff.
             </p>
           </div>
-          <div style={{ display: 'flex', gap: 10, maxWidth: 440, margin: '0 auto' }}>
-            <input type="email" placeholder="CFO email address"
-              style={f({
-                flex: 1, padding: '12px 16px', borderRadius: 9,
-                background: C.bg3, border: `1px solid ${C.borderMid}`,
-                color: C.t1, fontSize: 14, outline: 'none',
-              })}
-              onFocus={e => e.target.style.borderColor = C.blue}
-              onBlur={e => e.target.style.borderColor = C.borderMid}
-            />
-            <button style={f({
-              fontSize: 14, fontWeight: 700, color: '#fff', background: C.blue,
-              border: 'none', borderRadius: 9, padding: '12px 22px', cursor: 'pointer',
-              whiteSpace: 'nowrap', transition: 'all 0.2s',
-              boxShadow: `0 4px 16px ${C.blue}40`,
-            })}
-            onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-1px)'}
-            onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
-            >
-              Subscribe
-            </button>
-          </div>
+          {subscribed ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, justifyContent: 'center',
+              padding: '14px 28px', borderRadius: 12, background: `${C.green}15`,
+              border: `1px solid ${C.green}35`, maxWidth: 440, margin: '0 auto',
+              animation: 'pageFade 0.3s ease' }}>
+              <span style={{ fontSize: 18 }}>✓</span>
+              <span style={f({ fontSize: 14, color: C.green, fontWeight: 600 })}>
+                You're subscribed — first issue arrives Monday.
+              </span>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', gap: 10, maxWidth: 440, margin: '0 auto' }}>
+              <input type="email" placeholder="CFO email address"
+                value={subEmail}
+                onChange={e => setSubEmail(e.target.value)}
+                style={f({
+                  flex: 1, padding: '12px 16px', borderRadius: 9,
+                  background: C.bg3, border: `1px solid ${C.borderMid}`,
+                  color: C.t1, fontSize: 14, outline: 'none',
+                })}
+                onFocus={e => e.target.style.borderColor = C.blue}
+                onBlur={e => e.target.style.borderColor = C.borderMid}
+                onKeyDown={e => e.key === 'Enter' && subEmail.includes('@') && setSubscribed(true)}
+              />
+              <button
+                onClick={() => subEmail.includes('@') && setSubscribed(true)}
+                style={f({
+                  fontSize: 14, fontWeight: 700, color: '#fff', background: C.blue,
+                  border: 'none', borderRadius: 9, padding: '12px 22px', cursor: 'pointer',
+                  whiteSpace: 'nowrap', transition: 'all 0.2s',
+                  boxShadow: `0 4px 16px ${C.blue}40`,
+                })}
+                onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-1px)'}
+                onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
+              >
+                Subscribe
+              </button>
+            </div>
+          )}
           <div style={f({ fontSize: 11, color: C.t3, marginTop: 14 })}>
             3,200+ finance leaders subscribed · Unsubscribe anytime
           </div>

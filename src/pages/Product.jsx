@@ -960,7 +960,13 @@ function Overview({ setView, importedData }) {
               <div>
                 <div style={f({ fontSize:12,fontWeight:600,color:C.t1,marginBottom:4,lineHeight:1.4 })}>{sig.text}</div>
                 <div style={f({ fontSize:11,color:C.t3,marginBottom:8 })}>{sig.sub}</div>
-                <button style={f({ fontSize:10,color:sig.color,background:'transparent',
+                <button
+                  onClick={() => {
+                    if (sig.action === 'Dismiss') setSigIdx(i => (i + 1) % SIGNALS.length)
+                    else if (sig.action === 'View AR') setView('reports')
+                    else setView('alerts')
+                  }}
+                  style={f({ fontSize:10,color:sig.color,background:'transparent',
                   border:`1px solid ${sig.color}40`,borderRadius:5,padding:'3px 8px',cursor:'pointer',fontWeight:600 })}>
                   {sig.action}
                 </button>

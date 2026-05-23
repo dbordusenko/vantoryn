@@ -76,19 +76,32 @@ function Nav() {
         </div>
 
         <div style={{ display: 'flex', gap: 36, alignItems: 'center' }}>
-          {['Platform', 'Use Cases', 'Security', 'Pricing'].map(l => (
-            <a key={l} href="#" style={f({ fontSize: 14, color: C.t2, textDecoration: 'none', fontWeight: 500 })}
+          {[
+            { label: 'Platform',  page: 'platform'  },
+            { label: 'Use Cases', page: 'solutions' },
+            { label: 'Security',  page: 'security'  },
+            { label: 'Pricing',   page: 'pricing'   },
+          ].map(l => (
+            <button key={l.label} onClick={() => navigate(l.page)}
+              style={f({ fontSize: 14, color: C.t2, background: 'none', border: 'none',
+                cursor: 'pointer', fontWeight: 500, padding: 0, transition: 'color 0.2s' })}
               onMouseEnter={e => e.target.style.color = C.t1}
               onMouseLeave={e => e.target.style.color = C.t2}
-            >{l}</a>
+            >{l.label}</button>
           ))}
         </div>
 
         <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-          <a href="#" style={f({ fontSize: 14, color: C.t2, textDecoration: 'none', fontWeight: 500, padding: '8px 16px' })}>
+          <button onClick={() => navigate('cabinet')} style={f({
+            fontSize: 14, color: C.t2, background: 'none', border: 'none',
+            cursor: 'pointer', fontWeight: 500, padding: '8px 16px', transition: 'color 0.2s',
+          })}
+          onMouseEnter={e => e.currentTarget.style.color = C.t1}
+          onMouseLeave={e => e.currentTarget.style.color = C.t2}
+          >
             Sign in
-          </a>
-          <button style={f({
+          </button>
+          <button onClick={() => navigate('pricing')} style={f({
             fontSize: 14, fontWeight: 600, color: '#fff',
             background: C.blue, border: 'none', borderRadius: 9,
             padding: '10px 22px', cursor: 'pointer',
@@ -377,7 +390,7 @@ function Hero({ navigate }) {
 
             {/* CTAs */}
             <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap', marginBottom: 48 }}>
-              <button style={f({
+              <button onClick={() => navigate('pricing')} style={f({
                 fontSize: 15, fontWeight: 700, color: '#fff',
                 background: C.blue, border: 'none', borderRadius: 11,
                 padding: '15px 32px', cursor: 'pointer',
@@ -390,7 +403,7 @@ function Hero({ navigate }) {
               >
                 See Predictive Finance in Action <ArrowRight size={16} />
               </button>
-              <button style={f({
+              <button onClick={() => navigate('platform')} style={f({
                 fontSize: 14, fontWeight: 500, color: C.t2,
                 background: 'transparent', border: `1px solid ${C.borderMid}`,
                 borderRadius: 11, padding: '14px 24px', cursor: 'pointer',
@@ -782,7 +795,7 @@ function ExecutiveBriefingSection() {
                 </div>
               ))}
             </div>
-            <button style={f({
+            <button onClick={() => navigate('cabinet')} style={f({
               fontSize: 14, fontWeight: 600, color: C.t1,
               background: 'transparent', border: `1px solid ${C.borderMid}`,
               borderRadius: 9, padding: '12px 24px', cursor: 'pointer',
@@ -1066,7 +1079,7 @@ function FinalCTA({ navigate }) {
           Join finance teams that have moved from spreadsheet-driven reporting to real-time AI intelligence. See Vantoryn in action with your actual data stack.
         </p>
         <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 36 }}>
-          <button style={f({
+          <button onClick={() => navigate('pricing')} style={f({
             fontSize: 16, fontWeight: 700, color: '#fff',
             background: C.blue, border: 'none', borderRadius: 12,
             padding: '17px 40px', cursor: 'pointer',
@@ -1078,7 +1091,7 @@ function FinalCTA({ navigate }) {
           >
             Book CFO Strategy Demo <ArrowRight size={18} />
           </button>
-          <button style={f({
+          <button onClick={() => navigate('platform')} style={f({
             fontSize: 14, fontWeight: 500, color: C.t2,
             background: 'transparent', border: `1px solid ${C.borderMid}`,
             borderRadius: 12, padding: '16px 28px', cursor: 'pointer', transition: 'all 0.2s',
