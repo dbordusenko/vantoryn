@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+﻿import { useState, useEffect } from 'react'
 import { BarChart3, ChevronDown, ArrowRight, Menu, X,
   Layers, Shield, Users, DollarSign, BookOpen, LayoutDashboard } from 'lucide-react'
 import { C, f, FONT } from '../tokens'
@@ -44,7 +44,7 @@ export default function Nav({ currentPage, onNavigate }) {
             <BarChart3 size={17} color="#fff" strokeWidth={2.5} />
           </div>
           <span style={f({ fontSize: 17, fontWeight: 700, color: C.t1, letterSpacing: '-0.025em' })}>
-            FinAutomate
+            Vantoryn
           </span>
         </div>
 
@@ -136,3 +136,4 @@ export default function Nav({ currentPage, onNavigate }) {
     </nav>
   )
 }
+

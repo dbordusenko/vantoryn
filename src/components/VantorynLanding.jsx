@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+﻿import { useState, useEffect, useRef } from 'react'
 import {
   TrendingUp, TrendingDown, AlertTriangle, CheckCircle2, ArrowRight,
   BarChart3, Brain, Shield, Zap, Users, ChevronRight, Activity,
@@ -71,7 +71,7 @@ function Nav() {
             <BarChart3 size={17} color="#fff" strokeWidth={2.5} />
           </div>
           <span style={f({ fontSize: 17, fontWeight: 700, color: C.t1, letterSpacing: '-0.025em' })}>
-            FinAutomate
+            Vantoryn
           </span>
         </div>
 
@@ -372,7 +372,7 @@ function Hero({ navigate }) {
               fontSize: 18, lineHeight: 1.7, color: C.t2,
               margin: '0 0 40px', maxWidth: 450,
             })}>
-              Finance leaders use FinAutomate to close in hours, predict risk weeks early, and replace fragmented reporting with real-time executive intelligence.
+              Finance leaders use Vantoryn to close in hours, predict risk weeks early, and replace fragmented reporting with real-time executive intelligence.
             </p>
 
             {/* CTAs */}
@@ -523,7 +523,7 @@ function FinancialAnxietySection({ navigate }) {
         }}>
           <div style={{ flex: 1 }}>
             <div style={f({ fontSize: 18, fontWeight: 700, color: C.t1, marginBottom: 8, letterSpacing: '-0.02em' })}>
-              FinAutomate replaces reactive finance operations with real-time AI intelligence.
+              Vantoryn replaces reactive finance operations with real-time AI intelligence.
             </div>
             <div style={f({ fontSize: 14, color: C.t2, lineHeight: 1.65 })}>
               One platform that unifies your financial data, automates the operational backbone, and gives executive teams predictive visibility.
@@ -555,7 +555,7 @@ function PlatformSection() {
       icon: <BarChart3 size={19} />, color: C.blue,
       tag: 'Module 01', title: 'Executive Reporting',
       headline: 'Board-ready reporting in hours, not weeks.',
-      body: 'FinAutomate compiles financial data across all connected systems and generates board packs, variance reports, and management decks — formatted, accurate, and automated.',
+      body: 'Vantoryn compiles financial data across all connected systems and generates board packs, variance reports, and management decks — formatted, accurate, and automated.',
       outcomes: ['Automated month-end close', 'Auto-generated board packs', 'KPI dashboards with drill-down', '70% faster reporting cycle'],
     },
     {
@@ -569,7 +569,7 @@ function PlatformSection() {
       icon: <Workflow size={19} />, color: C.purple,
       tag: 'Module 03', title: 'AI Finance Operations',
       headline: 'Automate the operational backbone of finance.',
-      body: 'Approval routing, invoice reconciliation, ERP synchronization — FinAutomate eliminates the manual workflows that consume your team capacity.',
+      body: 'Approval routing, invoice reconciliation, ERP synchronization — Vantoryn eliminates the manual workflows that consume your team capacity.',
       outcomes: ['Approval workflow automation', 'Invoice reconciliation', 'ERP bi-directional sync', 'Full audit trail per action'],
     },
     {
@@ -767,7 +767,7 @@ function ExecutiveBriefingSection() {
               <span style={{ color: C.teal }}>Generated automatically.</span>
             </h2>
             <p style={f({ fontSize: 15, color: C.t2, lineHeight: 1.75, margin: '0 0 28px' })}>
-              Every morning at 8 AM, FinAutomate delivers a concise executive intelligence brief directly to your inbox — key financial signals, anomalies, and decisions that require attention. No dashboards to open. No exports to run.
+              Every morning at 8 AM, Vantoryn delivers a concise executive intelligence brief directly to your inbox — key financial signals, anomalies, and decisions that require attention. No dashboards to open. No exports to run.
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 36 }}>
               {[
@@ -806,7 +806,7 @@ function ExecutiveBriefingSection() {
             <div style={{ background: C.bg3, padding: '12px 20px', borderBottom: `1px solid ${C.border}`,
               display: 'flex', alignItems: 'center', gap: 8 }}>
               <Inbox size={14} color={C.t3} />
-              <span style={f({ fontSize: 11, color: C.t3 })}>FinAutomate Intelligence</span>
+              <span style={f({ fontSize: 11, color: C.t3 })}>Vantoryn Intelligence</span>
             </div>
 
             <div style={{ padding: '24px 28px' }}>
@@ -863,7 +863,7 @@ function ExecutiveBriefingSection() {
 function ImpactSection() {
   const metrics = [
     { value: '74%', label: 'reduction in time spent on monthly financial reporting', color: C.blue },
-    { value: '3.2×', label: 'faster financial close cycle vs pre-FinAutomate baseline',  color: C.teal },
+    { value: '3.2×', label: 'faster financial close cycle vs pre-Vantoryn baseline',  color: C.teal },
     { value: '91%', label: 'forecast accuracy improvement in first 90 days of deployment', color: C.green },
   ]
   return (
@@ -909,12 +909,12 @@ function BeforeAfterSection() {
         <div style={{ textAlign: 'center', marginBottom: 56 }}>
           <span style={f({ fontSize: 11, color: C.t3, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase' })}>The Difference</span>
           <h2 style={f({ fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 800, color: C.t1, margin: '16px 0 0', letterSpacing: '-0.03em' })}>
-            Before FinAutomate. After FinAutomate.
+            Before Vantoryn. After Vantoryn.
           </h2>
         </div>
         <div style={{ background: C.bg2, border: `1px solid ${C.border}`, borderRadius: 20, overflow: 'hidden' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', background: C.bg3, borderBottom: `1px solid ${C.border}` }}>
-            {['', 'Before', 'After — FinAutomate'].map((h, i) => (
+            {['', 'Before', 'After — Vantoryn'].map((h, i) => (
               <div key={i} style={{ padding: '14px 24px', borderRight: i < 2 ? `1px solid ${C.border}` : 'none' }}>
                 <span style={f({ fontSize: 11, fontWeight: 700, color: i === 2 ? C.blue : C.t3,
                   letterSpacing: '0.07em', textTransform: 'uppercase' })}>{h}</span>
@@ -963,7 +963,7 @@ function SecuritySection({ navigate }) {
               Enterprise-grade infrastructure for financial data.
             </h2>
             <p style={f({ fontSize: 15, color: C.t2, lineHeight: 1.75, margin: '0 0 32px' })}>
-              FinAutomate was designed for organizations where data integrity and auditability are non-negotiable. Every layer meets enterprise security standards.
+              Vantoryn was designed for organizations where data integrity and auditability are non-negotiable. Every layer meets enterprise security standards.
             </p>
             <button style={f({ fontSize: 14, fontWeight: 600, color: C.t1, background: 'transparent',
               border: `1px solid ${C.borderMid}`, borderRadius: 9, padding: '12px 22px', cursor: 'pointer',
@@ -1063,7 +1063,7 @@ function FinalCTA({ navigate }) {
           Replace reactive finance<br />with predictive intelligence.
         </h2>
         <p style={f({ fontSize: 17, color: C.t2, lineHeight: 1.7, margin: '0 0 48px', maxWidth: 560, marginLeft: 'auto', marginRight: 'auto' })}>
-          Join finance teams that have moved from spreadsheet-driven reporting to real-time AI intelligence. See FinAutomate in action with your actual data stack.
+          Join finance teams that have moved from spreadsheet-driven reporting to real-time AI intelligence. See Vantoryn in action with your actual data stack.
         </p>
         <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 36 }}>
           <button style={f({
@@ -1110,7 +1110,7 @@ function Footer({ navigate }) {
                 display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <BarChart3 size={17} color="#fff" strokeWidth={2.5} />
               </div>
-              <span style={f({ fontSize: 17, fontWeight: 700, color: C.t1, letterSpacing: '-0.025em' })}>FinAutomate</span>
+              <span style={f({ fontSize: 17, fontWeight: 700, color: C.t1, letterSpacing: '-0.025em' })}>Vantoryn</span>
             </div>
             <p style={f({ fontSize: 13, color: C.t3, lineHeight: 1.75, margin: 0 })}>
               AI Financial Operating System for modern finance teams. Predictive intelligence, automated operations, enterprise governance.
@@ -1138,7 +1138,7 @@ function Footer({ navigate }) {
         </div>
         <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: 24,
           display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
-          <span style={f({ fontSize: 12, color: C.t3 })}>© 2026 FinAutomate. All rights reserved.</span>
+          <span style={f({ fontSize: 12, color: C.t3 })}>© 2026 Vantoryn. All rights reserved.</span>
           <div style={{ display: 'flex', gap: 20 }}>
             {['SOC 2 Type II', 'GDPR Compliant', 'CCPA Ready'].map(b => (
               <div key={b} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
@@ -1154,7 +1154,7 @@ function Footer({ navigate }) {
 }
 
 /* ─── ROOT ───────────────────────────────────────────────── */
-export default function FinAutomateLanding({ navigate = () => {} }) {
+export default function VantorynLanding({ navigate = () => {} }) {
   return (
     <div style={{ background: C.bg0, minHeight: '100vh', fontFamily: FONT }}>
       {/* Nav is handled by App.jsx router — no double nav */}
@@ -1173,3 +1173,4 @@ export default function FinAutomateLanding({ navigate = () => {} }) {
     </div>
   )
 }
+

@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react'
+﻿import { useState, useCallback, useEffect } from 'react'
 import Nav from './components/Nav'
 import Home from './pages/Home'
 import Platform from './pages/Platform'
@@ -31,7 +31,7 @@ function SharedFooter({ navigate }) {
           <div style={{ width: 28, height: 28, borderRadius: 7,
             background: `linear-gradient(135deg, ${C.blue}, ${C.teal})`,
             display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>📊</div>
-          <span style={f({ fontSize: 15, fontWeight: 700, color: C.t1 })}>FinAutomate</span>
+          <span style={f({ fontSize: 15, fontWeight: 700, color: C.t1 })}>Vantoryn</span>
         </div>
         <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
           {[
@@ -48,7 +48,7 @@ function SharedFooter({ navigate }) {
             >{l.label}</button>
           ))}
         </div>
-        <span style={f({ fontSize: 12, color: C.t4 })}>© 2026 FinAutomate. All rights reserved.</span>
+        <span style={f({ fontSize: 12, color: C.t4 })}>© 2026 Vantoryn. All rights reserved.</span>
       </div>
     </footer>
   )
@@ -93,3 +93,4 @@ export default function App() {
     </div>
   )
 }
+

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { CheckCircle2, ArrowRight, Zap, BarChart3, Activity,
   Building2, Shield, ChevronDown, Calculator } from 'lucide-react'
 import { C, f } from '../tokens'
@@ -166,7 +166,7 @@ export default function Pricing({ navigate }) {
             </span>
           </h1>
           <p style={f({ fontSize: 17, color: C.t2, lineHeight: 1.7, margin: '0 auto' })}>
-            FinAutomate is not a monthly subscription tool. It is financial infrastructure — priced to reflect the value it delivers to your organization.
+            Vantoryn is not a monthly subscription tool. It is financial infrastructure — priced to reflect the value it delivers to your organization.
           </p>
         </div>
       </section>
@@ -323,7 +323,7 @@ export default function Pricing({ navigate }) {
             Ready to see the platform?
           </h2>
           <p style={f({ fontSize: 15, color: C.t2, lineHeight: 1.7, margin: '0 0 32px' })}>
-            A 30-minute executive demo shows FinAutomate with your actual ERP data. No commitment, no pressure — just the platform working for your finance operation.
+            A 30-minute executive demo shows Vantoryn with your actual ERP data. No commitment, no pressure — just the platform working for your finance operation.
           </p>
           <button onClick={() => navigate('home')} style={f({
             fontSize: 15, fontWeight: 700, color: '#fff', background: C.blue,
@@ -341,3 +341,4 @@ export default function Pricing({ navigate }) {
     </div>
   )
 }
+

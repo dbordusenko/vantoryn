@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { Shield, Lock, Eye, Users, Building2, Globe, CheckCircle2,
   ArrowRight, BadgeCheck, Server, ChevronDown } from 'lucide-react'
 import { C, f } from '../tokens'
@@ -7,47 +7,47 @@ const PILLARS = [
   {
     icon: <Lock size={22} />, color: C.blue, title: 'Data Encryption',
     headline: 'AES-256 at rest. TLS 1.3 in transit.',
-    body: 'All financial data stored in FinAutomate is encrypted using AES-256 encryption at rest. All data transmitted between your systems and FinAutomate uses TLS 1.3 — the strongest transport encryption standard available.',
+    body: 'All financial data stored in Vantoryn is encrypted using AES-256 encryption at rest. All data transmitted between your systems and Vantoryn uses TLS 1.3 — the strongest transport encryption standard available.',
     points: ['AES-256 field-level encryption', 'TLS 1.3 for all data in transit', 'Encryption keys managed per tenant', 'Zero plaintext storage of sensitive fields'],
   },
   {
     icon: <Users size={22} />, color: C.teal, title: 'Role-Based Access Control',
     headline: 'Granular permissions. Principle of least privilege.',
-    body: 'FinAutomate enforces role-based access control at every layer — from module access to individual data field visibility. Admins define roles by team, function, and data sensitivity.',
+    body: 'Vantoryn enforces role-based access control at every layer — from module access to individual data field visibility. Admins define roles by team, function, and data sensitivity.',
     points: ['Custom role definitions per organization', 'Data-level visibility rules', 'Module and feature permissions', 'SSO + SAML 2.0 support'],
   },
   {
     icon: <Eye size={22} />, color: C.purple, title: 'Audit Logs & Data Lineage',
     headline: 'Every action logged. Every data point traceable.',
-    body: 'FinAutomate maintains immutable audit logs for every read, write, export, and configuration change. Data lineage is tracked from source system transaction to report output.',
+    body: 'Vantoryn maintains immutable audit logs for every read, write, export, and configuration change. Data lineage is tracked from source system transaction to report output.',
     points: ['Immutable audit log per event', 'User + timestamp + action + data', 'Data lineage from ERP to report', 'Exportable audit trail for compliance'],
   },
   {
     icon: <Server size={22} />, color: C.amber, title: 'Infrastructure Security',
     headline: 'Cloud-native. Multi-region. Monitored 24/7.',
-    body: 'FinAutomate runs on hardened cloud infrastructure with automated threat detection, network isolation, and continuous vulnerability scanning. Uptime SLA: 99.9%.',
+    body: 'Vantoryn runs on hardened cloud infrastructure with automated threat detection, network isolation, and continuous vulnerability scanning. Uptime SLA: 99.9%.',
     points: ['VPC network isolation per tenant', 'Automated vulnerability scanning', 'DDoS mitigation and WAF', '99.9% uptime SLA with incident response'],
   },
   {
     icon: <Building2 size={22} />, color: C.green, title: 'Single-Tenant Option',
     headline: 'Dedicated infrastructure for enterprise clients.',
-    body: 'Enterprise clients with strict data residency or isolation requirements can deploy FinAutomate on dedicated, single-tenant infrastructure with guaranteed data separation.',
+    body: 'Enterprise clients with strict data residency or isolation requirements can deploy Vantoryn on dedicated, single-tenant infrastructure with guaranteed data separation.',
     points: ['Dedicated cloud environment', 'Data residency guarantees (EU, US, custom)', 'Custom SLAs available', 'Private connectivity (VPN / Direct Connect)'],
   },
   {
     icon: <Globe size={22} />, color: C.red, title: 'GDPR & CCPA Compliance',
     headline: 'Built for global regulatory requirements.',
-    body: 'FinAutomate was designed with privacy-by-default principles. Data processing agreements, right-to-erasure workflows, and data portability are built into the platform.',
+    body: 'Vantoryn was designed with privacy-by-default principles. Data processing agreements, right-to-erasure workflows, and data portability are built into the platform.',
     points: ['DPA available on request', 'Right-to-erasure supported', 'Data portability export', 'CCPA opt-out mechanisms'],
   },
 ]
 
 const FAQ = [
-  { q: 'Who owns the financial data in FinAutomate?', a: 'You do. FinAutomate is a data processor, not a data controller. Your organization retains full ownership of all financial data. We process it only to provide the service, and you can export or delete your data at any time.' },
-  { q: 'How is our ERP data transmitted to FinAutomate?', a: 'All data transmission uses OAuth 2.0 and TLS 1.3 encrypted connections. Credentials are never stored in plaintext. Integration tokens are encrypted and scoped to minimum-required permissions.' },
-  { q: 'Can we restrict which team members see which financial data?', a: 'Yes. FinAutomate\'s RBAC system lets you define custom roles with field-level data visibility rules. A Controller can see all transaction data while an FP&A analyst might see only aggregated forecasting views.' },
-  { q: 'What happens to our data if we cancel?', a: 'You retain access to export all data for 30 days after cancellation. After that, data is securely deleted from all FinAutomate systems within 60 days, with written confirmation available.' },
-  { q: 'Is FinAutomate compliant with SOX financial reporting requirements?', a: 'FinAutomate\'s audit trail, role-based access controls, data lineage tracking, and change management logs are designed to support SOX compliance requirements. We recommend review with your compliance counsel.' },
+  { q: 'Who owns the financial data in Vantoryn?', a: 'You do. Vantoryn is a data processor, not a data controller. Your organization retains full ownership of all financial data. We process it only to provide the service, and you can export or delete your data at any time.' },
+  { q: 'How is our ERP data transmitted to Vantoryn?', a: 'All data transmission uses OAuth 2.0 and TLS 1.3 encrypted connections. Credentials are never stored in plaintext. Integration tokens are encrypted and scoped to minimum-required permissions.' },
+  { q: 'Can we restrict which team members see which financial data?', a: 'Yes. Vantoryn\'s RBAC system lets you define custom roles with field-level data visibility rules. A Controller can see all transaction data while an FP&A analyst might see only aggregated forecasting views.' },
+  { q: 'What happens to our data if we cancel?', a: 'You retain access to export all data for 30 days after cancellation. After that, data is securely deleted from all Vantoryn systems within 60 days, with written confirmation available.' },
+  { q: 'Is Vantoryn compliant with SOX financial reporting requirements?', a: 'Vantoryn\'s audit trail, role-based access controls, data lineage tracking, and change management logs are designed to support SOX compliance requirements. We recommend review with your compliance counsel.' },
   { q: 'Do you offer security assessments or penetration test reports?', a: 'Yes. We conduct annual third-party penetration tests and SOC 2 Type II audits. Summarized results and our latest audit reports are available to enterprise clients under NDA.' },
 ]
 
@@ -102,7 +102,7 @@ export default function Security({ navigate }) {
                 </span>
               </h1>
               <p style={f({ fontSize: 17, color: C.t2, lineHeight: 1.7, margin: '0 0 36px' })}>
-                FinAutomate was built for organizations where financial data integrity, auditability, and access control are non-negotiable. Security is not a feature — it is the foundation.
+                Vantoryn was built for organizations where financial data integrity, auditability, and access control are non-negotiable. Security is not a feature — it is the foundation.
               </p>
               <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
                 <button onClick={() => navigate('pricing')} style={f({
@@ -193,7 +193,7 @@ export default function Security({ navigate }) {
                 Financial data governance built for enterprise.
               </h2>
               <p style={f({ fontSize: 15, color: C.t2, lineHeight: 1.75, margin: '0 0 28px' })}>
-                FinAutomate treats governance as infrastructure — not an afterthought. Every permission, every data flow, every integration is controlled, auditable, and compliant.
+                Vantoryn treats governance as infrastructure — not an afterthought. Every permission, every data flow, every integration is controlled, auditable, and compliant.
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 {[
@@ -280,3 +280,4 @@ export default function Security({ navigate }) {
     </div>
   )
 }
+

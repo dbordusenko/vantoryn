@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { ArrowRight, Database, Brain, Target, CheckCircle2,
   BarChart3, Activity, Workflow, Layers, PlugZap, Sparkles,
   AlertTriangle, RefreshCw, SlidersHorizontal, TrendingUp,
@@ -67,7 +67,7 @@ function ArchDiagram() {
                   <div style={f({ fontSize: 16, fontWeight: 800, color: C.t1, letterSpacing: '-0.02em' })}>
                     AI Intelligence Layer
                   </div>
-                  <div style={f({ fontSize: 12, color: C.t3 })}>The core of FinAutomate</div>
+                  <div style={f({ fontSize: 12, color: C.t3 })}>The core of Vantoryn</div>
                 </div>
               </div>
             </div>
@@ -197,7 +197,7 @@ export default function Platform({ navigate }) {
   const modules = [
     {
       tag: 'Module 01', title: 'Executive Reporting & Board Intelligence', icon: <BarChart3 size={18} />, color: C.blue,
-      body: 'FinAutomate transforms financial data into board-ready deliverables automatically. From monthly management accounts to investor decks, the reporting cycle compresses from weeks to hours.',
+      body: 'Vantoryn transforms financial data into board-ready deliverables automatically. From monthly management accounts to investor decks, the reporting cycle compresses from weeks to hours.',
       features: [
         'Automated month-end reporting pack',
         'Board deck generation with AI narrative',
@@ -271,7 +271,7 @@ export default function Platform({ navigate }) {
               </span>
             </h1>
             <p style={f({ fontSize: 18, color: C.t2, lineHeight: 1.7, margin: '0 0 36px' })}>
-              FinAutomate connects reporting, forecasting, operational workflows, and financial analytics into a unified executive intelligence platform.
+              Vantoryn connects reporting, forecasting, operational workflows, and financial analytics into a unified executive intelligence platform.
             </p>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
               <button onClick={() => navigate('pricing')} style={f({
@@ -452,7 +452,7 @@ export default function Platform({ navigate }) {
             Ready to see it with your data?
           </h2>
           <p style={f({ fontSize: 16, color: C.t2, lineHeight: 1.7, margin: '0 0 32px' })}>
-            A 30-minute executive demo shows FinAutomate working with your actual ERP and accounting data.
+            A 30-minute executive demo shows Vantoryn working with your actual ERP and accounting data.
           </p>
           <button onClick={() => navigate('pricing')} style={f({
             fontSize: 15, fontWeight: 700, color: '#fff', background: C.blue,
@@ -470,3 +470,4 @@ export default function Platform({ navigate }) {
     </div>
   )
 }
+

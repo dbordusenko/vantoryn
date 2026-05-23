@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+﻿import { useState, useEffect, useCallback } from 'react'
 import {
   LayoutDashboard, TrendingUp, FileText, Brain, Bell, PlugZap,
   Settings, ArrowUpRight, ArrowDownRight, AlertTriangle, CheckCircle2,
@@ -88,7 +88,7 @@ function downloadDemo() {
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
   a.href = url
-  a.download = 'finautomateapp_acme_corp_demo.csv'
+  a.download = 'vantoryn_acme_corp_demo.csv'
   document.body.appendChild(a)
   a.click()
   document.body.removeChild(a)
@@ -281,25 +281,25 @@ const ERP_SYSTEMS = [
   {
     id: 'sap', name: 'SAP S/4HANA', sub: 'SAP Business One also supported', authType: 'Service Account',
     steps: [
-      { title: 'Create a service account', body: 'In SAP Admin Console → Users → Service Accounts → New. Name it finautomateread. Assign roles: FICO_Reader and CO_Module_Reader. Do not assign write permissions.' },
+      { title: 'Create a service account', body: 'In SAP Admin Console → Users → Service Accounts → New. Name it vantorynread. Assign roles: FICO_Reader and CO_Module_Reader. Do not assign write permissions.' },
       { title: 'Enable OData API', body: 'Run transaction SICF. Navigate to /sap/opu/odata/ and activate the service node. This enables read-only access to financial data via REST API.' },
       { title: 'Collect your credentials', body: 'Note your SAP System URL (e.g. https://yoursap.company.com:8000), Client (Mandant) number, System ID (SID like PRD), and the service account username + password.' },
-      { title: 'Paste & test in FinAutomate', body: 'Enter credentials in the form on the right and click Test Connection. First full sync takes 10–30 minutes depending on history depth.' },
+      { title: 'Paste & test in Vantoryn', body: 'Enter credentials in the form on the right and click Test Connection. First full sync takes 10–30 minutes depending on history depth.' },
     ],
     fields: [
       { label: 'SAP System URL', placeholder: 'https://yoursap.company.com:8000' },
       { label: 'Client (Mandant)', placeholder: '100' },
       { label: 'System ID (SID)', placeholder: 'PRD' },
-      { label: 'Service Account Username', placeholder: 'finautomateread' },
+      { label: 'Service Account Username', placeholder: 'vantorynread' },
       { label: 'Password', placeholder: '••••••••', type: 'password' },
     ],
   },
   {
     id: 'netsuite', name: 'Oracle NetSuite', sub: 'Token-Based Authentication', authType: 'TBA / OAuth',
     steps: [
-      { title: 'Create a new integration record', body: 'Log in as Administrator. Go to Setup → Integration → Manage Integrations → New. Name: "FinAutomate". Enable Token-Based Authentication. Save.' },
+      { title: 'Create a new integration record', body: 'Log in as Administrator. Go to Setup → Integration → Manage Integrations → New. Name: "Vantoryn". Enable Token-Based Authentication. Save.' },
       { title: 'Copy Consumer Keys immediately', body: 'After saving, NetSuite shows your Consumer Key and Consumer Secret exactly once. Copy them now — they cannot be retrieved again without regenerating.' },
-      { title: 'Generate an access token', body: 'Go to Setup → Users/Roles → Manage Tokens → New. Select the FinAutomate integration and your admin user. Save and copy Token ID + Token Secret.' },
+      { title: 'Generate an access token', body: 'Go to Setup → Users/Roles → Manage Tokens → New. Select the Vantoryn integration and your admin user. Save and copy Token ID + Token Secret.' },
       { title: 'Locate your Account ID', body: 'Go to Setup → Company → Company Information. Your Account ID is shown at the top (format: 1234567 or TSTDRIVE-123456). Enter all credentials below.' },
     ],
     fields: [
@@ -316,16 +316,16 @@ const ERP_SYSTEMS = [
       { title: 'Click "Connect QuickBooks"', body: 'You will be redirected to Intuit\'s OAuth authorization page. No manual credential entry required — the connection is entirely browser-based.' },
       { title: 'Sign in as Administrator', body: 'You must be the QuickBooks Administrator or have Manage Users + Reports access. A regular accountant login will be rejected by Intuit.' },
       { title: 'Select your company', body: 'If you have multiple QBO companies, select the one to sync. You can connect additional companies later via Integrations → Add Connection.' },
-      { title: 'Review permissions and allow', body: 'FinAutomate requests read-only access to: P&L, Balance Sheet, Cash Flow Statement, Chart of Accounts, and Transaction History. Click Allow to complete.' },
+      { title: 'Review permissions and allow', body: 'Vantoryn requests read-only access to: P&L, Balance Sheet, Cash Flow Statement, Chart of Accounts, and Transaction History. Click Allow to complete.' },
     ],
     fields: [],
   },
   {
     id: 'xero', name: 'Xero', sub: 'OAuth 2.0 — one-click connect', authType: 'OAuth 2.0', oauth: true,
     steps: [
-      { title: 'Click "Connect Xero"', body: 'You will be redirected to Xero\'s authorization page. Sign in with your Xero credentials — FinAutomate never sees your password.' },
-      { title: 'Select your organization', body: 'Choose the Xero organization to connect. Multi-entity setups: connect each entity separately. Consolidation is handled inside FinAutomate.' },
-      { title: 'Grant read-only access', body: 'FinAutomate requests: Accounting (read), Bank Statements (read), Invoices (read). Write access is never requested or used.' },
+      { title: 'Click "Connect Xero"', body: 'You will be redirected to Xero\'s authorization page. Sign in with your Xero credentials — Vantoryn never sees your password.' },
+      { title: 'Select your organization', body: 'Choose the Xero organization to connect. Multi-entity setups: connect each entity separately. Consolidation is handled inside Vantoryn.' },
+      { title: 'Grant read-only access', body: 'Vantoryn requests: Accounting (read), Bank Statements (read), Invoices (read). Write access is never requested or used.' },
       { title: 'Automatic sync begins', body: 'Connection completes immediately. Historical data (up to 24 months) syncs in the background. Ongoing sync runs every 15 minutes.' },
     ],
     fields: [],
@@ -333,10 +333,10 @@ const ERP_SYSTEMS = [
   {
     id: 'workday', name: 'Workday', sub: 'Integration System User required', authType: 'ISU + API Client',
     steps: [
-      { title: 'Create an Integration System User', body: 'In Workday: Security → Users → New → System User. Name it "FinAutomate_ISU". Check "Do Not Allow UI Sessions" — this is a machine-only account.' },
+      { title: 'Create an Integration System User', body: 'In Workday: Security → Users → New → System User. Name it "Vantoryn_ISU". Check "Do Not Allow UI Sessions" — this is a machine-only account.' },
       { title: 'Assign the correct security group', body: 'Add the ISU to the "Workday_Report_Writer_Foundation_User" security group. This grants read-only access to financial reports without broader admin access.' },
-      { title: 'Create an API Client', body: 'Workday → Integration → API Clients → New. Name: "FinAutomate". Client Type: Public. Scopes to select: Staffing, Payroll, Financial Management (Read only).' },
-      { title: 'Enter credentials in FinAutomate', body: 'Copy your Tenant URL (format: https://wd2.myworkday.com/yourcompany), Client ID, and generate a Refresh Token. Paste below and click Test Connection.' },
+      { title: 'Create an API Client', body: 'Workday → Integration → API Clients → New. Name: "Vantoryn". Client Type: Public. Scopes to select: Staffing, Payroll, Financial Management (Read only).' },
+      { title: 'Enter credentials in Vantoryn', body: 'Copy your Tenant URL (format: https://wd2.myworkday.com/yourcompany), Client ID, and generate a Refresh Token. Paste below and click Test Connection.' },
     ],
     fields: [
       { label: 'Tenant URL', placeholder: 'https://wd2.myworkday.com/yourcompany' },
@@ -421,7 +421,7 @@ function Guide() {
         <div style={f({ fontSize: 15, fontWeight: 800, color: C.t1, marginBottom: 4 })}>Connect Your ERP</div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 16 }}>
           <p style={f({ fontSize: 12, color: C.t3, margin: 0 })}>
-            All connections are read-only. FinAutomate never writes to your ERP. Data is encrypted in transit (TLS 1.3) and at rest (AES-256).
+            All connections are read-only. Vantoryn never writes to your ERP. Data is encrypted in transit (TLS 1.3) and at rest (AES-256).
           </p>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0,
             padding: '4px 12px', borderRadius: 6, background: `${C.green}0c`, border: `1px solid ${C.green}25` }}>
@@ -511,7 +511,7 @@ function Guide() {
                           <div style={{ padding: '20px 16px', borderRadius: 10, background: C.bg3, border: `1px solid ${C.border}`, textAlign: 'center' }}>
                             <Globe size={26} color={C.blue} style={{ margin: '0 auto 12px' }} />
                             <p style={f({ fontSize: 12, color: C.t2, lineHeight: 1.65, marginBottom: 16, marginTop: 0 })}>
-                              You will be redirected to {erp.name} to authorize read-only access.<br />No credentials are stored by FinAutomate.
+                              You will be redirected to {erp.name} to authorize read-only access.<br />No credentials are stored by Vantoryn.
                             </p>
                             <button
                               onClick={e => handleConnect(erp.id, e)}
@@ -579,7 +579,7 @@ function Guide() {
       <div style={{ background: C.bg2, border: `1px solid ${C.border}`, borderRadius: 14, padding: '22px 26px' }}>
         <div style={f({ fontSize: 14, fontWeight: 800, color: C.t1, marginBottom: 4 })}>Data Access — What We Read</div>
         <p style={f({ fontSize: 12, color: C.t3, marginTop: 0, marginBottom: 18 })}>
-          FinAutomate never requests write access. The table below shows exactly what data is pulled from your ERP and why.
+          Vantoryn never requests write access. The table below shows exactly what data is pulled from your ERP and why.
         </p>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
           {[
@@ -617,11 +617,11 @@ function Guide() {
         <div style={f({ fontSize: 14, fontWeight: 800, color: C.t1, marginBottom: 18 })}>Common Questions</div>
         {[
           { q: 'How long does the initial sync take?', a: 'The first sync typically takes 10–30 minutes depending on your data volume. QuickBooks and Xero are fastest via OAuth. SAP and NetSuite may take up to 45 minutes for multi-year history. You will see data appearing progressively in the dashboard.' },
-          { q: 'Does FinAutomate store my ERP credentials?', a: 'OAuth connections (QuickBooks, Xero) store only encrypted refresh tokens — your password is never seen by FinAutomate. API key connections (SAP, NetSuite, Workday) encrypt credentials at rest using AES-256 in an isolated secrets vault with zero standing access.' },
+          { q: 'Does Vantoryn store my ERP credentials?', a: 'OAuth connections (QuickBooks, Xero) store only encrypted refresh tokens — your password is never seen by Vantoryn. API key connections (SAP, NetSuite, Workday) encrypt credentials at rest using AES-256 in an isolated secrets vault with zero standing access.' },
           { q: 'How often does data sync after setup?', a: 'By default, data syncs every 15 minutes for real-time systems and nightly at 2 AM for batch-based ERPs. You can change the frequency in Settings → Integrations → Sync Frequency. Real-time webhooks are available on Enterprise plans.' },
           { q: 'Can I connect multiple entities or companies?', a: 'Yes. Enterprise plans support unlimited entities. Each entity appears as a separate connection in Integrations. Cross-entity consolidation and eliminations are handled in the Reports view under "Consolidated View".' },
-          { q: 'My ERP version is not listed — what do I do?', a: 'Contact support@finautomateapp.com with your ERP name and version. We typically add new connectors within 2–4 weeks for common systems. Custom connectors via REST API are available on Enterprise plans with a dedicated integration engineer.' },
-          { q: 'What happens if the connection breaks mid-sync?', a: 'FinAutomate detects sync failures within 3 minutes and sends an alert (visible in the Alerts view). The system will automatically retry 3 times. If the issue persists, you will receive an email and the status will show as "Warning" in Integrations.' },
+          { q: 'My ERP version is not listed — what do I do?', a: 'Contact support@vantoryn.ai with your ERP name and version. We typically add new connectors within 2–4 weeks for common systems. Custom connectors via REST API are available on Enterprise plans with a dedicated integration engineer.' },
+          { q: 'What happens if the connection breaks mid-sync?', a: 'Vantoryn detects sync failures within 3 minutes and sends an alert (visible in the Alerts view). The system will automatically retry 3 times. If the issue persists, you will receive an email and the status will show as "Warning" in Integrations.' },
         ].map((item, i, arr) => <FAQItem key={i} q={item.q} a={item.a} last={i === arr.length - 1} />)}
       </div>
     </div>
@@ -656,7 +656,7 @@ function Sidebar({ view, setView, navigate }) {
             <BarChart3 size={15} color="#fff" strokeWidth={2.5}/>
           </div>
           <div>
-            <div style={f({ fontSize:14,fontWeight:700,color:C.t1,letterSpacing:'-0.02em' })}>FinAutomate</div>
+            <div style={f({ fontSize:14,fontWeight:700,color:C.t1,letterSpacing:'-0.02em' })}>Vantoryn</div>
             <div style={f({ fontSize:10,color:C.t3 })}>Acme Corp · Finance</div>
           </div>
         </div>
@@ -1234,7 +1234,7 @@ function AIBrief() {
           display:'flex',justifyContent:'space-between',alignItems:'center' }}>
           <div style={{ display:'flex',alignItems:'center',gap:8 }}>
             <Brain size={14} color={C.teal}/>
-            <span style={f({ fontSize:12,color:C.t2,fontWeight:600 })}>FinAutomate Intelligence</span>
+            <span style={f({ fontSize:12,color:C.t2,fontWeight:600 })}>Vantoryn Intelligence</span>
           </div>
           <span style={f({ fontSize:11,color:C.t3 })}>Friday, May 23, 2026 · 08:00 AM</span>
         </div>
@@ -1706,3 +1706,4 @@ export default function Product({ navigate }) {
     </div>
   )
 }
+

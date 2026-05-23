@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { ArrowRight, CheckCircle2, TrendingUp, Clock, AlertTriangle,
   BarChart3, Activity, Workflow, Layers, ChevronRight,
   Users, Building2, PieChart, Target } from 'lucide-react'
@@ -16,7 +16,7 @@ const PERSONAS = [
       'Cash flow risk is discovered after operational damage',
       'Forecast accuracy insufficient for confident decision-making',
     ],
-    solution: 'FinAutomate gives CFOs real-time financial position, AI-generated executive reporting, and predictive risk signals — all in one intelligence layer.',
+    solution: 'Vantoryn gives CFOs real-time financial position, AI-generated executive reporting, and predictive risk signals — all in one intelligence layer.',
     features: [
       { icon: <BarChart3 size={14} />, label: 'Real-time P&L and balance sheet', desc: 'Live view of financial position across all entities' },
       { icon: <AlertTriangle size={14} />, label: 'Predictive risk alerts', desc: 'Cash flow, budget, and operational anomalies flagged 30–90d early' },
@@ -28,7 +28,7 @@ const PERSONAS = [
       { metric: '3.2×', label: 'faster month-end close' },
       { metric: '91%', label: 'forecast accuracy improvement' },
     ],
-    quote: '"FinAutomate turned our month-end from a 2-week sprint into an automated process. The CFO brief every morning is how I start every day."',
+    quote: '"Vantoryn turned our month-end from a 2-week sprint into an automated process. The CFO brief every morning is how I start every day."',
     quoteRole: 'CFO, Series B SaaS — $28M ARR',
   },
   {
@@ -42,7 +42,7 @@ const PERSONAS = [
       'Rolling forecasts require days to rebuild manually',
       'Scenario modeling limited by spreadsheet complexity',
     ],
-    solution: 'FinAutomate replaces the manual FP&A workflow with AI-driven forecasting models, automated variance analysis, and continuous scenario simulation.',
+    solution: 'Vantoryn replaces the manual FP&A workflow with AI-driven forecasting models, automated variance analysis, and continuous scenario simulation.',
     features: [
       { icon: <Activity size={14} />, label: 'Driver-based forecast models', desc: 'ML models trained on your business patterns and drivers' },
       { icon: <BarChart3 size={14} />, label: 'Variance analysis automation', desc: 'Budget vs actual with root-cause drill-down, auto-generated' },
@@ -54,7 +54,7 @@ const PERSONAS = [
       { metric: '±8%', label: 'forecast accuracy vs ±30% manual' },
       { metric: '4hrs', label: 'to generate a full scenario model' },
     ],
-    quote: '"We used to spend 3 days building a scenario model for board. Now it takes a conversation with FinAutomate and 4 hours of review."',
+    quote: '"We used to spend 3 days building a scenario model for board. Now it takes a conversation with Vantoryn and 4 hours of review."',
     quoteRole: 'VP FP&A, Private Equity-backed manufacturer',
   },
   {
@@ -68,7 +68,7 @@ const PERSONAS = [
       'Audit preparation requires weeks of document assembly',
       'Intercompany eliminations are error-prone and time-intensive',
     ],
-    solution: 'FinAutomate automates the close process end-to-end — from bank reconciliation to intercompany elimination — with a full audit trail on every action.',
+    solution: 'Vantoryn automates the close process end-to-end — from bank reconciliation to intercompany elimination — with a full audit trail on every action.',
     features: [
       { icon: <CheckCircle2 size={14} />, label: 'Automated bank reconciliation', desc: 'Match transactions across accounts with ML categorization' },
       { icon: <Workflow size={14} />, label: 'Close task orchestration', desc: 'Step-by-step close checklist with auto-completion tracking' },
@@ -94,7 +94,7 @@ const PERSONAS = [
       'Strategic decisions delayed waiting for finance team outputs',
       'No early warning system for operational financial risk',
     ],
-    solution: 'FinAutomate gives CEOs a clear, real-time financial picture — with the AI morning brief, runway visibility, and early warning signals to act decisively.',
+    solution: 'Vantoryn gives CEOs a clear, real-time financial picture — with the AI morning brief, runway visibility, and early warning signals to act decisively.',
     features: [
       { icon: <BarChart3 size={14} />, label: 'Executive morning intelligence brief', desc: 'AI-generated daily summary of key financial signals' },
       { icon: <Activity size={14} />, label: 'Revenue and runway visibility', desc: 'Real-time cash position, runway, and burn forecast' },
@@ -139,7 +139,7 @@ export default function Solutions({ navigate }) {
             </span>
           </h1>
           <p style={f({ fontSize: 17, color: C.t2, lineHeight: 1.7, maxWidth: 520, margin: '0 auto' })}>
-            FinAutomate is designed around the actual workflows, pain points, and decision needs of each finance role.
+            Vantoryn is designed around the actual workflows, pain points, and decision needs of each finance role.
           </p>
         </div>
       </section>
@@ -300,3 +300,4 @@ export default function Solutions({ navigate }) {
     </div>
   )
 }
+

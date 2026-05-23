@@ -1,4 +1,4 @@
-# FinAutomate — AI Financial Operating System
+﻿# Vantoryn — AI Financial Operating System
 
 Marketing site + SaaS product UI built with React 18 + Vite.
 
@@ -37,7 +37,7 @@ npm run build      # production build → dist/
 ## CSV Demo Import
 
 1. Open the app → Integrations → scroll to "Import Financial Data"
-2. Click **Download Demo CSV** — get `finautomateapp_acme_corp_demo.csv`
+2. Click **Download Demo CSV** — get `vantoryn_acme_corp_demo.csv`
 3. Edit the numbers in Excel/Sheets
 4. Drop the file back → dashboard updates live
 
@@ -57,3 +57,4 @@ import { C, f, FONT } from './tokens'
 // C.blue, C.teal, C.t1...t4, C.bg0...bg4
 // f({ fontSize: 14, color: C.t1 }) → adds fontFamily automatically
 ```
+
