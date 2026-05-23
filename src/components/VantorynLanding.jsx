@@ -44,7 +44,7 @@ const FONT = "'Inter', system-ui, -apple-system, sans-serif"
 const f = s => ({ fontFamily: FONT, ...s })
 
 /* ─── NAV ────────────────────────────────────────────────── */
-function Nav() {
+function Nav({ navigate, onBookDemo = () => {} }) {
   const [scrolled, setScrolled] = useState(false)
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 32)
@@ -315,7 +315,7 @@ function DashboardMockup() {
 }
 
 /* ─── HERO ───────────────────────────────────────────────── */
-function Hero({ navigate }) {
+function Hero({ navigate, onBookDemo }) {
   return (
     <section style={{
       minHeight: '100vh', display: 'flex', alignItems: 'center',
@@ -1058,7 +1058,7 @@ function UseCasesSection({ navigate }) {
 }
 
 /* ─── FINAL CTA ──────────────────────────────────────────── */
-function FinalCTA({ navigate }) {
+function FinalCTA({ navigate, onBookDemo }) {
   return (
     <section style={{ background: C.bg0, padding: '110px 28px', borderTop: `1px solid ${C.border}` }}>
       <div style={{ maxWidth: 800, margin: '0 auto', textAlign: 'center' }}>
@@ -1171,7 +1171,7 @@ export default function VantorynLanding({ navigate = () => {}, onBookDemo = () =
   return (
     <div style={{ background: C.bg0, minHeight: '100vh', fontFamily: FONT }}>
       {/* Nav is handled by App.jsx router — no double nav */}
-      <Hero navigate={navigate} />
+      <Hero navigate={navigate} onBookDemo={onBookDemo} />
       <TrustBar />
       <FinancialAnxietySection navigate={navigate} />
       <PlatformSection />
@@ -1181,7 +1181,7 @@ export default function VantorynLanding({ navigate = () => {}, onBookDemo = () =
       <BeforeAfterSection />
       <SecuritySection navigate={navigate} />
       <UseCasesSection navigate={navigate} />
-      <FinalCTA navigate={navigate} />
+      <FinalCTA navigate={navigate} onBookDemo={onBookDemo} />
       <Footer navigate={navigate} />
     </div>
   )
