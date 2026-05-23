@@ -68,8 +68,8 @@ export default function Nav({ currentPage, onNavigate, session }) {
         {/* CTAs */}
         <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
           {session ? (
-            /* Logged-in pill: avatar + name → goes to app */
-            <button onClick={() => go('product')} style={f({
+            /* Logged-in pill: avatar + name → goes to CABINET */
+            <button onClick={() => go('cabinet')} style={f({
               display: 'flex', alignItems: 'center', gap: 8,
               fontSize: 13, color: C.t1, background: C.bg2,
               border: `1px solid ${C.borderMid}`, borderRadius: 50,
@@ -88,22 +88,20 @@ export default function Nav({ currentPage, onNavigate, session }) {
                 {session.name?.[0] ?? '?'}
               </div>
               <span>{session.name}</span>
-              <LayoutDashboard size={13} color={C.teal} />
             </button>
           ) : (
-            /* Not logged in — show Launch App */
-            <button onClick={() => go('product')} style={f({
+            /* Not logged in — Sign In → cabinet */
+            <button onClick={() => go('cabinet')} style={f({
               display: 'flex', alignItems: 'center', gap: 7,
-              fontSize: 14, color: C.teal, background: `${C.teal}12`,
-              border: `1px solid ${C.teal}30`, borderRadius: 9,
-              cursor: 'pointer', padding: '8px 16px', fontWeight: 600,
+              fontSize: 14, color: C.t1, background: C.bg2,
+              border: `1px solid ${C.borderMid}`, borderRadius: 9,
+              cursor: 'pointer', padding: '8px 18px', fontWeight: 500,
               transition: 'all 0.2s',
             })}
-            onMouseEnter={e => { e.currentTarget.style.background = `${C.teal}20`; e.currentTarget.style.borderColor = `${C.teal}60` }}
-            onMouseLeave={e => { e.currentTarget.style.background = `${C.teal}12`; e.currentTarget.style.borderColor = `${C.teal}30` }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = C.teal; e.currentTarget.style.color = C.teal }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = C.borderMid; e.currentTarget.style.color = C.t1 }}
             >
-              <LayoutDashboard size={14} />
-              Launch App
+              Sign In
             </button>
           )}
           <button onClick={() => go('pricing')} style={f({
@@ -144,13 +142,13 @@ export default function Nav({ currentPage, onNavigate, session }) {
               {item.icon} {item.label}
             </button>
           ))}
-          <button onClick={() => go('product')} style={f({
+          <button onClick={() => go('cabinet')} style={f({
             display: 'flex', alignItems: 'center', gap: 10, padding: '12px 14px',
-            borderRadius: 9, border: `1px solid ${C.teal}30`, cursor: 'pointer',
-            background: `${C.teal}12`, color: C.teal,
-            fontSize: 15, fontWeight: 600, textAlign: 'left', marginTop: 8,
+            borderRadius: 9, border: `1px solid ${C.borderMid}`, cursor: 'pointer',
+            background: C.bg2, color: C.t1,
+            fontSize: 15, fontWeight: 500, textAlign: 'left', marginTop: 8,
           })}>
-            <LayoutDashboard size={16} /> Launch App
+            {session ? session.name : 'Sign In'}
           </button>
         </div>
       )}

@@ -7,6 +7,7 @@ import Security from './pages/Security'
 import Pricing from './pages/Pricing'
 import Insights from './pages/Insights'
 import Product from './pages/Product'
+import Cabinet from './pages/Cabinet'
 import LogoShowcase from './pages/LogoShowcase'
 import Login, { loadSession, clearSession } from './pages/Login'
 import VantorynMark from './components/VantorynMark'
@@ -20,8 +21,12 @@ const PAGES = {
   pricing:   Pricing,
   insights:  Insights,
   product:   Product,
+  cabinet:   Cabinet,
   logos:     LogoShowcase,
 }
+
+// Pages that require authentication
+const AUTH_PAGES = new Set(['product', 'cabinet'])
 
 // Footer shared across all pages except Home (Home has its own)
 function SharedFooter({ navigate }) {
@@ -63,8 +68,8 @@ export default function App() {
   const [showLogin, setShowLogin] = useState(false)             // login overlay
 
   const navigate = useCallback((to) => {
-    // Guard: product requires auth
-    if (to === 'product' && !loadSession()) {
+    // Guard: protected pages require auth
+    if (AUTH_PAGES.has(to) && !loadSession()) {
       setShowLogin(true)
       return
     }
@@ -82,7 +87,8 @@ export default function App() {
     setShowLogin(false)
     setFadeOut(true)
     setTimeout(() => {
-      setPage('product')
+      // After login → go to personal cabinet
+      setPage('cabinet')
       setFadeOut(false)
       window.scrollTo({ top: 0, behavior: 'instant' })
     }, 180)
@@ -100,8 +106,9 @@ export default function App() {
   }
 
   const Page = PAGES[page] || Home
-  const isHome    = page === 'home'
-  const isProduct = page === 'product'
+  const isHome      = page === 'home'
+  const isProduct   = page === 'product'
+  const isCabinet   = page === 'cabinet'
 
   // If login overlay is active, render only the Login page
   if (showLogin) {
@@ -123,6 +130,7 @@ export default function App() {
       {/* Shared Nav — hidden inside the product app (it has its own sidebar) */}
       {!isProduct && <Nav currentPage={page} onNavigate={navigate} session={session} />}
 
+
       {/* Page transition wrapper */}
       <div style={{
         opacity: fadeOut ? 0 : 1,
@@ -132,8 +140,8 @@ export default function App() {
         <Page navigate={navigate} onLogout={handleLogout} session={session} />
       </div>
 
-      {/* Shared footer for sub-pages (not home, not product app) */}
-      {!isHome && !isProduct && <SharedFooter navigate={navigate} />}
+      {/* Shared footer for sub-pages (not home, not product, not cabinet) */}
+      {!isHome && !isProduct && !isCabinet && <SharedFooter navigate={navigate} />}
     </div>
   )
 }
