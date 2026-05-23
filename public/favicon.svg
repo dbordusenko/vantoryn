@@ -1,0 +1,30 @@
+<svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gold" x1="10" y1="5" x2="90" y2="95" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"   stop-color="#e8c96a"/>
+      <stop offset="45%"  stop-color="#c9a84c"/>
+      <stop offset="100%" stop-color="#a07828"/>
+    </linearGradient>
+    <linearGradient id="inner" x1="30" y1="15" x2="70" y2="80" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"   stop-color="#e8c96a" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#c9a84c" stop-opacity="0.5"/>
+    </linearGradient>
+    <linearGradient id="arc" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#e8c96a" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#c9a84c" stop-opacity="0.2"/>
+    </linearGradient>
+  </defs>
+  <!-- Outer V -->
+  <path d="M 10 12 L 50 82 L 90 12" stroke="url(#gold)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- Inner V -->
+  <path d="M 22 12 L 50 68 L 78 12" stroke="url(#inner)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- Diamond -->
+  <path d="M 50 60 L 56 72 L 50 84 L 44 72 Z" fill="url(#gold)" opacity="0.9"/>
+  <!-- Left arc -->
+  <path d="M 9 35 A 42 42 0 0 1 46 88" stroke="url(#arc)" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.7"/>
+  <!-- Right arc -->
+  <path d="M 54 88 A 42 42 0 0 1 91 35" stroke="url(#arc)" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.7"/>
+  <!-- Cap ticks -->
+  <line x1="6" y1="12" x2="24" y2="12" stroke="url(#gold)" stroke-width="3" stroke-linecap="round" opacity="0.55"/>
+  <line x1="76" y1="12" x2="94" y2="12" stroke="url(#gold)" stroke-width="3" stroke-linecap="round" opacity="0.55"/>
+</svg>

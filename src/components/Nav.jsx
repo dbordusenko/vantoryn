@@ -1,7 +1,8 @@
 ﻿import { useState, useEffect } from 'react'
-import { BarChart3, ChevronDown, ArrowRight, Menu, X,
+import { ChevronDown, Menu, X,
   Layers, Shield, Users, DollarSign, BookOpen, LayoutDashboard } from 'lucide-react'
 import { C, f, FONT } from '../tokens'
+import VantorynMark from './VantorynMark'
 
 const NAV_ITEMS = [
   { id: 'platform',  label: 'Platform',  icon: <Layers size={14} /> },
@@ -36,13 +37,7 @@ export default function Nav({ currentPage, onNavigate, session }) {
 
         {/* Logo */}
         <div onClick={() => go('home')} style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
-          <div style={{
-            width: 34, height: 34, borderRadius: 9,
-            background: `linear-gradient(135deg, ${C.blue}, ${C.teal})`,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-          }}>
-            <BarChart3 size={17} color="#fff" strokeWidth={2.5} />
-          </div>
+          <VantorynMark size={36} />
           <span style={f({ fontSize: 17, fontWeight: 700, color: C.t1, letterSpacing: '-0.025em' })}>
             Vantoryn
           </span>

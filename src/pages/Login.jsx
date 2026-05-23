@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { C, f, FONT } from '../tokens'
 import { Eye, EyeOff, ArrowLeft, Loader2 } from 'lucide-react'
+import VantorynMark from '../components/VantorynMark'
 
 /* ─── credentials ─────────────────────────────────────────────────── */
 const USERS = [
@@ -108,12 +109,7 @@ export default function Login({ onSuccess, onBack }) {
     }
   }
 
-  const logoBox = {
-    width: 40, height: 40, borderRadius: 10,
-    background: `linear-gradient(135deg, ${C.blue}, ${C.teal})`,
-    display: 'flex', alignItems: 'center', justifyContent: 'center',
-    fontSize: 20, flexShrink: 0,
-  }
+  const logoBox = { flexShrink: 0 }
 
   return (
     <div style={{
@@ -150,7 +146,7 @@ export default function Login({ onSuccess, onBack }) {
 
         {/* Logo */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 32 }}>
-          <div style={logoBox}>📊</div>
+          <div style={logoBox}><VantorynMark size={44} /></div>
           <div>
             <div style={f({ fontSize: 18, fontWeight: 700, color: C.t1, letterSpacing: '-0.03em' })}>
               Vantoryn

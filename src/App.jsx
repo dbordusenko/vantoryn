@@ -7,7 +7,9 @@ import Security from './pages/Security'
 import Pricing from './pages/Pricing'
 import Insights from './pages/Insights'
 import Product from './pages/Product'
+import LogoShowcase from './pages/LogoShowcase'
 import Login, { loadSession, clearSession } from './pages/Login'
+import VantorynMark from './components/VantorynMark'
 import { C, FONT, GLOBAL_STYLES } from './tokens'
 
 const PAGES = {
@@ -18,6 +20,7 @@ const PAGES = {
   pricing:   Pricing,
   insights:  Insights,
   product:   Product,
+  logos:     LogoShowcase,
 }
 
 // Footer shared across all pages except Home (Home has its own)
@@ -29,9 +32,7 @@ function SharedFooter({ navigate }) {
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
         flexWrap: 'wrap', gap: 20 }}>
         <div onClick={() => navigate('home')} style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
-          <div style={{ width: 28, height: 28, borderRadius: 7,
-            background: `linear-gradient(135deg, ${C.blue}, ${C.teal})`,
-            display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>📊</div>
+          <VantorynMark size={28} />
           <span style={f({ fontSize: 15, fontWeight: 700, color: C.t1 })}>Vantoryn</span>
         </div>
         <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>

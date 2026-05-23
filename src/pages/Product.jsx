@@ -1,4 +1,5 @@
 ﻿import { useState, useEffect, useCallback } from 'react'
+import VantorynMark from '../components/VantorynMark'
 import {
   LayoutDashboard, TrendingUp, FileText, Brain, Bell, PlugZap,
   Settings, ArrowUpRight, ArrowDownRight, AlertTriangle, CheckCircle2,
@@ -650,11 +651,7 @@ function Sidebar({ view, setView, navigate }) {
       {/* Logo */}
       <div style={{ padding:'18px 20px 14px', borderBottom:`1px solid ${C.border}` }}>
         <div style={{ display:'flex', alignItems:'center', gap:9 }}>
-          <div style={{ width:30,height:30,borderRadius:8,
-            background:`linear-gradient(135deg,${C.blue},${C.teal})`,
-            display:'flex',alignItems:'center',justifyContent:'center' }}>
-            <BarChart3 size={15} color="#fff" strokeWidth={2.5}/>
-          </div>
+          <VantorynMark size={30} />
           <div>
             <div style={f({ fontSize:14,fontWeight:700,color:C.t1,letterSpacing:'-0.02em' })}>Vantoryn</div>
             <div style={f({ fontSize:10,color:C.t3 })}>Acme Corp · Finance</div>
