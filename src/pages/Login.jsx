@@ -4,6 +4,7 @@ import { Eye, EyeOff, ArrowLeft, Loader2, Check } from 'lucide-react'
 import VantorynMark from '../components/VantorynMark'
 
 /* ─── built-in demo accounts ──────────────────────────────────────── */
+// ⚠️ DEMO ONLY — remove before connecting real auth backend
 const DEMO_USERS = [
   { email: 'demo@vantoryn.ai',  password: 'Vantoryn2026', name: 'Demo User',  org: 'Acme Corp' },
   { email: 'admin@vantoryn.ai', password: 'Admin2026!',   name: 'Dmytro B.',  org: 'Vantoryn'  },

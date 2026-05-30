@@ -1,4 +1,5 @@
-﻿import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect } from 'react'
+import { BrowserRouter, useNavigate as useRRNav, useLocation } from 'react-router-dom'
 import Nav from './components/Nav'
 import Home from './pages/Home'
 import Platform from './pages/Platform'
@@ -6,13 +7,14 @@ import Solutions from './pages/Solutions'
 import Security from './pages/Security'
 import Pricing from './pages/Pricing'
 import Insights from './pages/Insights'
-import Product from './pages/Product'
+import Product from './pages/product'
 import Cabinet from './pages/Cabinet'
 import LogoShowcase from './pages/LogoShowcase'
 import Login, { loadSession, clearSession } from './pages/Login'
 import VantorynMark from './components/VantorynMark'
 import BookDemoModal from './components/BookDemoModal'
 import WaitlistModal from './components/WaitlistModal'
+import ErrorBoundary from './components/ErrorBoundary'
 import { C, FONT, GLOBAL_STYLES } from './tokens'
 
 const PAGES = {
@@ -63,35 +65,45 @@ function SharedFooter({ navigate }) {
   )
 }
 
-export default function App() {
-  const [page, setPage]       = useState('home')
-  const [fadeOut, setFadeOut] = useState(false)
-  const [session, setSession] = useState(() => loadSession())   // null = logged out
-  const [showLogin, setShowLogin] = useState(false)             // login overlay
-  const [showBookDemo, setShowBookDemo] = useState(false)       // book demo modal
-  const [showWaitlist, setShowWaitlist] = useState(false)       // waitlist modal
+function AppContent() {
+  const rrNav    = useRRNav()
+  const location = useLocation()
+
+  const urlPage = location.pathname.slice(1) || 'home'
+  const [page, setPage]           = useState(() => PAGES[urlPage] ? urlPage : 'home')
+  const [fadeOut, setFadeOut]     = useState(false)
+  const [session, setSession]     = useState(() => loadSession())
+  const [showLogin, setShowLogin] = useState(false)
+  const [showBookDemo, setShowBookDemo] = useState(false)
+  const [showWaitlist, setShowWaitlist] = useState(false)
+
+  // Sync browser back/forward button → state
+  useEffect(() => {
+    const p = location.pathname.slice(1) || 'home'
+    if (PAGES[p] && p !== page) setPage(p)
+  }, [location.pathname]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const navigate = useCallback((to) => {
-    // Guard: protected pages require auth
     if (AUTH_PAGES.has(to) && !loadSession()) {
       setShowLogin(true)
       return
     }
     if (to === page) return
+    rrNav('/' + to)
     setFadeOut(true)
     setTimeout(() => {
       setPage(to)
       setFadeOut(false)
       window.scrollTo({ top: 0, behavior: 'instant' })
     }, 180)
-  }, [page])
+  }, [page, rrNav])
 
   function handleLoginSuccess(user) {
     setSession(user)
     setShowLogin(false)
+    rrNav('/cabinet')
     setFadeOut(true)
     setTimeout(() => {
-      // After login → go to personal cabinet
       setPage('cabinet')
       setFadeOut(false)
       window.scrollTo({ top: 0, behavior: 'instant' })
@@ -101,6 +113,7 @@ export default function App() {
   function handleLogout() {
     clearSession()
     setSession(null)
+    rrNav('/home')
     setFadeOut(true)
     setTimeout(() => {
       setPage('home')
@@ -109,12 +122,11 @@ export default function App() {
     }, 180)
   }
 
-  const Page = PAGES[page] || Home
-  const isHome      = page === 'home'
-  const isProduct   = page === 'product'
-  const isCabinet   = page === 'cabinet'
+  const Page      = PAGES[page] || Home
+  const isHome    = page === 'home'
+  const isProduct = page === 'product'
+  const isCabinet = page === 'cabinet'
 
-  // If login overlay is active, render only the Login page
   if (showLogin) {
     return (
       <div style={{ background: C.bg0, minHeight: '100vh', fontFamily: FONT }}>
@@ -131,28 +143,44 @@ export default function App() {
     <div style={{ background: C.bg0, minHeight: '100vh', fontFamily: FONT }}>
       <style>{GLOBAL_STYLES}</style>
 
-      {/* Shared Nav — hidden inside the product app (it has its own sidebar) */}
-      {!isProduct && <Nav currentPage={page} onNavigate={navigate} session={session} onBookDemo={() => setShowBookDemo(true)} onWaitlist={() => setShowWaitlist(true)} />}
+      {!isProduct && (
+        <Nav
+          currentPage={page}
+          onNavigate={navigate}
+          session={session}
+          onBookDemo={() => setShowBookDemo(true)}
+          onWaitlist={() => setShowWaitlist(true)}
+        />
+      )}
 
-      {/* Book Demo modal */}
       {showBookDemo && <BookDemoModal onClose={() => setShowBookDemo(false)} />}
-
-      {/* Waitlist modal */}
       {showWaitlist && <WaitlistModal onClose={() => setShowWaitlist(false)} />}
 
-
-      {/* Page transition wrapper */}
       <div style={{
         opacity: fadeOut ? 0 : 1,
         transform: fadeOut ? 'translateY(8px)' : 'translateY(0)',
         transition: 'opacity 0.18s ease, transform 0.18s ease',
       }}>
-        <Page navigate={navigate} onLogout={handleLogout} session={session} onBookDemo={() => setShowBookDemo(true)} onWaitlist={() => setShowWaitlist(true)} />
+        <ErrorBoundary>
+          <Page
+            navigate={navigate}
+            onLogout={handleLogout}
+            session={session}
+            onBookDemo={() => setShowBookDemo(true)}
+            onWaitlist={() => setShowWaitlist(true)}
+          />
+        </ErrorBoundary>
       </div>
 
-      {/* Shared footer for sub-pages (not home, not product, not cabinet) */}
       {!isHome && !isProduct && !isCabinet && <SharedFooter navigate={navigate} />}
     </div>
   )
 }
 
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AppContent />
+    </BrowserRouter>
+  )
+}

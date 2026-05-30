@@ -11,37 +11,7 @@ import {
   MoveRight, SlidersHorizontal, Gauge, AlarmClock
 } from 'lucide-react'
 
-/* ─── DESIGN TOKENS ──────────────────────────────────────── */
-const C = {
-  bg0:       '#04050a',
-  bg1:       '#080b13',
-  bg2:       '#0c1019',
-  bg3:       '#111622',
-  bg4:       '#161d2e',
-  border:    '#171e30',
-  borderMid: '#1f293f',
-  borderHi:  '#2a3a58',
-  t1:        '#eef2fa',
-  t2:        '#7e8fa8',
-  t3:        '#374256',
-  t4:        '#1e2a3a',
-  blue:      '#3b7fff',
-  blueD:     '#2563eb',
-  blueGlow:  '#3b7fff28',
-  teal:      '#00c5b5',
-  tealGlow:  '#00c5b520',
-  green:     '#22c55e',
-  greenGlow: '#22c55e1a',
-  amber:     '#f59e0b',
-  amberGlow: '#f59e0b1a',
-  red:       '#f87171',
-  redGlow:   '#f8717120',
-  purple:    '#818cf8',
-  purpleGlow:'#818cf81a',
-}
-
-const FONT = "'Inter', system-ui, -apple-system, sans-serif"
-const f = s => ({ fontFamily: FONT, ...s })
+import { C, FONT, f } from '../tokens'
 
 /* ─── NAV ────────────────────────────────────────────────── */
 function Nav({ navigate, onBookDemo = () => {}, onWaitlist = () => {} }) {
