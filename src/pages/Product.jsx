@@ -190,12 +190,12 @@ function Sparkline({ data, color, up }) {
   )
 }
 
-function CashFlowChart({ showForecast=true, scenario='base', compact=false, importedData=null }) {
+function CashFlowChart({ showForecast=true, scenario='base', compact=false, importedData=null, forecastOverride=null }) {
   const H = compact ? 140 : 200
   const W = 600
 
   const allActual = importedData ? importedData.cashActual   : CF_ACTUAL
-  const allF      = importedData ? importedData.cashForecast : (SCENARIOS[scenario]?.data || CF_FORECAST)
+  const allF      = importedData ? importedData.cashForecast : (forecastOverride || SCENARIOS[scenario]?.data || CF_FORECAST)
   const hiArr     = importedData ? importedData.cashHi       : CF_HI
   const loArr     = importedData ? importedData.cashLo       : CF_LO
   const monthLbls = importedData ? importedData.allMonths    : MONTHS
@@ -1075,6 +1075,21 @@ function Forecasting() {
 
   const sc = SCENARIOS[scenario]
 
+  // Compute dynamic forecast from sliders
+  const BASE_REVENUE   = 6.1   // current month ($M)
+  const BASE_BURN_K    = 890   // base burn ($K/mo)
+  const CASH_POSITION  = 10.2  // current cash ($M)
+
+  const monthlyGrowth  = revenueGrowth / 100 / 12
+  const monthlyChurn   = churn / 100 / 12
+  const computedForecast = Array.from({ length: 5 }, (_, i) =>
+    parseFloat((BASE_REVENUE * Math.pow(1 + monthlyGrowth, i + 1) * Math.pow(1 - monthlyChurn, i + 1)).toFixed(2))
+  )
+  const adjustedBurnK  = Math.round(BASE_BURN_K * (1 + costGrowth / 100))
+  const adjustedBurnM  = adjustedBurnK / 1000
+  const runwayMo       = (CASH_POSITION / adjustedBurnM).toFixed(1)
+  const revenue12mo    = (BASE_REVENUE * Math.pow(1 + monthlyGrowth, 12) * Math.pow(1 - monthlyChurn, 12)).toFixed(1)
+
   return (
     <div style={{ display:'flex',flexDirection:'column',gap:20 }}>
       {/* Scenario selector */}
@@ -1115,7 +1130,7 @@ function Forecasting() {
               </span>
             </div>
           </div>
-          <CashFlowChart scenario={scenario}/>
+          <CashFlowChart scenario={scenario} forecastOverride={computedForecast}/>
         </div>
 
         {/* Assumptions */}
@@ -1138,9 +1153,9 @@ function Forecasting() {
           ))}
           <div style={{ borderTop:`1px solid ${C.border}`,paddingTop:14,display:'flex',flexDirection:'column',gap:10 }}>
             {[
-              { label:'Projected Runway', value:sc.runway, color:C.teal },
-              { label:'Burn Rate',        value:sc.burn,   color:C.amber },
-              { label:'12-mo Revenue',    value:sc.data[sc.data.length-1]>8?'$'+sc.data[sc.data.length-1].toFixed(1)+'M':'$'+sc.data[sc.data.length-1].toFixed(1)+'M', color:C.blue },
+              { label:'Projected Runway', value:`${runwayMo}mo`,           color:C.teal },
+              { label:'Burn Rate',        value:`$${adjustedBurnK}K/mo`,   color:C.amber },
+              { label:'12-mo Revenue',    value:`$${revenue12mo}M`,        color:C.blue },
             ].map(r=>(
               <div key={r.label} style={{ display:'flex',justifyContent:'space-between',
                 padding:'8px 10px',borderRadius:7,background:C.bg3 }}>
