@@ -69,18 +69,29 @@ function AppContent() {
   const rrNav    = useRRNav()
   const location = useLocation()
 
-  const urlPage = location.pathname.slice(1) || 'home'
-  const [page, setPage]           = useState(() => PAGES[urlPage] ? urlPage : 'home')
+  const urlPage    = location.pathname.slice(1) || 'home'
+  const hasSession = !!loadSession()
+  // Auth guard on direct URL load: if page requires auth and no session → show login
+  const initialPage = PAGES[urlPage]
+    ? (AUTH_PAGES.has(urlPage) && !hasSession ? 'home' : urlPage)
+    : 'home'
+
+  const [page, setPage]           = useState(initialPage)
   const [fadeOut, setFadeOut]     = useState(false)
   const [session, setSession]     = useState(() => loadSession())
-  const [showLogin, setShowLogin] = useState(false)
+  const [showLogin, setShowLogin] = useState(() => AUTH_PAGES.has(urlPage) && !hasSession)
   const [showBookDemo, setShowBookDemo] = useState(false)
   const [showWaitlist, setShowWaitlist] = useState(false)
 
-  // Sync browser back/forward button → state
+  // Sync browser back/forward button → state (with auth guard)
   useEffect(() => {
     const p = location.pathname.slice(1) || 'home'
-    if (PAGES[p] && p !== page) setPage(p)
+    if (!PAGES[p] || p === page) return
+    if (AUTH_PAGES.has(p) && !loadSession()) {
+      setShowLogin(true)
+      return
+    }
+    setPage(p)
   }, [location.pathname]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const navigate = useCallback((to) => {
