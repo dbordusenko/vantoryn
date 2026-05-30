@@ -641,7 +641,7 @@ const NAV = [
   { id:'guide',         icon:<BookOpen size={16}/>,        label:'Getting Started', divider:true },
 ]
 
-function Sidebar({ view, setView, navigate }) {
+function Sidebar({ view, setView, navigate, session }) {
   return (
     <div style={{
       width:224, flexShrink:0, background:C.bg1,
@@ -715,11 +715,13 @@ function Sidebar({ view, setView, navigate }) {
           <div style={{ width:28,height:28,borderRadius:'50%',
             background:`linear-gradient(135deg,${C.blue},${C.purple})`,
             display:'flex',alignItems:'center',justifyContent:'center' }}>
-            <span style={f({ fontSize:11,fontWeight:700,color:'#fff' })}>SC</span>
+            <span style={f({ fontSize:11,fontWeight:700,color:'#fff' })}>
+              {session?.name ? session.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase() : 'U'}
+            </span>
           </div>
           <div>
-            <div style={f({ fontSize:12,fontWeight:600,color:C.t1 })}>Sarah Chen</div>
-            <div style={f({ fontSize:10,color:C.t3 })}>CFO</div>
+            <div style={f({ fontSize:12,fontWeight:600,color:C.t1 })}>{session?.name ?? 'User'}</div>
+            <div style={f({ fontSize:10,color:C.t3 })}>{session?.org ?? 'Finance'}</div>
           </div>
         </div>
       </div>
@@ -1213,8 +1215,13 @@ function Forecasting() {
 
 // REPORTS
 function Reports() {
-  const [reports, setReports] = useState(REPORTS)
+  const [reports, setReports]     = useState(REPORTS)
   const [generating, setGenerating] = useState(false)
+  const [filterStatus, setFilterStatus] = useState('All')
+  const [exportingIdx, setExportingIdx] = useState(null)
+  const [showFilter, setShowFilter] = useState(false)
+
+  const FILTER_OPTIONS = ['All', 'Ready', 'Generating', 'Scheduled', 'Draft']
 
   const handleGenerate = () => {
     if (generating) return
@@ -1230,6 +1237,28 @@ function Reports() {
     }, 3000)
   }
 
+  const handleExport = (r, idx, e) => {
+    e.stopPropagation()
+    if (exportingIdx === idx) return
+    setExportingIdx(idx)
+    setTimeout(() => {
+      const blob = new Blob([DEMO_CSV], { type: 'text/csv;charset=utf-8;' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = r.title.replace(/[^a-z0-9]/gi, '_').toLowerCase() + '.csv'
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
+      setExportingIdx(null)
+    }, 800)
+  }
+
+  const visibleReports = filterStatus === 'All'
+    ? reports
+    : reports.filter(r => r.status === filterStatus)
+
   const readyCount = reports.filter(r => r.status === 'Ready').length
 
   return (
@@ -1237,12 +1266,43 @@ function Reports() {
       {/* Header actions */}
       <div style={{ display:'flex',justifyContent:'space-between',alignItems:'center' }}>
         <div style={f({ fontSize:13,color:C.t2 })}>{reports.length} reports · {readyCount} ready to export</div>
-        <div style={{ display:'flex',gap:10 }}>
-          <button style={f({ display:'flex',alignItems:'center',gap:7,padding:'8px 16px',
-            borderRadius:8,border:`1px solid ${C.borderMid}`,background:'transparent',
-            color:C.t2,fontSize:13,cursor:'pointer' })}>
-            <Filter size={13}/> Filter
-          </button>
+        <div style={{ display:'flex',gap:10,alignItems:'center' }}>
+          {/* Filter dropdown */}
+          <div style={{ position:'relative' }}>
+            <button
+              onClick={() => setShowFilter(v => !v)}
+              style={f({ display:'flex',alignItems:'center',gap:7,padding:'8px 16px',
+                borderRadius:8,border:`1px solid ${filterStatus !== 'All' ? C.blue : C.borderMid}`,
+                background: filterStatus !== 'All' ? `${C.blue}12` : 'transparent',
+                color: filterStatus !== 'All' ? C.blue : C.t2,fontSize:13,cursor:'pointer',
+                transition:'all 0.2s',
+              })}>
+              <Filter size={13}/>
+              {filterStatus === 'All' ? 'Filter' : filterStatus}
+            </button>
+            {showFilter && (
+              <div style={{
+                position:'absolute',top:'calc(100% + 6px)',right:0,
+                background:C.bg2,border:`1px solid ${C.borderMid}`,
+                borderRadius:10,padding:6,zIndex:50,
+                boxShadow:'0 8px 24px #00000050',minWidth:140,
+              }}>
+                {FILTER_OPTIONS.map(opt => (
+                  <button key={opt}
+                    onClick={() => { setFilterStatus(opt); setShowFilter(false) }}
+                    style={f({
+                      display:'block',width:'100%',padding:'8px 12px',
+                      borderRadius:7,border:'none',textAlign:'left',
+                      background: filterStatus === opt ? `${C.blue}18` : 'transparent',
+                      color: filterStatus === opt ? C.blue : C.t2,
+                      fontSize:13,fontWeight: filterStatus === opt ? 700 : 500,cursor:'pointer',
+                    })}>
+                    {opt}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
           <button onClick={handleGenerate} style={f({ display:'flex',alignItems:'center',gap:7,padding:'8px 16px',
             borderRadius:8,border:'none',background:generating?C.bg3:C.blue,color:generating?C.t3:'#fff',fontSize:13,
             fontWeight:600,cursor:generating?'default':'pointer',boxShadow:generating?'none':`0 2px 12px ${C.blue}40`,
@@ -1253,47 +1313,65 @@ function Reports() {
       </div>
       {/* Report cards */}
       <div style={{ display:'flex',flexDirection:'column',gap:10 }}>
-        {reports.map((r,i)=>(
-          <div key={i} style={{ background:C.bg2,border:`1px solid ${C.border}`,borderRadius:14,
-            padding:'18px 24px',display:'flex',alignItems:'center',justifyContent:'space-between',
-            transition:'border-color 0.2s',cursor:'pointer',gap:20 }}
-          onMouseEnter={e=>e.currentTarget.style.borderColor=r.color+'50'}
-          onMouseLeave={e=>e.currentTarget.style.borderColor=C.border}
-          >
-            <div style={{ display:'flex',alignItems:'center',gap:16,flex:1,minWidth:0 }}>
-              <div style={{ width:40,height:40,borderRadius:10,background:`${r.color}16`,
-                border:`1px solid ${r.color}30`,display:'flex',alignItems:'center',justifyContent:'center',
-                flexShrink:0 }}>
-                <FileText size={18} color={r.color}/>
-              </div>
-              <div style={{ minWidth:0 }}>
-                <div style={f({ fontSize:14,fontWeight:600,color:C.t1,marginBottom:4 })}>{r.title}</div>
-                <div style={{ display:'flex',gap:12 }}>
-                  <span style={f({ fontSize:11,color:C.t3 })}>{r.pages} pages</span>
-                  <span style={f({ fontSize:11,color:C.t3 })}>{r.type}</span>
-                  <span style={f({ fontSize:11,color:C.t3 })}>{r.date}</span>
+        {visibleReports.length === 0 && (
+          <div style={{ textAlign:'center',padding:'48px',color:C.t3,fontFamily:FONT,fontSize:13 }}>
+            No reports match this filter.
+          </div>
+        )}
+        {visibleReports.map((r, i) => {
+          const origIdx = reports.indexOf(r)
+          const isExporting = exportingIdx === origIdx
+          return (
+            <div key={origIdx} style={{ background:C.bg2,border:`1px solid ${C.border}`,borderRadius:14,
+              padding:'18px 24px',display:'flex',alignItems:'center',justifyContent:'space-between',
+              transition:'border-color 0.2s',cursor:'default',gap:20 }}
+            onMouseEnter={e=>e.currentTarget.style.borderColor=r.color+'50'}
+            onMouseLeave={e=>e.currentTarget.style.borderColor=C.border}
+            >
+              <div style={{ display:'flex',alignItems:'center',gap:16,flex:1,minWidth:0 }}>
+                <div style={{ width:40,height:40,borderRadius:10,background:`${r.color}16`,
+                  border:`1px solid ${r.color}30`,display:'flex',alignItems:'center',justifyContent:'center',
+                  flexShrink:0 }}>
+                  <FileText size={18} color={r.color}/>
+                </div>
+                <div style={{ minWidth:0 }}>
+                  <div style={f({ fontSize:14,fontWeight:600,color:C.t1,marginBottom:4 })}>{r.title}</div>
+                  <div style={{ display:'flex',gap:12 }}>
+                    <span style={f({ fontSize:11,color:C.t3 })}>{r.pages} pages</span>
+                    <span style={f({ fontSize:11,color:C.t3 })}>{r.type}</span>
+                    <span style={f({ fontSize:11,color:C.t3 })}>{r.date}</span>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div style={{ display:'flex',alignItems:'center',gap:12,flexShrink:0 }}>
-              <div style={{ display:'flex',alignItems:'center',gap:5,padding:'4px 10px',
-                borderRadius:5,background:`${r.color}14`,border:`1px solid ${r.color}30` }}>
-                {r.status==='Ready'&&<CheckCircle2 size={11} color={r.color}/>}
-                {r.status==='Generating'&&<RefreshCw size={11} color={r.color}/>}
-                {r.status==='Scheduled'&&<Clock size={11} color={r.color}/>}
-                {r.status==='Draft'&&<Eye size={11} color={r.color}/>}
-                <span style={f({ fontSize:11,color:r.color,fontWeight:600 })}>{r.status}</span>
+              <div style={{ display:'flex',alignItems:'center',gap:12,flexShrink:0 }}>
+                <div style={{ display:'flex',alignItems:'center',gap:5,padding:'4px 10px',
+                  borderRadius:5,background:`${r.color}14`,border:`1px solid ${r.color}30` }}>
+                  {r.status==='Ready'&&<CheckCircle2 size={11} color={r.color}/>}
+                  {r.status==='Generating'&&<RefreshCw size={11} color={r.color} style={{ animation:'spin 1.2s linear infinite' }}/>}
+                  {r.status==='Scheduled'&&<Clock size={11} color={r.color}/>}
+                  {r.status==='Draft'&&<Eye size={11} color={r.color}/>}
+                  <span style={f({ fontSize:11,color:r.color,fontWeight:600 })}>{r.status}</span>
+                </div>
+                {r.status==='Ready' && (
+                  <button
+                    onClick={e => handleExport(r, origIdx, e)}
+                    style={f({ display:'flex',alignItems:'center',gap:6,padding:'6px 14px',
+                      borderRadius:7,border:`1px solid ${isExporting ? C.green+'60' : C.borderMid}`,
+                      background: isExporting ? `${C.green}10` : 'transparent',
+                      color: isExporting ? C.green : C.t2,
+                      fontSize:12,cursor: isExporting ? 'default' : 'pointer',
+                      transition:'all 0.2s',
+                    })}>
+                    {isExporting
+                      ? <><RefreshCw size={12} style={{ animation:'spin 1s linear infinite' }}/> Exporting…</>
+                      : <><Download size={12}/> Export</>
+                    }
+                  </button>
+                )}
               </div>
-              {r.status==='Ready'&&(
-                <button style={f({ display:'flex',alignItems:'center',gap:6,padding:'6px 14px',
-                  borderRadius:7,border:`1px solid ${C.borderMid}`,background:'transparent',
-                  color:C.t2,fontSize:12,cursor:'pointer' })}>
-                  <Download size={12}/> Export
-                </button>
-              )}
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )
@@ -1405,7 +1483,7 @@ function AIBrief() {
 }
 
 // ALERTS
-function Alerts() {
+function Alerts({ setView }) {
   const [filter, setFilter] = useState('ALL')
   const [dismissed, setDismissed] = useState([])
   const all = SIGNALS.filter((_,i) => !dismissed.includes(i))
@@ -1466,7 +1544,15 @@ function Alerts() {
                   padding:'7px 12px',borderRadius:7,border:`1px solid ${C.border}`,
                   background:'transparent',color:C.t3,fontSize:11,cursor:'pointer',
                 })}>Dismiss</button>
-                <button style={f({ padding:'7px 16px',borderRadius:7,border:`1px solid ${s.color}40`,
+                <button
+                  onClick={() => {
+                    if (s.action === 'Dismiss') setDismissed(d => [...d, origIdx])
+                    else if (s.action === 'View AR') setView?.('reports')
+                    else if (s.action === 'Drill down') setView?.('reports')
+                    else if (s.action === 'Review') setView?.('forecasting')
+                    else setDismissed(d => [...d, origIdx])
+                  }}
+                  style={f({ padding:'7px 16px',borderRadius:7,border:`1px solid ${s.color}40`,
                   background:`${s.color}10`,color:s.color,fontSize:12,fontWeight:600,
                   cursor:'pointer',whiteSpace:'nowrap' })}>
                   {s.action}
@@ -1702,6 +1788,13 @@ function Integrations({ onImport, importedData }) {
 
 // SETTINGS (stub)
 function AppSettings() {
+  const [saved, setSaved] = useState(false)
+
+  const handleSave = () => {
+    setSaved(true)
+    setTimeout(() => setSaved(false), 2500)
+  }
+
   return (
     <div style={{ background:C.bg2,border:`1px solid ${C.border}`,borderRadius:14,padding:'32px',
       display:'flex',flexDirection:'column',gap:20,maxWidth:640 }}>
@@ -1724,9 +1817,12 @@ function AppSettings() {
           />
         </div>
       ))}
-      <button style={f({ alignSelf:'flex-start',padding:'10px 22px',borderRadius:9,
-        background:C.blue,border:'none',color:'#fff',fontSize:13,fontWeight:600,cursor:'pointer' })}>
-        Save Changes
+      <button onClick={handleSave} style={f({ alignSelf:'flex-start',padding:'10px 22px',borderRadius:9,
+        background: saved ? C.green : C.blue,
+        border:'none',color:'#fff',fontSize:13,fontWeight:600,cursor:'pointer',
+        transition:'background 0.3s', display:'flex', alignItems:'center', gap:7,
+      })}>
+        {saved ? <><Check size={14}/> Saved</> : 'Save Changes'}
       </button>
     </div>
   )
@@ -1751,7 +1847,7 @@ export default function Product({ navigate, onLogout, session }) {
     forecasting:  <Forecasting/>,
     reports:      <Reports/>,
     'ai-brief':   <AIBrief/>,
-    alerts:       <Alerts/>,
+    alerts:       <Alerts setView={setView}/>,
     integrations: <Integrations onImport={setImportedData} importedData={importedData}/>,
     settings:     <AppSettings/>,
     guide:        <Guide/>,
@@ -1770,7 +1866,7 @@ export default function Product({ navigate, onLogout, session }) {
         input[type=range]{height:4px;border-radius:2px}
       `}</style>
 
-      <Sidebar view={view} setView={v=>{setView(v)}} navigate={navigate}/>
+      <Sidebar view={view} setView={v=>{setView(v)}} navigate={navigate} session={session}/>
 
       <div style={{ marginLeft:224,flex:1,display:'flex',flexDirection:'column' }}>
         <TopBar view={view} lastSync={lastSync} importedData={importedData} session={session} onLogout={onLogout}/>
