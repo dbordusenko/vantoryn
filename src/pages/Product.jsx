@@ -8,8 +8,10 @@ import {
   ArrowLeft, Eye, Filter, MoreHorizontal, X,
   BookOpen, ChevronDown, Key, Copy, Check, Globe, Lock,
   Database, Link2, HelpCircle, PlayCircle, Shield, Users, LogOut,
+  Factory,
 } from 'lucide-react'
 import { C, f, FONT } from '../tokens'
+import ProductionPlanning from './ProductionPlanning'
 
 /* ─── STATIC DATA ────────────────────────────────────────── */
 const MONTHS = ['Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep']
@@ -633,6 +635,7 @@ function Guide() {
 const NAV = [
   { id:'overview',      icon:<LayoutDashboard size={16}/>, label:'Overview' },
   { id:'forecasting',   icon:<TrendingUp size={16}/>,      label:'Forecasting' },
+  { id:'production',    icon:<Factory size={16}/>,         label:'Production Planning' },
   { id:'reports',       icon:<FileText size={16}/>,        label:'Reports' },
   { id:'ai-brief',      icon:<Brain size={16}/>,           label:'AI Brief' },
   { id:'alerts',        icon:<Bell size={16}/>,            label:'Alerts', badge:3 },
@@ -734,6 +737,7 @@ function TopBar({ view, lastSync, importedData, session, onLogout }) {
   const [showUserMenu, setShowUserMenu] = useState(false)
   const titles = {
     overview:'Executive Overview', forecasting:'Forecasting & Scenarios',
+    production:'Production & Supply Optimizer',
     reports:'Reports & Board Packs', 'ai-brief':'AI Intelligence Brief',
     alerts:'Risk Alerts & Signals', integrations:'Data Integrations',
     settings:'Settings', guide:'Getting Started & ERP Setup',
@@ -1845,6 +1849,7 @@ export default function Product({ navigate, onLogout, session }) {
   const VIEWS = {
     overview:     <Overview setView={setView} importedData={importedData}/>,
     forecasting:  <Forecasting/>,
+    production:    <ProductionPlanning/>,
     reports:      <Reports/>,
     'ai-brief':   <AIBrief/>,
     alerts:       <Alerts setView={setView}/>,

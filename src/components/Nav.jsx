@@ -104,7 +104,7 @@ export default function Nav({ currentPage, onNavigate, session, onBookDemo, onWa
               Sign In
             </button>
           )}
-          <button onClick={onWaitlist} style={f({
+          <button onClick={() => onNavigate('health-score')} style={f({
             fontSize: 14, fontWeight: 500, color: C.teal,
             background: `${C.teal}10`, border: `1px solid ${C.teal}35`,
             borderRadius: 9, padding: '9px 18px', cursor: 'pointer',
@@ -113,7 +113,7 @@ export default function Nav({ currentPage, onNavigate, session, onBookDemo, onWa
           onMouseEnter={e => { e.currentTarget.style.background = `${C.teal}20`; e.currentTarget.style.transform = 'translateY(-1px)' }}
           onMouseLeave={e => { e.currentTarget.style.background = `${C.teal}10`; e.currentTarget.style.transform = 'translateY(0)' }}
           >
-            Join Waitlist
+            Get Health Score
           </button>
           <button onClick={onBookDemo} style={f({
             fontSize: 14, fontWeight: 600, color: '#fff',
@@ -161,13 +161,13 @@ export default function Nav({ currentPage, onNavigate, session, onBookDemo, onWa
           })}>
             {session ? session.name : 'Sign In'}
           </button>
-          <button onClick={() => { onWaitlist?.(); setMobile(false) }} style={f({
+          <button onClick={() => { onNavigate('health-score'); setMobile(false) }} style={f({
             display: 'flex', alignItems: 'center', gap: 10, padding: '12px 14px',
             borderRadius: 9, border: `1px solid ${C.teal}35`, cursor: 'pointer',
             background: `${C.teal}10`, color: C.teal,
             fontSize: 15, fontWeight: 500, textAlign: 'left',
           })}>
-            Join Waitlist
+            Get Health Score
           </button>
         </div>
       )}

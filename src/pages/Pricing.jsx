@@ -6,7 +6,7 @@ import { C, f } from '../tokens'
 const PLANS = [
   {
     id: 'ops', name: 'Finance Operations', color: C.blue,
-    price: 'From $15K', period: 'per year',
+    price: 'From $15K', period: 'per year — up to 3 integrations, 1 entity',
     tagline: 'For companies automating core finance processes',
     description: 'Close faster, automate reporting, and eliminate manual reconciliation — without replacing your existing ERP.',
     icon: <BarChart3 size={20} />,
@@ -19,13 +19,15 @@ const PLANS = [
       'Board pack generation',
       'Up to 3 integrations',
       'Standard audit trail',
+      'Self-serve onboarding with guided setup',
       'Email + chat support',
     ],
     cta: 'Start with Finance Ops',
+    scaleNote: 'Scales with your organization\'s entity count and transaction volume.',
   },
   {
     id: 'fpa', name: 'FP&A Intelligence', color: C.teal,
-    price: 'From $28K', period: 'per year',
+    price: 'From $28K', period: 'per year — unlimited integrations, up to 5 entities',
     tagline: 'For finance teams requiring predictive analytics',
     description: 'Everything in Finance Operations, plus AI-driven forecasting, scenario modeling, and predictive risk detection.',
     icon: <Activity size={20} />,
@@ -40,13 +42,15 @@ const PLANS = [
       'Rolling 12-month projections',
       'Unlimited integrations',
       'CFO morning intelligence brief',
+      'Dedicated onboarding specialist — 2-week deployment',
       'Priority support + CSM',
     ],
     cta: 'Start with FP&A Intelligence',
+    scaleNote: 'Scales with your organization\'s entity count and transaction volume.',
   },
   {
     id: 'enterprise', name: 'Enterprise Control', color: C.purple,
-    price: 'Custom', period: 'annual contract',
+    price: 'Custom', period: 'annual contract — multi-entity, single-tenant',
     tagline: 'For multi-entity enterprises with governance needs',
     description: 'Full platform capabilities with dedicated infrastructure, custom integrations, enterprise SLAs, and compliance support.',
     icon: <Building2 size={20} />,
@@ -57,12 +61,13 @@ const PLANS = [
       'Custom data residency',
       'SOX compliance workflow support',
       'Custom integration development',
-      'Dedicated implementation team',
+      'Dedicated implementation team — white-glove deployment',
       'Enterprise SLA (99.9% uptime)',
       'Executive business reviews',
       'SAML SSO + advanced RBAC',
     ],
     cta: 'Talk to Enterprise Sales',
+    scaleNote: 'Custom pricing based on entity count, transaction volume, and infrastructure requirements.',
   },
 ]
 
@@ -84,30 +89,30 @@ const COMPARE_ROWS = [
 
 /* ROI Calculator */
 function ROICalc() {
-  const [team, setTeam] = useState(4)
-  const [hoursClose, setHoursClose] = useState(80)
-  const [rate, setRate] = useState(85)
+  const [entities, setEntities] = useState(3)
+  const [txVolume, setTxVolume] = useState(50)
+  const [closeDays, setCloseDays] = useState(14)
 
-  const monthlyHoursSaved = (hoursClose * 0.65) + (team * 8 * 0.4) // 65% close + 40% ad hoc
-  const annualSavings = monthlyHoursSaved * 12 * rate
-  const roi = Math.round(((annualSavings - 20000) / 20000) * 100)
+  const projectedClose = Math.max(2, Math.round(closeDays * 0.28))
+  const riskExposure = Math.round((entities * txVolume * 0.68) + (closeDays * 8))
+  const annualSavings = Math.round((closeDays - projectedClose) * entities * 4.2 + txVolume * 0.38)
 
   return (
     <div style={{ background: C.bg2, border: `1px solid ${C.borderMid}`, borderRadius: 20, padding: '36px 32px' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 28 }}>
         <Calculator size={20} color={C.blue} />
         <span style={f({ fontSize: 16, fontWeight: 700, color: C.t1 })}>ROI Calculator</span>
-        <span style={f({ fontSize: 12, color: C.t3 })}>Estimate your annual savings</span>
+        <span style={f({ fontSize: 12, color: C.t3 })}>Estimate your organization's return</span>
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20, marginBottom: 28 }}>
         {[
-          { label: 'Finance team size (FTEs)',      val: team,       set: setTeam,       min: 1, max: 20, step: 1 },
-          { label: 'Hours on monthly close cycle',  val: hoursClose, set: setHoursClose, min: 20, max: 200, step: 10 },
-          { label: 'Avg. hourly cost of team ($)',  val: rate,       set: setRate,       min: 40, max: 200, step: 5 },
+          { label: 'Number of legal entities',       val: entities,  set: setEntities,  min: 1, max: 50, step: 1, fmt: v => v },
+          { label: 'Monthly transaction volume (K)', val: txVolume,  set: setTxVolume,  min: 1, max: 500, step: 5, fmt: v => `${v}K` },
+          { label: 'Current close cycle (days)',     val: closeDays, set: setCloseDays, min: 3, max: 30, step: 1, fmt: v => v },
         ].map(input => (
           <div key={input.label}>
             <div style={f({ fontSize: 11, color: C.t3, marginBottom: 8, fontWeight: 600 })}>{input.label}</div>
-            <div style={f({ fontSize: 22, fontWeight: 800, color: C.t1, marginBottom: 8 })}>{input.val}</div>
+            <div style={f({ fontSize: 22, fontWeight: 800, color: C.t1, marginBottom: 8 })}>{input.fmt(input.val)}</div>
             <input type="range" min={input.min} max={input.max} step={input.step}
               value={input.val} onChange={e => input.set(Number(e.target.value))}
               style={{ width: '100%', accentColor: C.blue }} />
@@ -120,9 +125,9 @@ function ROICalc() {
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
         {[
-          { label: 'Hours saved / month',  value: `${Math.round(monthlyHoursSaved)}h`, color: C.blue },
-          { label: 'Annual time savings',  value: `$${(annualSavings/1000).toFixed(0)}K`,    color: C.green },
-          { label: 'Estimated ROI',        value: `${roi > 0 ? '+' : ''}${roi}%`, color: roi > 0 ? C.teal : C.amber },
+          { label: 'Projected close cycle',       value: `${projectedClose} days`, color: C.blue },
+          { label: 'Annual risk exposure identified', value: `$${riskExposure}K`,  color: C.amber },
+          { label: 'Estimated annual savings',     value: `$${annualSavings}K`,    color: C.green },
         ].map(r => (
           <div key={r.label} style={{ background: C.bg3, border: `1px solid ${C.border}`,
             borderRadius: 12, padding: '18px', textAlign: 'center' }}>
@@ -132,7 +137,7 @@ function ROICalc() {
         ))}
       </div>
       <div style={f({ fontSize: 11, color: C.t3, marginTop: 16, lineHeight: 1.5 })}>
-        * Estimate based on industry benchmarks. Actual results vary by organization. Based on starting at Finance Operations tier ($15K/year).
+        * Estimate based on industry benchmarks. Actual results vary by organization. Scales with entity count and transaction volume.
       </div>
     </div>
   )
@@ -216,7 +221,10 @@ export default function Pricing({ navigate, onBookDemo }) {
                   <div style={f({ fontSize: 12, color: C.t3 })}>{plan.period}</div>
                 </div>
 
-                <p style={f({ fontSize: 13, color: C.t2, lineHeight: 1.65, margin: '0 0 20px' })}>{plan.description}</p>
+                <p style={f({ fontSize: 13, color: C.t2, lineHeight: 1.65, margin: '0 0 12px' })}>{plan.description}</p>
+                {plan.scaleNote && (
+                  <p style={f({ fontSize: 11, color: C.t3, lineHeight: 1.5, margin: '0 0 20px', fontStyle: 'italic' })}>{plan.scaleNote}</p>
+                )}
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 9, marginBottom: 28 }}>
                   {plan.features.map(feat => (

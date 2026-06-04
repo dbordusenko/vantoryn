@@ -7,3 +7,12 @@ dist
 *.log
 
 .vercel
+
+# local agent config
+.claude/
+
+# python (aps-backend)
+__pycache__/
+*.pyc
+.venv/
+aps-backend/.venv/

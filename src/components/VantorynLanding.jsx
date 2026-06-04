@@ -349,7 +349,16 @@ function Hero({ navigate, onBookDemo, onWaitlist }) {
               color: C.t1, margin: '0 0 8px',
               letterSpacing: '-0.035em',
             })}>
-              The AI Operating
+              Close the Books
+            </h1>
+            <h1 style={f({
+              fontSize: 'clamp(40px, 4.8vw, 62px)',
+              fontWeight: 800, lineHeight: 1.08,
+              margin: '0 0 8px',
+              letterSpacing: '-0.035em',
+              color: C.t1,
+            })}>
+              in 3 Days.
             </h1>
             <h1 style={f({
               fontSize: 'clamp(40px, 4.8vw, 62px)',
@@ -359,19 +368,19 @@ function Hero({ navigate, onBookDemo, onWaitlist }) {
               background: `linear-gradient(135deg, ${C.blue} 0%, ${C.teal} 60%, ${C.teal} 100%)`,
               WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
             })}>
-              System for Finance.
+              Not 14.
             </h1>
 
             <p style={f({
               fontSize: 18, lineHeight: 1.7, color: C.t2,
               margin: '0 0 40px', maxWidth: 450,
             })}>
-              Finance leaders use Vantoryn to close in hours, predict risk weeks early, and replace fragmented reporting with real-time executive intelligence.
+              Vantoryn automates reconciliation, eliminates manual exports, and delivers board-ready reporting — directly from your ERP. No rip-and-replace. Deploys alongside your existing stack.
             </p>
 
             {/* CTAs */}
             <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap', marginBottom: 48 }}>
-              <button onClick={onBookDemo} style={f({
+              <button onClick={() => navigate('health-score')} style={f({
                 fontSize: 15, fontWeight: 700, color: '#fff',
                 background: C.blue, border: 'none', borderRadius: 11,
                 padding: '15px 32px', cursor: 'pointer',
@@ -382,9 +391,9 @@ function Hero({ navigate, onBookDemo, onWaitlist }) {
               onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = `0 8px 36px ${C.blue}55` }}
               onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = `0 4px 24px ${C.blue}44` }}
               >
-                See Predictive Finance in Action <ArrowRight size={16} />
+                Get Your Free Financial Health Score <ArrowRight size={16} />
               </button>
-              <button onClick={onWaitlist} style={f({
+              <button onClick={onBookDemo} style={f({
                 fontSize: 14, fontWeight: 500, color: C.teal,
                 background: `${C.teal}10`, border: `1px solid ${C.teal}35`,
                 borderRadius: 11, padding: '14px 24px', cursor: 'pointer',
@@ -394,14 +403,19 @@ function Hero({ navigate, onBookDemo, onWaitlist }) {
               onMouseEnter={e => { e.currentTarget.style.background = `${C.teal}20`; e.currentTarget.style.transform = 'translateY(-2px)' }}
               onMouseLeave={e => { e.currentTarget.style.background = `${C.teal}10`; e.currentTarget.style.transform = 'translateY(0)' }}
               >
-                <Users size={14} /> Join Waitlist
+                Book CFO Demo
               </button>
+            </div>
+
+            {/* Security micro-copy */}
+            <div style={f({ fontSize: 12, color: C.t3, marginBottom: 24, opacity: 0.7 })}>
+              No raw ledger data required. Zero integrations needed.
             </div>
 
             {/* Trust proof */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 11 }}>
               {[
-                { icon: <PlugZap size={13} color={C.teal} />, text: 'Connect ERP, accounting, and payroll in under 24 hours' },
+                { icon: <Building2 size={13} color={C.teal} />, text: 'Used by finance teams closing across 3+ ERPs' },
                 { icon: <Shield size={13} color={C.green} />, text: 'SOC 2 Type II · AES-256 encryption · Full audit trail' },
                 { icon: <Building2 size={13} color={C.blue} />, text: 'Deployed at companies managing $10M–$500M in revenue' },
               ].map(t => (
@@ -1072,15 +1086,15 @@ function FinalCTA({ navigate, onBookDemo }) {
           >
             Book CFO Strategy Demo <ArrowRight size={18} />
           </button>
-          <button onClick={() => navigate('platform')} style={f({
-            fontSize: 14, fontWeight: 500, color: C.t2,
-            background: 'transparent', border: `1px solid ${C.borderMid}`,
+          <button onClick={() => navigate('health-score')} style={f({
+            fontSize: 14, fontWeight: 500, color: C.teal,
+            background: `${C.teal}10`, border: `1px solid ${C.teal}35`,
             borderRadius: 12, padding: '16px 28px', cursor: 'pointer', transition: 'all 0.2s',
           })}
-          onMouseEnter={e => { e.currentTarget.style.borderColor = C.borderHi; e.currentTarget.style.color = C.t1 }}
-          onMouseLeave={e => { e.currentTarget.style.borderColor = C.borderMid; e.currentTarget.style.color = C.t2 }}
+          onMouseEnter={e => { e.currentTarget.style.background = `${C.teal}20`; e.currentTarget.style.transform = 'translateY(-1px)' }}
+          onMouseLeave={e => { e.currentTarget.style.background = `${C.teal}10`; e.currentTarget.style.transform = 'translateY(0)' }}
           >
-            Download Platform Overview
+            Get Your Free Health Score
           </button>
         </div>
         <p style={f({ fontSize: 12, color: C.t3 })}>
@@ -1154,14 +1168,14 @@ export default function VantorynLanding({ navigate = () => {}, onBookDemo = () =
       {/* Nav is handled by App.jsx router — no double nav */}
       <Hero navigate={navigate} onBookDemo={onBookDemo} onWaitlist={onWaitlist} />
       <TrustBar />
+      <UseCasesSection navigate={navigate} />
       <FinancialAnxietySection navigate={navigate} />
+      <ExecutiveBriefingSection />
       <PlatformSection />
       <HowItWorksSection />
-      <ExecutiveBriefingSection />
       <ImpactSection />
       <BeforeAfterSection />
       <SecuritySection navigate={navigate} />
-      <UseCasesSection navigate={navigate} />
       <FinalCTA navigate={navigate} onBookDemo={onBookDemo} />
       <Footer navigate={navigate} />
     </div>
