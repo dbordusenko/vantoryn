@@ -1,62 +1,45 @@
-"""APS Production & Supply Optimizer — FastAPI MVP.
+"""APS Production & Supply Optimizer — full backend (FastAPI + SQLAlchemy + OR-Tools).
 
-Endpoints:
-  GET  /                      health
-  GET  /api/aps/demo-dataset  returns the demo planning dataset
-  POST /api/aps/plan/run      runs the planning pipeline (uses demo data if none provided)
-  POST /api/aps/plan/scenario runs 3 preset scenarios for comparison
+CRUD for all master/transactional data, planning pipeline, and plan-version history.
+DB-agnostic via DATABASE_URL (SQLite by default, Postgres/Supabase in prod).
 """
 from __future__ import annotations
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .models import PlanRequest, PlanResult, PlanningDataset, PlanWeights
-from .demo_data import build_demo_dataset
-from .engine import run_plan
+from .db import Base, engine, SessionLocal
+from .config import CORS_ORIGINS, AUTO_SEED
+from . import orm  # noqa: F401 — register models on Base
+from .routers import api
+from .seed import seed_demo
 
-app = FastAPI(title="Vantoryn APS Production & Supply Optimizer", version="1.0.0")
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    Base.metadata.create_all(bind=engine)
+    if AUTO_SEED:
+        db = SessionLocal()
+        try:
+            seed_demo(db)          # idempotent: only seeds if empty
+        finally:
+            db.close()
+    yield
+
+
+app = FastAPI(title="Vantoryn APS Production & Supply Optimizer",
+              version="2.0.0", lifespan=lifespan)
+
+origins = ["*"] if CORS_ORIGINS.strip() == "*" else [o.strip() for o in CORS_ORIGINS.split(",")]
 app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],          # tighten to frontend domain in prod
-    allow_methods=["*"],
-    allow_headers=["*"],
+    CORSMiddleware, allow_origins=origins,
+    allow_methods=["*"], allow_headers=["*"],
 )
 
 
 @app.get("/")
 def health():
-    return {"status": "ok", "service": "aps-optimizer", "version": "1.0.0"}
+    return {"status": "ok", "service": "aps-optimizer", "version": "2.0.0"}
 
 
-@app.get("/api/aps/demo-dataset", response_model=PlanningDataset)
-def demo_dataset():
-    return build_demo_dataset()
-
-
-@app.post("/api/aps/plan/run", response_model=PlanResult)
-def plan_run(req: PlanRequest):
-    ds = req.dataset or build_demo_dataset()
-    return run_plan(ds, req.weights, req.time_limit_s)
-
-
-@app.post("/api/aps/plan/scenario")
-def plan_scenarios(req: PlanRequest):
-    """Run preset optimization scenarios and return KPI comparison."""
-    ds = req.dataset or build_demo_dataset()
-    presets = {
-        "min_inventory":   PlanWeights(holding=5, setup=1, overtime=1, stockout=8, cash_tie_up=5),
-        "min_cash_tie_up": PlanWeights(holding=2, setup=1, overtime=2, stockout=5, cash_tie_up=10),
-        "max_service":     PlanWeights(holding=1, setup=1, overtime=3, stockout=20, cash_tie_up=1),
-        "balanced":        PlanWeights(),
-    }
-    results = {}
-    for name, w in presets.items():
-        r = run_plan(ds, w, req.time_limit_s)
-        results[name] = {
-            "status": r.status,
-            "kpis": r.kpis.model_dump(),
-            "risk_count": len(r.risks),
-            "high_risks": sum(1 for x in r.risks if x.severity == "HIGH"),
-        }
-    return {"scenarios": results}
+app.include_router(api)

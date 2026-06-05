@@ -336,10 +336,11 @@ export default function ProductionPlanning() {
   const [running, setRunning] = useState(false)
   const [source, setSource]   = useState('mock')   // 'live' | 'mock'
 
+  const API = import.meta.env.VITE_APS_API || 'https://192.18.131.82.sslip.io/aps'
   const run = useCallback(async ()=>{
     setRunning(true)
     try {
-      const res = await fetch('/api/aps/plan/run', {
+      const res = await fetch(`${API}/plan/run`, {
         method:'POST', headers:{'content-type':'application/json'},
         body: JSON.stringify({ weights, time_limit_s:15 }),
       })

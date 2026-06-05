@@ -38,15 +38,41 @@ def compute_low_level_codes(ds: PlanningDataset) -> dict[str, int]:
 
 
 def bom_index(ds: PlanningDataset):
-    """parent_id -> list[(component_id, gross_factor_per_unit)] accounting for scrap."""
-    idx: dict[str, list[tuple[str, float]]] = {}
+    """parent_id -> list of component slots. Each slot carries its base gross
+    factor (scrap-adjusted) plus all sourcing OPTIONS (primary + alternates),
+    ranked by priority. The actual option is chosen at explosion time."""
+    idx: dict[str, list[dict]] = {}
     for b in ds.boms:
         comps = []
         for c in b.components:
-            gross = (c.quantity_per / b.output_qty) / max(1e-9, (1 - c.scrap_rate))
-            comps.append((c.component_id, gross))
+            base = (c.quantity_per / b.output_qty) / max(1e-9, (1 - c.scrap_rate))
+            options = [{
+                "component_id": c.component_id, "priority": c.priority,
+                "conversion_factor": 1.0, "cost_delta": 0.0,
+            }]
+            for a in c.alternates:
+                options.append({
+                    "component_id": a.component_id, "priority": a.priority,
+                    "conversion_factor": a.conversion_factor, "cost_delta": a.cost_delta,
+                })
+            options.sort(key=lambda o: o["priority"])   # 1 (primary) first
+            comps.append({"base_factor": base, "options": options})
         idx[b.parent_id] = comps
     return idx
+
+
+def select_option(options: list[dict], need_period: int, prod: dict) -> dict:
+    """Rule-based alternate selection: pick the highest-priority option whose
+    lead time still lets it arrive by the need period; fall back to primary."""
+    for opt in options:                       # already sorted by priority
+        p = prod.get(opt["component_id"])
+        if p is None:
+            continue
+        lt_buckets = max(0, round(p.lead_time_days / DAYS_PER_BUCKET))
+        # feasible if we can order now (period 0) and still receive by need_period
+        if lt_buckets <= need_period:
+            return opt
+    return options[0]                          # nothing fits in time → primary (risk surfaces later)
 
 
 # --------------------------------------------------------------------------
@@ -165,6 +191,7 @@ def run_plan(ds: PlanningDataset, weights: PlanWeights, time_limit_s: int = 30) 
     mps_entries: list[MPSEntry] = []
     purchase_plan: list[PurchaseOrder] = []
     planned_orders: dict[tuple[str, int], float] = {}
+    substitutions: list[dict] = []
 
     # process products by low-level code (parents first)
     # Process strictly by low-level code (parents first). This guarantees that
@@ -219,12 +246,22 @@ def run_plan(ds: PlanningDataset, weights: PlanWeights, time_limit_s: int = 30) 
                 planned_orders[(pid, t)] = planned
                 proj = ending
 
-                # explode dependent demand to components, offset by lead time
+                # explode dependent demand to components, offset by lead time,
+                # choosing primary vs alternate per slot by priority + feasibility
                 if planned > 0 and pid in bidx:
                     lt_buckets = max(0, round(prod[pid].lead_time_days / DAYS_PER_BUCKET))
                     start_t = max(0, t - lt_buckets)
-                    for comp_id, factor in bidx[pid]:
-                        total_req[(comp_id, start_t)] += planned * factor
+                    for slot in bidx[pid]:
+                        opt = select_option(slot["options"], start_t, prod)
+                        qty = planned * slot["base_factor"] * opt["conversion_factor"]
+                        total_req[(opt["component_id"], start_t)] += qty
+                        if opt["priority"] > 1:           # an alternate was used
+                            substitutions.append({
+                                "parent": pid, "period": start_t,
+                                "primary": slot["options"][0]["component_id"],
+                                "used": opt["component_id"], "qty": round(qty, 1),
+                                "cost_delta": opt["cost_delta"],
+                            })
 
                 # purchase order generation for BUY items
                 if p.source == SourceType.BUY and planned > 0:
@@ -242,6 +279,17 @@ def run_plan(ds: PlanningDataset, weights: PlanWeights, time_limit_s: int = 30) 
     capacity_loads = _capacity(ds, planned_orders, overtime_all)
     cash_flow = _cash_flow(ds, planned_orders, purchase_plan, gross_demand)
     risks, recs = _risks_and_recs(ds, mps_entries, capacity_loads, cash_flow)
+    # report alternate-component substitutions the planner made
+    if substitutions:
+        agg = defaultdict(lambda: [0.0, 0.0])  # (primary,used) -> [qty, cost_delta_total]
+        for s in substitutions:
+            key = (s["primary"], s["used"])
+            agg[key][0] += s["qty"]
+            agg[key][1] += s["cost_delta"] * s["qty"]
+        for (primary, used), (qty, cdt) in agg.items():
+            extra = f", +${cdt:,.0f} cost" if cdt else ""
+            recs.insert(0, f"Substituted {used} for {primary} ({qty:,.0f} units{extra}) "
+                           f"— primary couldn't arrive in time; alternate (priority 2) selected.")
     kpis = _kpis(ds, mps_entries, capacity_loads, cash_flow, gross_demand)
 
     status = status_flag

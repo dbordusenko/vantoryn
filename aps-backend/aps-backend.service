@@ -1,0 +1,17 @@
+[Unit]
+Description=Vantoryn APS Production & Supply Optimizer (FastAPI)
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/aps-backend
+Environment=DATABASE_URL=sqlite:////home/ubuntu/aps-backend/aps.db
+Environment=AUTO_SEED=true
+Environment=CORS_ORIGINS=*
+ExecStart=/home/ubuntu/aps-backend/.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

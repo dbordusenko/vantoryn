@@ -45,10 +45,19 @@ class Product(BaseModel):
     customer_dso_days: int = 30     # collection terms (FG)
 
 
+class AlternateComponent(BaseModel):
+    component_id: str
+    priority: int = 2               # 2,3,... — lower number = preferred
+    conversion_factor: float = 1.0  # 1.0 = 1:1 replacement
+    cost_delta: float = 0.0         # extra unit cost vs primary (informational)
+
+
 class BOMComponent(BaseModel):
     component_id: str
     quantity_per: float
     scrap_rate: float = 0.0         # 0.02 = 2%
+    priority: int = 1               # primary component = 1
+    alternates: list[AlternateComponent] = Field(default_factory=list)
 
 
 class BOM(BaseModel):

@@ -13,8 +13,8 @@ from __future__ import annotations
 from datetime import date
 from .models import (
     PlanningDataset, Product, ProductType, SourceType, BOM, BOMComponent,
-    Resource, RoutingOp, Supplier, InventoryRecord, ScheduledReceipt,
-    ForecastEntry, FinancialParams, SafetyStockPolicy, Bucket,
+    AlternateComponent, Resource, RoutingOp, Supplier, InventoryRecord,
+    ScheduledReceipt, ForecastEntry, FinancialParams, SafetyStockPolicy, Bucket,
 )
 
 
@@ -39,6 +39,10 @@ def build_demo_dataset() -> PlanningDataset:
                 source=SourceType.BUY, standard_cost=3.2, lead_time_days=28,
                 moq=1000, order_multiple=500, supplier_id="SUP-CHIP",
                 safety_stock=SafetyStockPolicy(value=800)),
+        Product(id="SEN-1B", sku="SEN-1B", name="Sensor Chip (alt, fast lead)", type=ProductType.RAW,
+                source=SourceType.BUY, standard_cost=3.6, lead_time_days=7,
+                moq=500, order_multiple=250, supplier_id="SUP-MECH",
+                safety_stock=SafetyStockPolicy(value=200)),
         Product(id="ENC-1", sku="ENC-1", name="Enclosure", type=ProductType.RAW,
                 source=SourceType.BUY, standard_cost=4.0, lead_time_days=14,
                 moq=200, order_multiple=100, supplier_id="SUP-MECH",
@@ -53,7 +57,11 @@ def build_demo_dataset() -> PlanningDataset:
         BOM(parent_id="SS-100", output_qty=1, components=[
             BOMComponent(component_id="PCB-A", quantity_per=1, scrap_rate=0.02),
             BOMComponent(component_id="ENC-1", quantity_per=1, scrap_rate=0.01),
-            BOMComponent(component_id="SEN-1", quantity_per=2, scrap_rate=0.03),
+            BOMComponent(component_id="SEN-1", quantity_per=2, scrap_rate=0.03, priority=1,
+                         alternates=[
+                             AlternateComponent(component_id="SEN-1B", priority=2,
+                                                conversion_factor=1.0, cost_delta=0.4),
+                         ]),
         ]),
         BOM(parent_id="SH-200", output_qty=1, components=[
             BOMComponent(component_id="PCB-A", quantity_per=1, scrap_rate=0.02),
@@ -92,6 +100,7 @@ def build_demo_dataset() -> PlanningDataset:
         InventoryRecord(product_id="PCB-A", on_hand_qty=80),
         InventoryRecord(product_id="MCU-1", on_hand_qty=600),
         InventoryRecord(product_id="SEN-1", on_hand_qty=1200),
+        InventoryRecord(product_id="SEN-1B", on_hand_qty=0),
         InventoryRecord(product_id="ENC-1", on_hand_qty=300),
         InventoryRecord(product_id="PCB-B", on_hand_qty=700),
     ]

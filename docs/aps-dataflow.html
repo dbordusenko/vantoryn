@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vantoryn APS — Data Flow</title>
+<style>
+  :root{
+    --bg0:#04050a; --bg1:#080b13; --bg2:#0c1019; --bg3:#111622; --bg4:#161d2e;
+    --border:#171e30; --borderMid:#1f293f; --borderHi:#2a3a58;
+    --t1:#eef2fa; --t2:#7e8fa8; --t3:#374256;
+    --blue:#3b7fff; --teal:#00c5b5; --green:#22c55e; --amber:#f59e0b;
+    --red:#f87171; --purple:#818cf8;
+    --font:'Inter',system-ui,-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg0);color:var(--t1);font-family:var(--font);
+    min-height:100vh;padding:28px 20px 60px}
+  .wrap{max-width:1180px;margin:0 auto}
+  h1{font-size:22px;font-weight:800;letter-spacing:-.02em;margin-bottom:4px}
+  .sub{font-size:13px;color:var(--t2);margin-bottom:22px}
+  .controls{display:flex;gap:10px;align-items:center;margin-bottom:24px;flex-wrap:wrap}
+  button{font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;
+    border-radius:9px;padding:9px 18px;border:1px solid var(--borderMid);
+    background:transparent;color:var(--t2);transition:all .15s;display:flex;align-items:center;gap:7px}
+  button:hover{border-color:var(--borderHi);color:var(--t1)}
+  button.primary{background:var(--blue);border:none;color:#fff;box-shadow:0 4px 20px #3b7fff40}
+  button.primary:hover{transform:translateY(-1px)}
+  .speed{display:flex;gap:6px;align-items:center;font-size:12px;color:var(--t3);margin-left:auto}
+  .speed input{accent-color:var(--blue)}
+
+  .pipeline{display:flex;flex-direction:column;gap:0}
+  .phase{display:grid;grid-template-columns:200px 1fr;gap:18px;position:relative;
+    padding:0 0 0 0}
+  .node{background:var(--bg1);border:1px solid var(--border);border-radius:14px;
+    padding:16px 18px;transition:all .35s;position:relative;overflow:hidden}
+  .node.io{background:var(--bg2);border-style:dashed}
+  .node .pnum{position:absolute;top:12px;right:14px;font-size:11px;font-weight:700;color:var(--t3)}
+  .node .ptitle{display:flex;align-items:center;gap:9px;font-size:14px;font-weight:700;margin-bottom:8px}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--t3);transition:all .35s;flex-shrink:0}
+  .node .pdesc{font-size:12px;color:var(--t2);line-height:1.55}
+  .node .detail{font-size:11.5px;color:var(--t2);margin-top:10px;padding-top:10px;
+    border-top:1px solid var(--border);display:none;line-height:1.6}
+  .node.open .detail{display:block;animation:fade .25s ease}
+  .node .sample{font-family:ui-monospace,Menlo,monospace;font-size:11px;color:var(--teal);
+    background:#00c5b510;border:1px solid #00c5b528;border-radius:7px;padding:7px 10px;margin-top:8px;white-space:pre-wrap}
+  .leftcol{display:flex;align-items:center}
+  .leftcol .lbl{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--t3)}
+
+  /* active state */
+  .node.active{border-color:var(--blue);box-shadow:0 0 0 1px var(--blue),0 8px 30px #3b7fff22;transform:translateX(4px)}
+  .node.active .dot{background:var(--blue);box-shadow:0 0 10px var(--blue)}
+  .node.done .dot{background:var(--green)}
+  .node.active .ptitle{color:#fff}
+
+  /* connector / flowing packet */
+  .conn{height:34px;position:relative;margin-left:99px;width:2px;background:var(--border)}
+  .conn.lit{background:linear-gradient(var(--blue),var(--teal))}
+  .packet{position:absolute;left:-5px;width:12px;height:12px;border-radius:50%;
+    background:var(--teal);box-shadow:0 0 12px var(--teal);opacity:0;top:0}
+  .packet.run{animation:drop var(--dur,900ms) linear forwards}
+  .clabel{position:absolute;left:16px;top:7px;font-size:10.5px;color:var(--t3);white-space:nowrap}
+  .conn.lit .clabel{color:var(--teal)}
+
+  @keyframes drop{0%{top:-2px;opacity:0}10%{opacity:1}90%{opacity:1}100%{top:32px;opacity:0}}
+  @keyframes fade{from{opacity:0;transform:translateY(-4px)}to{opacity:1}}
+  .hint{font-size:11px;color:var(--t3);margin-top:18px;text-align:center}
+  .badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:6px}
+  .b-blue{background:#3b7fff1e;color:var(--blue)} .b-teal{background:#00c5b51e;color:var(--teal)}
+  .b-amber{background:#f59e0b1e;color:var(--amber)} .b-purple{background:#818cf81e;color:var(--purple)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🏭 Vantoryn APS — Production &amp; Supply Optimizer</h1>
+  <div class="sub">Interactive data-flow. Press <b>Play</b> to watch data move through each phase, or click any phase to expand what it does. Numbers are from the demo dataset.</div>
+
+  <div class="controls">
+    <button class="primary" id="play">▶ Play</button>
+    <button id="step">⏭ Step</button>
+    <button id="reset">↺ Reset</button>
+    <button id="expandAll">⤢ Expand all</button>
+    <div class="speed">speed
+      <input type="range" id="speed" min="300" max="1600" value="900" step="100">
+    </div>
+  </div>
+
+  <div class="pipeline" id="pipeline"></div>
+  <div class="hint">Tip: click a phase box to see the detail + sample data. Use <b>Step</b> to advance one phase at a time.</div>
+</div>
+
+<script>
+const PHASES = [
+  { col:'INPUTS', io:true, title:'Input Data', badge:['b-blue','source'],
+    desc:'Sales forecast (the driver), inventory, open orders, BOM + routings, resource calendars, supplier terms, financial params.',
+    detail:'Everything master + transactional. The forecast is what pulls the whole plan.',
+    sample:'SS-100 demand: 200,220,240… (12 wks)\nOn-hand: SS-100=120, MCU-1=600\nFinance: opening cash $250k, target $50k',
+    flow:'forecast + inventory + BOM' },
+
+  { col:'PHASE 1', title:'Demand Aggregation', badge:['b-blue','net demand'],
+    desc:'Consolidate forecast, then net it against on-hand stock + scheduled receipts to get the true requirement.',
+    detail:'Net requirement = gross demand − projected on-hand − scheduled receipts + safety stock.',
+    sample:'SS-100 W1: gross 200 − onhand 120 + SS 50 = net 130',
+    flow:'net requirements' },
+
+  { col:'PHASE 2', title:'Master Production Schedule (MPS)', badge:['b-teal','what to build'],
+    desc:'Decide how much of each finished product to build in each week, keeping safety stock.',
+    detail:'Time-phased plan per FG product. Drives everything downstream.',
+    sample:'SS-100 planned orders: 80,220,240,260…',
+    flow:'planned FG orders' },
+
+  { col:'PHASE 3', title:'MRP — BOM Explosion', badge:['b-teal','what to buy/make'],
+    desc:'Explode the FG plan down through every recipe level into component demand. Apply scrap, offset by lead time.',
+    detail:'Multi-level, low-level coding (≤10 levels). 1×SS-100 → 1 PCB-A + 1 ENC-1 + 2 SEN-1; 1×PCB-A → 1 PCB-B + 1 MCU-1. Scrap inflates gross; lead time shifts orders earlier.',
+    sample:'240 SS-100 → 240/(1-2%) PCB-A\n→ 480 SEN-1 (×2, +3% scrap)\nMCU-1 lead 21d → order 3 wks early',
+    flow:'component requirements' },
+
+  { col:'PHASE 4', title:'Capacity Optimization', badge:['b-purple','OR-Tools MILP'],
+    desc:'Fit production to finite machine capacity. Minimize a weighted cost: holding + overtime + cash tie-up. Detect bottlenecks.',
+    detail:'Google OR-Tools MILP. Each resource has limited hours. When a week is overloaded it chooses: build ahead (more inventory/cash) OR overtime (more cost) — based on YOUR slider weights.',
+    sample:'SMT line: 14h/wk regular, peak need 17h\n→ optimizer adds 6h overtime OR builds ahead\nPeak load: 122.8%',
+    flow:'feasible schedule + overtime' },
+
+  { col:'PHASE 5', title:'Procurement Planning', badge:['b-blue','purchase orders'],
+    desc:'Turn buy-item demand into purchase orders: qty (MOQ/multiples), order date (− lead time), supplier, and payment date (DPO).',
+    detail:'Rounds to minimum order qty / order multiple. Order date = need − lead time. Payment date = receipt + supplier terms.',
+    sample:'MCU-1: need 500 → MOQ 500, mult 100\norder W-1, pay receipt+45d (DPO)',
+    flow:'POs + payment timing' },
+
+  { col:'PHASE 6', title:'Cash Flow Simulation', badge:['b-purple','money in/out'],
+    desc:'Weave the three timelines into a weekly cash forecast: cash-out (materials@DPO + labor + overhead) vs cash-in (sales@DSO).',
+    detail:'Cash-out: material payments at supplier terms + direct labor (scheduled hrs × rate) + overhead. Cash-in: shipments collected after customer DSO. Tracks cumulative vs target balance.',
+    sample:'W1: out $9,376 in $0 → cum $240,624\nmin cash balance: $210,547 (> target ✓)',
+    flow:'cash projection' },
+
+  { col:'OUTPUTS', io:true, title:'Plan Result + Risks', badge:['b-amber','decision'],
+    desc:'MPS, purchase plan, capacity loads, cash-flow, risk alerts (shortage / bottleneck / cash), and recommendations. Plus scenario KPIs.',
+    detail:'Everything the React tab renders: heatmap, cash waterfall, MPS table, risk list. Status OPTIMAL, OTD 100%.',
+    sample:'STATUS: OPTIMAL\ntotal_cost $206,895 · cash_tie $115,105\nOTD 100% · 2 bottleneck alerts',
+    flow:null },
+];
+
+const pipe = document.getElementById('pipeline');
+PHASES.forEach((p,i)=>{
+  const row = document.createElement('div');
+  row.className='phase';
+  row.innerHTML = `
+    <div class="leftcol"><span class="lbl">${p.col}</span></div>
+    <div class="node ${p.io?'io':''}" data-i="${i}">
+      <span class="pnum">${p.io?'':'phase '+i+'/6'}</span>
+      <div class="ptitle"><span class="dot"></span>${p.title}
+        <span class="badge ${p.badge[0]}">${p.badge[1]}</span></div>
+      <div class="pdesc">${p.desc}</div>
+      <div class="detail">${p.detail}<div class="sample">${p.sample}</div></div>
+    </div>`;
+  pipe.appendChild(row);
+  if(p.flow){
+    const c=document.createElement('div');
+    c.className='conn'; c.dataset.ci=i;
+    c.innerHTML=`<div class="packet"></div><div class="clabel">${p.flow} ↓</div>`;
+    pipe.appendChild(c);
+  }
+});
+
+const nodes=[...document.querySelectorAll('.node')];
+const conns=[...document.querySelectorAll('.conn')];
+let cur=-1, playing=false, timer=null;
+const speed=()=>+document.getElementById('speed').value;
+
+nodes.forEach(n=>n.addEventListener('click',()=>n.classList.toggle('open')));
+
+function clearAll(){
+  nodes.forEach(n=>n.classList.remove('active','done'));
+  conns.forEach(c=>{c.classList.remove('lit');c.querySelector('.packet').classList.remove('run');});
+  cur=-1;
+}
+function activate(i){
+  nodes.forEach((n,k)=>{
+    n.classList.toggle('active',k===i);
+    n.classList.toggle('done',k<i);
+  });
+  // light the connector leaving the previous node
+  if(i>0){
+    const c=conns[i-1];
+    if(c){
+      c.classList.add('lit');
+      const pk=c.querySelector('.packet');
+      pk.style.setProperty('--dur',speed()*0.9+'ms');
+      pk.classList.remove('run'); void pk.offsetWidth; pk.classList.add('run');
+    }
+  }
+  nodes[i].scrollIntoView({behavior:'smooth',block:'center'});
+}
+function step(){
+  if(cur>=nodes.length-1){ stop(); return; }
+  cur++; activate(cur);
+}
+function play(){
+  if(playing){ stop(); return; }
+  if(cur>=nodes.length-1) clearAll();
+  playing=true; document.getElementById('play').textContent='⏸ Pause';
+  const tick=()=>{
+    if(cur>=nodes.length-1){ stop(); return; }
+    step(); timer=setTimeout(tick,speed());
+  };
+  tick();
+}
+function stop(){
+  playing=false; clearTimeout(timer);
+  document.getElementById('play').textContent='▶ Play';
+}
+document.getElementById('play').onclick=play;
+document.getElementById('step').onclick=()=>{stop();step();};
+document.getElementById('reset').onclick=()=>{stop();clearAll();};
+document.getElementById('expandAll').onclick=(e)=>{
+  const anyClosed=nodes.some(n=>!n.classList.contains('open'));
+  nodes.forEach(n=>n.classList.toggle('open',anyClosed));
+  e.target.textContent=anyClosed?'⤡ Collapse all':'⤢ Expand all';
+};
+</script>
+</body>
+</html>
