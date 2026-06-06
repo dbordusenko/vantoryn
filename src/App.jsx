@@ -11,6 +11,7 @@ import Product from './pages/product'
 import Cabinet from './pages/Cabinet'
 import LogoShowcase from './pages/LogoShowcase'
 import HealthScore from './pages/HealthScore'
+import ApsDemo from './pages/ApsDemo'
 import Login, { loadSession, clearSession } from './pages/Login'
 import VantorynMark from './components/VantorynMark'
 import BookDemoModal from './components/BookDemoModal'
@@ -29,6 +30,7 @@ const PAGES = {
   cabinet:   Cabinet,
   logos:     LogoShowcase,
   'health-score': HealthScore,
+  'aps-demo': ApsDemo,
 }
 
 // Pages that require authentication
