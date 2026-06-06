@@ -5,6 +5,7 @@ import { C, f } from '../../tokens'
 const TITLES = {
   overview:     'Executive Overview',
   forecasting:  'Forecasting & Scenarios',
+  production:   'Production & Supply Optimizer',
   reports:      'Reports & Board Packs',
   'ai-brief':   'AI Intelligence Brief',
   alerts:       'Risk Alerts & Signals',

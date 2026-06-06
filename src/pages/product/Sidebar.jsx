@@ -1,6 +1,6 @@
 import {
   LayoutDashboard, TrendingUp, FileText, Brain, Bell, PlugZap,
-  Settings, ArrowLeft, BookOpen,
+  Settings, ArrowLeft, BookOpen, Factory,
 } from 'lucide-react'
 import VantorynMark from '../../components/VantorynMark'
 import { C, f } from '../../tokens'
@@ -8,6 +8,7 @@ import { C, f } from '../../tokens'
 const NAV = [
   { id: 'overview',     icon: <LayoutDashboard size={16} />, label: 'Overview' },
   { id: 'forecasting',  icon: <TrendingUp size={16} />,      label: 'Forecasting' },
+  { id: 'production',   icon: <Factory size={16} />,         label: 'Production Planning' },
   { id: 'reports',      icon: <FileText size={16} />,        label: 'Reports' },
   { id: 'ai-brief',     icon: <Brain size={16} />,           label: 'AI Brief' },
   { id: 'alerts',       icon: <Bell size={16} />,            label: 'Alerts', badge: 3 },

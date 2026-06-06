@@ -1,11 +1,11 @@
-import { useState, useEffect, useCallback } from 'react'
+﻿import { useState, useEffect, useCallback } from 'react'
 import {
   Factory, Play, AlertTriangle, TrendingUp, DollarSign, Gauge,
   Boxes, Truck, Activity, Lightbulb, Loader2,
 } from 'lucide-react'
-import { C, FONT, f } from '../tokens'
+import { C, FONT, f } from '../../../tokens'
 
-/* ───────────────────────── Mock fallback (matches backend PlanResult) ─────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Mock fallback (matches backend PlanResult) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    Used when the APS backend (FastAPI :8000) is not reachable, so the UI always renders. */
 const MOCK_RESULT = {
   status: 'OPTIMAL',
@@ -65,7 +65,7 @@ function buildMockCash() {
   return pts
 }
 
-/* ───────────────────────── small UI helpers ───────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ small UI helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function Card({ title, icon, children, style }) {
   return (
     <div style={{ background:C.bg1, border:`1px solid ${C.border}`, borderRadius:12,
@@ -105,7 +105,7 @@ function loadColor(pct) {
   return C.green
 }
 
-/* ───────────────────────── Capacity Heatmap ───────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Capacity Heatmap â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function CapacityHeatmap({ loads }) {
   const resources = [...new Set(loads.map(l=>l.resource_id))]
   const periods = [...new Set(loads.map(l=>l.period_index))].sort((a,b)=>a-b)
@@ -127,7 +127,7 @@ function CapacityHeatmap({ loads }) {
         </div>
       </div>
       <div style={{ display:'flex', gap:14, marginTop:14, flexWrap:'wrap' }}>
-        {[['≤70%',C.green],['70–95%',C.teal],['95–110%',C.amber],['>110%',C.red]].map(([lbl,col])=>(
+        {[['â‰¤70%',C.green],['70â€“95%',C.teal],['95â€“110%',C.amber],['>110%',C.red]].map(([lbl,col])=>(
           <div key={lbl} style={{ display:'flex', alignItems:'center', gap:5 }}>
             <div style={{ width:10, height:10, borderRadius:3, background:col }}/>
             <span style={f({ fontSize:10, color:C.t3 })}>{lbl}</span>
@@ -157,7 +157,7 @@ function Row({ r, periods, get }) {
   )
 }
 
-/* ───────────────────────── Cash Flow Waterfall ───────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Cash Flow Waterfall â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function CashWaterfall({ cash, target }) {
   const W=640, H=220, padL=46, padB=26, padT=10
   const cums = cash.map(c=>c.cumulative_cash)
@@ -215,7 +215,7 @@ function Legend({ color, label }) {
   )
 }
 
-/* ───────────────────────── MPS table ───────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ MPS table â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function MpsTable({ mps }) {
   const products = [...new Set(mps.map(m=>m.product_id))]
   const [sel, setSel] = useState(products[0])
@@ -261,13 +261,13 @@ function MpsTable({ mps }) {
   )
 }
 
-/* ───────────────────────── Risks + Recommendations ───────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Risks + Recommendations â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const SEV = { HIGH:C.red, MED:C.amber, LOW:C.teal, INFO:C.blue }
 function RiskList({ risks, recs }) {
   return (
     <Card title="Risk Alerts & Recommendations" icon={<AlertTriangle size={15}/>}>
       {risks.length===0 && (
-        <div style={f({ fontSize:12, color:C.green })}>✓ No critical risks detected.</div>
+        <div style={f({ fontSize:12, color:C.green })}>âœ“ No critical risks detected.</div>
       )}
       {risks.map((r,i)=>(
         <div key={i} style={{ display:'flex', gap:10, padding:'8px 0',
@@ -276,7 +276,7 @@ function RiskList({ risks, recs }) {
             background:SEV[r.severity]||C.t3, flexShrink:0 }}/>
           <div>
             <span style={f({ fontSize:9, fontWeight:700, color:SEV[r.severity], letterSpacing:'0.05em' })}>
-              {r.severity} · {r.category}
+              {r.severity} Â· {r.category}
             </span>
             <div style={f({ fontSize:12, color:C.t2, marginTop:2 })}>{r.message}</div>
           </div>
@@ -296,7 +296,7 @@ function RiskList({ risks, recs }) {
   )
 }
 
-/* ───────────────────────── Weight controls ───────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Weight controls â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const WEIGHT_DEFS = [
   { key:'cash_tie_up', label:'Min cash tie-up' },
   { key:'holding',     label:'Min inventory' },
@@ -323,13 +323,13 @@ function WeightPanel({ weights, setWeights, onRun, running }) {
         borderRadius:9, padding:'11px', cursor:running?'wait':'pointer',
         boxShadow:`0 4px 20px ${C.blue}40`, opacity:running?0.7:1 })}>
         {running ? <Loader2 size={15} className="spin"/> : <Play size={15}/>}
-        {running ? 'Optimizing…' : 'Run Optimization'}
+        {running ? 'Optimizingâ€¦' : 'Run Optimization'}
       </button>
     </Card>
   )
 }
 
-/* ───────────────────────── Main view ───────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Main view â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 export default function ProductionPlanning() {
   const [weights, setWeights] = useState({ cash_tie_up:5, holding:5, overtime:1, stockout:8 })
   const [result, setResult]   = useState(MOCK_RESULT)
@@ -348,7 +348,7 @@ export default function ProductionPlanning() {
       const data = await res.json()
       setResult(data); setSource('live')
     } catch {
-      // graceful fallback — keep mock but reflect weight changes lightly
+      // graceful fallback â€” keep mock but reflect weight changes lightly
       setResult({ ...MOCK_RESULT }); setSource('mock')
     } finally {
       setRunning(false)
@@ -370,11 +370,11 @@ export default function ProductionPlanning() {
           <div>
             <div style={f({ fontSize:16, fontWeight:700, color:C.t1 })}>Production & Supply Optimizer</div>
             <div style={f({ fontSize:11, color:C.t3 })}>
-              APS engine · status&nbsp;
+              APS engine Â· status&nbsp;
               <span style={{ color: result.status==='OPTIMAL'?C.green:C.amber, fontWeight:600 }}>
                 {result.status}
               </span>
-              &nbsp;·&nbsp;
+              &nbsp;Â·&nbsp;
               <span style={{ color: source==='live'?C.green:C.t3 }}>
                 {source==='live' ? 'live backend' : 'demo data (backend offline)'}
               </span>
@@ -408,3 +408,5 @@ export default function ProductionPlanning() {
     </div>
   )
 }
+
+

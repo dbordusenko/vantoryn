@@ -4,6 +4,7 @@ import Sidebar from './Sidebar'
 import TopBar from './TopBar'
 import Overview from './views/Overview'
 import Forecasting from './views/Forecasting'
+import ProductionPlanning from './views/ProductionPlanning'
 import Reports from './views/Reports'
 import AIBrief from './views/AIBrief'
 import Alerts from './views/Alerts'
@@ -28,6 +29,7 @@ export default function Product({ navigate, onLogout, session }) {
     switch (view) {
       case 'overview':     return <Overview setView={setView} importedData={importedData} />
       case 'forecasting':  return <Forecasting />
+      case 'production':   return <ProductionPlanning />
       case 'reports':      return <Reports />
       case 'ai-brief':     return <AIBrief />
       case 'alerts':       return <Alerts setView={setView} />
