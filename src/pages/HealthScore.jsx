@@ -70,9 +70,19 @@ export default function HealthScore({ navigate, onBookDemo }) {
 
   const canSubmit = company && revenue && erps && pain && email
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
-    if (canSubmit) setSubmitted(true)
+    if (!canSubmit) return
+    const s = calcScore(revenue, erps, pain)
+    setSubmitted(true)
+    // Fire-and-forget lead to Telegram
+    try {
+      await fetch('/api/lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'health', company, revenue, erps, pain, email, score: s }),
+      })
+    } catch { /* non-blocking */ }
   }
 
   const score = calcScore(revenue, erps, pain)

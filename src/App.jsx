@@ -40,31 +40,54 @@ const AUTH_PAGES = new Set(['product', 'cabinet'])
 // Footer shared across all pages except Home (Home has its own)
 function SharedFooter({ navigate }) {
   const f = s => ({ fontFamily: FONT, ...s })
+  const navLinks = [
+    { label: 'Platform', page: 'platform' }, { label: 'Solutions', page: 'solutions' },
+    { label: 'Security', page: 'security' }, { label: 'Pricing', page: 'pricing' },
+    { label: 'Insights', page: 'insights' },
+  ]
+  const legalLinks = [
+    { label: 'Privacy Policy', href: '/privacy' },
+    { label: 'Terms of Service', href: '/terms' },
+    { label: 'contact@vantoryn.com', href: 'mailto:contact@vantoryn.com' },
+  ]
   return (
-    <footer style={{ background: C.bg0, borderTop: `1px solid ${C.border}`, padding: '40px 28px' }}>
-      <div style={{ maxWidth: 1160, margin: '0 auto',
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        flexWrap: 'wrap', gap: 20 }}>
-        <div onClick={() => navigate('home')} style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
-          <VantorynMark size={28} />
-          <span style={f({ fontSize: 15, fontWeight: 700, color: C.t1 })}>Vantoryn</span>
+    <footer style={{ background: C.bg0, borderTop: `1px solid ${C.border}`, padding: '36px 28px' }}>
+      <div style={{ maxWidth: 1160, margin: '0 auto' }}>
+        {/* Top row */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+          flexWrap: 'wrap', gap: 20, marginBottom: 24 }}>
+          <div onClick={() => navigate('home')} style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
+            <VantorynMark size={28} />
+            <span style={f({ fontSize: 15, fontWeight: 700, color: C.t1 })}>Vantoryn</span>
+          </div>
+          <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
+            {navLinks.map(l => (
+              <button key={l.page} onClick={() => navigate(l.page)} style={f({
+                background: 'none', border: 'none', cursor: 'pointer',
+                fontSize: 13, color: C.t3, fontWeight: 500, transition: 'color 0.2s',
+              })}
+              onMouseEnter={e => e.currentTarget.style.color = C.t2}
+              onMouseLeave={e => e.currentTarget.style.color = C.t3}
+              >{l.label}</button>
+            ))}
+          </div>
         </div>
-        <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
-          {[
-            { label: 'Platform', page: 'platform' }, { label: 'Solutions', page: 'solutions' },
-            { label: 'Security', page: 'security' }, { label: 'Pricing', page: 'pricing' },
-            { label: 'Insights', page: 'insights' },
-          ].map(l => (
-            <button key={l.page} onClick={() => navigate(l.page)} style={f({
-              background: 'none', border: 'none', cursor: 'pointer',
-              fontSize: 13, color: C.t3, fontWeight: 500, transition: 'color 0.2s',
-            })}
-            onMouseEnter={e => e.currentTarget.style.color = C.t2}
-            onMouseLeave={e => e.currentTarget.style.color = C.t3}
-            >{l.label}</button>
-          ))}
+        {/* Bottom row */}
+        <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: 18,
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+          flexWrap: 'wrap', gap: 12 }}>
+          <span style={f({ fontSize: 12, color: C.t4 })}>© 2026 Vantoryn. All rights reserved.</span>
+          <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
+            {legalLinks.map(l => (
+              <a key={l.label} href={l.href} style={f({
+                fontSize: 12, color: C.t4, textDecoration: 'none', transition: 'color 0.2s',
+              })}
+              onMouseEnter={e => e.currentTarget.style.color = C.t2}
+              onMouseLeave={e => e.currentTarget.style.color = C.t4}
+              >{l.label}</a>
+            ))}
+          </div>
         </div>
-        <span style={f({ fontSize: 12, color: C.t4 })}>© 2026 Vantoryn. All rights reserved.</span>
       </div>
     </footer>
   )

@@ -41,9 +41,17 @@ export default function BookDemoModal({ onClose }) {
     if (validate()) setStep(2)
   }
 
-  function handleConfirm() {
+  async function handleConfirm() {
     if (!slot) return
     setStep(3)
+    // Fire-and-forget lead to Telegram
+    try {
+      await fetch('/api/lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'demo', ...form, slot }),
+      })
+    } catch { /* non-blocking */ }
   }
 
   const inp = (field, placeholder, icon) => (
