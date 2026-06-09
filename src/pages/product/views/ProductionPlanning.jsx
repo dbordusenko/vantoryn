@@ -65,6 +65,26 @@ function buildMockCash() {
   return pts
 }
 
+/* ─── dynamic mock: responds to weight sliders ─── */
+function buildDynamicMock(weights) {
+  const cashW = weights.cash_tie_up / 10
+  const holdW = weights.holding     / 10
+  const otW   = weights.overtime    / 10
+  const svcW  = weights.stockout    / 10
+
+  return {
+    ...MOCK_RESULT,
+    kpis: {
+      total_cost:              Math.round(MOCK_RESULT.kpis.total_cost            * (1 - Math.min((cashW + holdW) / 2, 1) * 0.18)),
+      cash_tie_up:             Math.round(MOCK_RESULT.kpis.cash_tie_up           * (1 - Math.min(cashW, 1) * 0.28)),
+      peak_capacity_load_pct: +(MOCK_RESULT.kpis.peak_capacity_load_pct         * (1 - Math.min(otW,   1) * 0.22)).toFixed(1),
+      on_time_delivery_pct:   +Math.min(100, MOCK_RESULT.kpis.on_time_delivery_pct * (1 + Math.min(svcW, 1) * 0.04)).toFixed(1),
+      total_setup_min:         Math.round(MOCK_RESULT.kpis.total_setup_min       * (1 - Math.min(otW,   1) * 0.30)),
+      min_cash_balance:        Math.round(MOCK_RESULT.kpis.min_cash_balance      * (1 + Math.min(cashW, 1) * 0.15)),
+    },
+  }
+}
+
 /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ small UI helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function Card({ title, icon, children, style }) {
   return (
@@ -348,8 +368,8 @@ export default function ProductionPlanning() {
       const data = await res.json()
       setResult(data); setSource('live')
     } catch {
-      // graceful fallback â€” keep mock but reflect weight changes lightly
-      setResult({ ...MOCK_RESULT }); setSource('mock')
+      // graceful fallback — KPIs reflect weight slider values
+      setResult(buildDynamicMock(weights)); setSource('mock')
     } finally {
       setRunning(false)
     }
