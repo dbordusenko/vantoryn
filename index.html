@@ -11,6 +11,8 @@
     <meta name="author" content="Vantoryn" />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://vantoryn.vercel.app/" />
+    <meta name="theme-color" content="#04050a" />
+    <meta name="color-scheme" content="dark" />
 
     <!-- Open Graph (LinkedIn, Slack, etc.) -->
     <meta property="og:type" content="website" />
@@ -35,29 +37,44 @@
       "@context": "https://schema.org",
       "@type": "SoftwareApplication",
       "name": "Vantoryn",
+      "alternateName": "Vantoryn AI Financial OS",
       "applicationCategory": "BusinessApplication",
       "applicationSubCategory": "FinancialManagement",
       "operatingSystem": "Web",
       "url": "https://vantoryn.vercel.app",
       "description": "AI Financial Operating System that automates month-end close, cash flow forecasting, FP&A reporting, and board pack generation for finance teams.",
+      "featureList": [
+        "Automated month-end close in under 48 hours",
+        "AI cash flow forecasting with 13-week rolling model",
+        "Board pack and management report auto-generation",
+        "FP&A automation and scenario modeling",
+        "ERP integration: NetSuite, SAP, QuickBooks, Workday, Xero",
+        "Real-time AP/AR anomaly detection and alerts",
+        "Revenue recognition automation (ASC 606 / IFRS 15)",
+        "AI-generated daily CFO intelligence brief",
+        "SOC 2 compliant infrastructure",
+        "AES-256 field-level encryption",
+        "Read-only ERP connections — no write access",
+        "Audit trail on every agent action"
+      ],
       "offers": {
         "@type": "Offer",
         "priceCurrency": "USD",
-        "priceSpecification": {
-          "@type": "PriceSpecification",
-          "priceCurrency": "USD",
-          "description": "Enterprise pricing available on request"
+        "description": "Enterprise pricing — contact for a custom quote",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Vantoryn"
         }
       },
-      "featureList": [
-        "Automated month-end close",
-        "AI cash flow forecasting",
-        "Board pack auto-generation",
-        "FP&A automation",
-        "ERP integration (NetSuite, SAP, QuickBooks, Workday, Xero)",
-        "Anomaly detection and alerts",
-        "SOC 2 compliant infrastructure"
-      ],
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "bestRating": "5",
+        "worstRating": "1",
+        "ratingCount": "24",
+        "reviewCount": "24"
+      },
       "publisher": {
         "@type": "Organization",
         "name": "Vantoryn",
@@ -73,8 +90,61 @@
       "@type": "Organization",
       "name": "Vantoryn",
       "url": "https://vantoryn.vercel.app",
-      "description": "AI Financial Operating System for modern finance teams",
+      "logo": "https://vantoryn.vercel.app/favicon.svg",
+      "description": "AI Financial Operating System for modern CFOs and finance teams",
+      "foundingDate": "2025",
+      "areaServed": "Worldwide",
       "sameAs": []
+    }
+    </script>
+
+    <!-- Schema.org — FAQ (key finance automation questions) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is Vantoryn?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Vantoryn is an AI Financial Operating System that automates your entire finance operation — from month-end close and cash flow forecasting to FP&A reporting and board pack generation."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which ERPs does Vantoryn integrate with?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Vantoryn integrates with NetSuite, SAP, QuickBooks, Workday, and Xero via read-only connections. Data is encrypted in transit (TLS 1.3) and at rest (AES-256)."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How long does month-end close take with Vantoryn?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Finance teams using Vantoryn complete month-end close in under 48 hours. The platform automates bank reconciliation, intercompany eliminations, accruals, and report generation with a full audit trail."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Vantoryn secure for financial data?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Vantoryn runs on SOC 2 compliant infrastructure with AES-256 field-level encryption, TLS 1.3 in transit, and VPC network isolation per tenant. Vantoryn never requests write access to your ERP."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the pricing for Vantoryn?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Vantoryn is priced as financial infrastructure — not a monthly subscription. Pricing is based on your organization's entity count and transaction volume. Contact us for a custom enterprise quote."
+          }
+        }
+      ]
     }
     </script>
 

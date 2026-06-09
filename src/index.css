@@ -2,6 +2,8 @@
 
 html {
   scroll-behavior: smooth;
+  background-color: #04050a;   /* prevents white flash on iOS overscroll */
+  color-scheme: dark;           /* native elements (inputs, scrollbars) respect dark mode */
 }
 
 :root {
@@ -51,9 +53,13 @@ html {
 body {
   margin: 0;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background-color: var(--bg-main);
-  color: var(--text-primary);
-  transition: background-color 0.3s ease, color 0.3s ease;
+  background-color: #04050a;   /* always dark — overrides the --bg-main light default */
+  color: #eef2fa;
+  min-height: 100vh;
+}
+
+#root {
+  background-color: #04050a;
   min-height: 100vh;
 }
 
