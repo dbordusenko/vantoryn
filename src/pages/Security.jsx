@@ -2,6 +2,7 @@
 import { Shield, Lock, Eye, Users, Building2, Globe, CheckCircle2,
   ArrowRight, BadgeCheck, Server, ChevronDown } from 'lucide-react'
 import { C, f } from '../tokens'
+import { useBreakpoint } from '../hooks/useBreakpoint'
 
 const PILLARS = [
   {
@@ -76,6 +77,7 @@ function FAQItem({ item }) {
 }
 
 export default function Security({ navigate, onBookDemo }) {
+  const { isMobile } = useBreakpoint()
   return (
     <div style={{ background: C.bg0, minHeight: '100vh', paddingTop: 66, animation: 'pageFade 0.3s ease' }}>
       <style>{`@keyframes pageFade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}} @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}`}</style>
@@ -86,7 +88,7 @@ export default function Security({ navigate, onBookDemo }) {
           backgroundImage: `linear-gradient(${C.border}55 1px, transparent 1px), linear-gradient(90deg, ${C.border}55 1px, transparent 1px)`,
           backgroundSize: '60px 60px', opacity: 0.4 }} />
         <div style={{ maxWidth: 1160, margin: '0 auto', position: 'relative', zIndex: 1 }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64, alignItems: 'center' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 40 : 64, alignItems: 'center' }}>
             <div>
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '5px 14px', borderRadius: 20,
                 marginBottom: 28, background: `${C.green}14`, border: `1px solid ${C.green}35` }}>
@@ -120,7 +122,7 @@ export default function Security({ navigate, onBookDemo }) {
             </div>
 
             {/* Trust badges */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14, marginTop: isMobile ? 0 : undefined }}>
               {[
                 { icon: <BadgeCheck size={24} color={C.green} />, title: 'SOC 2 Type II', sub: 'Annual independent audit' },
                 { icon: <Lock size={24} color={C.blue} />,       title: 'AES-256',        sub: 'Encryption at rest' },
@@ -153,7 +155,7 @@ export default function Security({ navigate, onBookDemo }) {
               Six pillars of enterprise security.
             </h2>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: 20 }}>
             {PILLARS.map(p => (
               <div key={p.title} style={{ background: C.bg2, border: `1px solid ${C.border}`,
                 borderRadius: 16, padding: '28px', transition: 'border-color 0.2s, transform 0.2s' }}

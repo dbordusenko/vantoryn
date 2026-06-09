@@ -3,6 +3,7 @@ import { ArrowRight, CheckCircle2, TrendingUp, Clock, AlertTriangle,
   BarChart3, Activity, Workflow, Layers, ChevronRight,
   Users, Building2, PieChart, Target } from 'lucide-react'
 import { C, f } from '../tokens'
+import { useBreakpoint } from '../hooks/useBreakpoint'
 
 const PERSONAS = [
   {
@@ -114,6 +115,7 @@ const PERSONAS = [
 export default function Solutions({ navigate, onBookDemo }) {
   const [active, setActive] = useState('cfo')
   const persona = PERSONAS.find(p => p.id === active)
+  const { isMobile } = useBreakpoint()
 
   return (
     <div style={{ background: C.bg0, minHeight: '100vh', paddingTop: 66, animation: 'pageFade 0.3s ease' }}>
@@ -173,7 +175,7 @@ export default function Solutions({ navigate, onBookDemo }) {
         {/* Headline block */}
         <section style={{ background: C.bg0, padding: '60px 28px', borderBottom: `1px solid ${C.border}` }}>
           <div style={{ maxWidth: 1160, margin: '0 auto' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64, alignItems: 'start' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 32 : 64, alignItems: 'start' }}>
               <div>
                 <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '4px 12px', borderRadius: 6,
                   background: `${persona.color}14`, border: `1px solid ${persona.color}35`, marginBottom: 20 }}>
@@ -219,7 +221,7 @@ export default function Solutions({ navigate, onBookDemo }) {
         {/* Features + Outcomes */}
         <section style={{ background: C.bg1, padding: '60px 28px', borderBottom: `1px solid ${C.border}` }}>
           <div style={{ maxWidth: 1160, margin: '0 auto' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 40 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 16 : 40 }}>
               {/* Features */}
               <div>
                 <div style={f({ fontSize: 11, color: C.t3, fontWeight: 700, letterSpacing: '0.1em',

@@ -1,7 +1,8 @@
-﻿import { useState } from 'react'
+import { useState } from 'react'
 import { CheckCircle2, ArrowRight, Zap, BarChart3, Activity,
   Building2, Shield, ChevronDown, Calculator } from 'lucide-react'
 import { C, f } from '../tokens'
+import { useBreakpoint } from '../hooks/useBreakpoint'
 
 const PLANS = [
   {
@@ -23,7 +24,7 @@ const PLANS = [
       'Email + chat support',
     ],
     cta: 'Start with Finance Ops',
-    scaleNote: 'Scales with your organization\'s entity count and transaction volume.',
+    scaleNote: "Scales with your organization's entity count and transaction volume.",
   },
   {
     id: 'fpa', name: 'FP&A Intelligence', color: C.teal,
@@ -46,7 +47,7 @@ const PLANS = [
       'Priority support + CSM',
     ],
     cta: 'Start with FP&A Intelligence',
-    scaleNote: 'Scales with your organization\'s entity count and transaction volume.',
+    scaleNote: "Scales with your organization's entity count and transaction volume.",
   },
   {
     id: 'enterprise', name: 'Enterprise Control', color: C.purple,
@@ -72,43 +73,45 @@ const PLANS = [
 ]
 
 const COMPARE_ROWS = [
-  { label: 'Executive reporting automation', ops: true, fpa: true, ent: true },
-  { label: 'Month-end close orchestration',  ops: true, fpa: true, ent: true },
-  { label: 'ERP integration',                ops: '3',  fpa: '∞',  ent: 'Custom' },
-  { label: 'AI forecasting engine',          ops: false,fpa: true, ent: true },
-  { label: 'Scenario modeling',              ops: false,fpa: true, ent: true },
-  { label: 'Anomaly detection',              ops: false,fpa: true, ent: true },
-  { label: 'CFO morning brief',              ops: false,fpa: true, ent: true },
-  { label: 'Multi-entity support',           ops: false,fpa: false,ent: true },
-  { label: 'Single-tenant infrastructure',   ops: false,fpa: false,ent: true },
-  { label: 'SOX compliance workflows',       ops: false,fpa: false,ent: true },
-  { label: 'Custom integrations',            ops: false,fpa: false,ent: true },
-  { label: 'Dedicated CSM',                  ops: false,fpa: true, ent: true },
-  { label: 'SLA guarantee',                  ops: '99%',fpa: '99.5%',ent: '99.9%' },
+  { label: 'Executive reporting automation', ops: true,   fpa: true,    ent: true },
+  { label: 'Month-end close orchestration',  ops: true,   fpa: true,    ent: true },
+  { label: 'ERP integration',                ops: '3',    fpa: '∞',     ent: 'Custom' },
+  { label: 'AI forecasting engine',          ops: false,  fpa: true,    ent: true },
+  { label: 'Scenario modeling',              ops: false,  fpa: true,    ent: true },
+  { label: 'Anomaly detection',              ops: false,  fpa: true,    ent: true },
+  { label: 'CFO morning brief',              ops: false,  fpa: true,    ent: true },
+  { label: 'Multi-entity support',           ops: false,  fpa: false,   ent: true },
+  { label: 'Single-tenant infrastructure',   ops: false,  fpa: false,   ent: true },
+  { label: 'SOX compliance workflows',       ops: false,  fpa: false,   ent: true },
+  { label: 'Custom integrations',            ops: false,  fpa: false,   ent: true },
+  { label: 'Dedicated CSM',                  ops: false,  fpa: true,    ent: true },
+  { label: 'SLA guarantee',                  ops: '99%',  fpa: '99.5%', ent: '99.9%' },
 ]
 
 /* ROI Calculator */
-function ROICalc() {
-  const [entities, setEntities] = useState(3)
-  const [txVolume, setTxVolume] = useState(50)
+function ROICalc({ isMobile }) {
+  const [entities, setEntities]   = useState(3)
+  const [txVolume, setTxVolume]   = useState(50)
   const [closeDays, setCloseDays] = useState(14)
 
-  const projectedClose = Math.max(2, Math.round(closeDays * 0.28))
-  const riskExposure = Math.round((entities * txVolume * 0.68) + (closeDays * 8))
-  const annualSavings = Math.round((closeDays - projectedClose) * entities * 4.2 + txVolume * 0.38)
+  const projectedClose  = Math.max(2, Math.round(closeDays * 0.28))
+  const riskExposure    = Math.round((entities * txVolume * 0.68) + (closeDays * 8))
+  const annualSavings   = Math.round((closeDays - projectedClose) * entities * 4.2 + txVolume * 0.38)
 
   return (
-    <div style={{ background: C.bg2, border: `1px solid ${C.borderMid}`, borderRadius: 20, padding: '36px 32px' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 28 }}>
+    <div style={{ background: C.bg2, border: `1px solid ${C.borderMid}`, borderRadius: 20, padding: isMobile ? '24px 20px' : '36px 32px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 28, flexWrap: 'wrap' }}>
         <Calculator size={20} color={C.blue} />
         <span style={f({ fontSize: 16, fontWeight: 700, color: C.t1 })}>ROI Calculator</span>
         <span style={f({ fontSize: 12, color: C.t3 })}>Estimate your organization's return</span>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20, marginBottom: 28 }}>
+
+      {/* Sliders */}
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: isMobile ? 24 : 20, marginBottom: 28 }}>
         {[
-          { label: 'Number of legal entities',       val: entities,  set: setEntities,  min: 1, max: 50, step: 1, fmt: v => v },
+          { label: 'Number of legal entities',       val: entities,  set: setEntities,  min: 1, max: 50,  step: 1, fmt: v => v },
           { label: 'Monthly transaction volume (K)', val: txVolume,  set: setTxVolume,  min: 1, max: 500, step: 5, fmt: v => `${v}K` },
-          { label: 'Current close cycle (days)',     val: closeDays, set: setCloseDays, min: 3, max: 30, step: 1, fmt: v => v },
+          { label: 'Current close cycle (days)',     val: closeDays, set: setCloseDays, min: 3, max: 30,  step: 1, fmt: v => v },
         ].map(input => (
           <div key={input.label}>
             <div style={f({ fontSize: 11, color: C.t3, marginBottom: 8, fontWeight: 600 })}>{input.label}</div>
@@ -123,11 +126,13 @@ function ROICalc() {
           </div>
         ))}
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+
+      {/* Results */}
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: 16 }}>
         {[
-          { label: 'Projected close cycle',       value: `${projectedClose} days`, color: C.blue },
-          { label: 'Annual risk exposure identified', value: `$${riskExposure}K`,  color: C.amber },
-          { label: 'Estimated annual savings',     value: `$${annualSavings}K`,    color: C.green },
+          { label: 'Projected close cycle',           value: `${projectedClose} days`, color: C.blue },
+          { label: 'Annual risk exposure identified',  value: `$${riskExposure}K`,     color: C.amber },
+          { label: 'Estimated annual savings',         value: `$${annualSavings}K`,    color: C.green },
         ].map(r => (
           <div key={r.label} style={{ background: C.bg3, border: `1px solid ${C.border}`,
             borderRadius: 12, padding: '18px', textAlign: 'center' }}>
@@ -137,7 +142,7 @@ function ROICalc() {
         ))}
       </div>
       <div style={f({ fontSize: 11, color: C.t3, marginTop: 16, lineHeight: 1.5 })}>
-        * Estimate based on industry benchmarks. Actual results vary by organization. Scales with entity count and transaction volume.
+        * Estimate based on industry benchmarks. Actual results vary by organization.
       </div>
     </div>
   )
@@ -145,14 +150,18 @@ function ROICalc() {
 
 export default function Pricing({ navigate, onBookDemo }) {
   const [showTable, setShowTable] = useState(false)
+  const { isMobile, isTablet } = useBreakpoint()
+
+  // Plans: 1 col on mobile, 1 col on tablet (stack vertically), 3 col on desktop
+  const plansColumns = isMobile ? '1fr' : isTablet ? '1fr' : 'repeat(3, 1fr)'
 
   return (
     <div style={{ background: C.bg0, minHeight: '100vh', paddingTop: 66, animation: 'pageFade 0.3s ease' }}>
-      <style>{`@keyframes pageFade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}`}</style>
+      <style>{`@keyframes pageFade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}} @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}`}</style>
 
       {/* Hero */}
-      <section style={{ background: C.bg0, padding: '72px 28px 56px', textAlign: 'center',
-        position: 'relative', overflow: 'hidden' }}>
+      <section style={{ background: C.bg0, padding: isMobile ? '52px 20px 40px' : '72px 28px 56px',
+        textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0,
           backgroundImage: `linear-gradient(${C.border}55 1px, transparent 1px), linear-gradient(90deg, ${C.border}55 1px, transparent 1px)`,
           backgroundSize: '60px 60px', opacity: 0.4 }} />
@@ -162,7 +171,7 @@ export default function Pricing({ navigate, onBookDemo }) {
             <Zap size={12} color={C.blue} />
             <span style={f({ fontSize: 12, color: C.blue, fontWeight: 600, letterSpacing: '0.04em' })}>Pricing</span>
           </div>
-          <h1 style={f({ fontSize: 'clamp(34px, 4vw, 52px)', fontWeight: 800, color: C.t1,
+          <h1 style={f({ fontSize: isMobile ? 32 : 'clamp(34px, 4vw, 52px)', fontWeight: 800, color: C.t1,
             margin: '0 0 18px', letterSpacing: '-0.035em', lineHeight: 1.1 })}>
             Strategic platform pricing<br />
             <span style={{ background: `linear-gradient(135deg, ${C.blue}, ${C.purple})`,
@@ -170,30 +179,27 @@ export default function Pricing({ navigate, onBookDemo }) {
               for serious finance teams.
             </span>
           </h1>
-          <p style={f({ fontSize: 17, color: C.t2, lineHeight: 1.7, margin: '0 auto' })}>
+          <p style={f({ fontSize: isMobile ? 15 : 17, color: C.t2, lineHeight: 1.7, margin: '0 auto' })}>
             Vantoryn is not a monthly subscription tool. It is financial infrastructure — priced to reflect the value it delivers to your organization.
           </p>
         </div>
       </section>
 
       {/* Plans */}
-      <section style={{ background: C.bg0, padding: '0 28px 72px' }}>
+      <section style={{ background: C.bg0, padding: isMobile ? '0 16px 52px' : '0 28px 72px' }}>
         <div style={{ maxWidth: 1160, margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: plansColumns, gap: isMobile ? 16 : 20 }}>
             {PLANS.map(plan => (
               <div key={plan.id} style={{
                 background: plan.highlighted ? C.bg3 : C.bg2,
                 border: `1px solid ${plan.highlighted ? plan.color + '55' : C.border}`,
-                borderRadius: 20, padding: '32px 28px',
+                borderRadius: 20, padding: isMobile ? '24px 20px' : '32px 28px',
                 position: 'relative', overflow: 'hidden',
                 boxShadow: plan.highlighted ? `0 0 60px ${plan.color}14` : 'none',
-                transition: 'transform 0.2s',
-              }}
-              onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-4px)'}
-              onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
-              >
-                {/* Top accent */}
-                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: plan.color }} />
+              }}>
+                {/* Top accent line */}
+                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: plan.color }} />
+
                 {plan.highlighted && (
                   <div style={{ position: 'absolute', top: 14, right: 14,
                     padding: '3px 10px', borderRadius: 20,
@@ -205,17 +211,17 @@ export default function Pricing({ navigate, onBookDemo }) {
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
                   <div style={{ width: 40, height: 40, borderRadius: 11,
                     background: `${plan.color}16`, border: `1px solid ${plan.color}35`,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center', color: plan.color }}>
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', color: plan.color, flexShrink: 0 }}>
                     {plan.icon}
                   </div>
-                  <div>
+                  <div style={{ minWidth: 0 }}>
                     <div style={f({ fontSize: 14, fontWeight: 800, color: C.t1 })}>{plan.name}</div>
                     <div style={f({ fontSize: 11, color: plan.color, fontWeight: 600 })}>{plan.tagline}</div>
                   </div>
                 </div>
 
                 <div style={{ marginBottom: 20, paddingBottom: 20, borderBottom: `1px solid ${C.border}` }}>
-                  <div style={f({ fontSize: 32, fontWeight: 800, color: C.t1, letterSpacing: '-0.03em', marginBottom: 4 })}>
+                  <div style={f({ fontSize: isMobile ? 28 : 32, fontWeight: 800, color: C.t1, letterSpacing: '-0.03em', marginBottom: 4 })}>
                     {plan.price}
                   </div>
                   <div style={f({ fontSize: 12, color: C.t3 })}>{plan.period}</div>
@@ -228,9 +234,9 @@ export default function Pricing({ navigate, onBookDemo }) {
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 9, marginBottom: 28 }}>
                   {plan.features.map(feat => (
-                    <div key={feat} style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
-                      <CheckCircle2 size={13} color={plan.color} style={{ flexShrink: 0 }} />
-                      <span style={f({ fontSize: 13, color: C.t2 })}>{feat}</span>
+                    <div key={feat} style={{ display: 'flex', alignItems: 'flex-start', gap: 9 }}>
+                      <CheckCircle2 size={13} color={plan.color} style={{ flexShrink: 0, marginTop: 2 }} />
+                      <span style={f({ fontSize: 13, color: C.t2, lineHeight: 1.5 })}>{feat}</span>
                     </div>
                   ))}
                 </div>
@@ -269,68 +275,72 @@ export default function Pricing({ navigate, onBookDemo }) {
             </button>
           </div>
 
-          {/* Compare table */}
+          {/* Compare table — scrollable on mobile */}
           {showTable && (
             <div style={{ marginTop: 24, background: C.bg2, border: `1px solid ${C.border}`,
               borderRadius: 16, overflow: 'hidden', animation: 'fadeUp 0.25s ease' }}>
-              <style>{`@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}`}</style>
-              {/* Header */}
-              <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr',
-                background: C.bg3, borderBottom: `1px solid ${C.border}` }}>
-                <div style={{ padding: '14px 20px' }} />
-                {PLANS.map(p => (
-                  <div key={p.id} style={{ padding: '14px 16px', textAlign: 'center', borderLeft: `1px solid ${C.border}` }}>
-                    <span style={f({ fontSize: 12, fontWeight: 700, color: p.color })}>{p.name.split(' ')[0]}</span>
+              <div style={{ overflowX: 'auto' }}>
+                <div style={{ minWidth: 520 }}>
+                  {/* Header */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr',
+                    background: C.bg3, borderBottom: `1px solid ${C.border}` }}>
+                    <div style={{ padding: '14px 20px' }} />
+                    {PLANS.map(p => (
+                      <div key={p.id} style={{ padding: '14px 16px', textAlign: 'center', borderLeft: `1px solid ${C.border}` }}>
+                        <span style={f({ fontSize: 12, fontWeight: 700, color: p.color })}>{p.name.split(' ')[0]}</span>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-              {COMPARE_ROWS.map((row, ri) => (
-                <div key={row.label} style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr',
-                  borderBottom: ri < COMPARE_ROWS.length - 1 ? `1px solid ${C.border}` : 'none' }}>
-                  <div style={{ padding: '12px 20px' }}>
-                    <span style={f({ fontSize: 13, color: C.t2 })}>{row.label}</span>
-                  </div>
-                  {[row.ops, row.fpa, row.ent].map((val, vi) => (
-                    <div key={vi} style={{ padding: '12px 16px', textAlign: 'center', borderLeft: `1px solid ${C.border}`,
-                      display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      {val === true ? <CheckCircle2 size={14} color={C.green} />
-                        : val === false ? <span style={f({ fontSize: 14, color: C.t4 })}>—</span>
-                        : <span style={f({ fontSize: 12, color: C.t2, fontWeight: 600 })}>{val}</span>}
+                  {/* Rows */}
+                  {COMPARE_ROWS.map((row, ri) => (
+                    <div key={row.label} style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr',
+                      borderBottom: ri < COMPARE_ROWS.length - 1 ? `1px solid ${C.border}` : 'none' }}>
+                      <div style={{ padding: '12px 20px' }}>
+                        <span style={f({ fontSize: 13, color: C.t2 })}>{row.label}</span>
+                      </div>
+                      {[row.ops, row.fpa, row.ent].map((val, vi) => (
+                        <div key={vi} style={{ padding: '12px 16px', textAlign: 'center', borderLeft: `1px solid ${C.border}`,
+                          display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          {val === true  ? <CheckCircle2 size={14} color={C.green} />
+                            : val === false ? <span style={f({ fontSize: 14, color: C.t4 })}>—</span>
+                            : <span style={f({ fontSize: 12, color: C.t2, fontWeight: 600 })}>{val}</span>}
+                        </div>
+                      ))}
                     </div>
                   ))}
                 </div>
-              ))}
+              </div>
             </div>
           )}
         </div>
       </section>
 
       {/* ROI Calculator */}
-      <section style={{ background: C.bg1, padding: '80px 28px', borderTop: `1px solid ${C.border}` }}>
+      <section style={{ background: C.bg1, padding: isMobile ? '52px 16px' : '80px 28px', borderTop: `1px solid ${C.border}` }}>
         <div style={{ maxWidth: 860, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: 48 }}>
+          <div style={{ textAlign: 'center', marginBottom: isMobile ? 32 : 48 }}>
             <span style={f({ fontSize: 11, color: C.t3, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase' })}>ROI Calculator</span>
-            <h2 style={f({ fontSize: 'clamp(24px, 3vw, 38px)', fontWeight: 800, color: C.t1,
+            <h2 style={f({ fontSize: isMobile ? 24 : 'clamp(24px, 3vw, 38px)', fontWeight: 800, color: C.t1,
               margin: '14px 0 0', letterSpacing: '-0.03em' })}>
               Calculate your organization's return.
             </h2>
           </div>
-          <ROICalc />
+          <ROICalc isMobile={isMobile} />
         </div>
       </section>
 
       {/* Enterprise CTA */}
-      <section style={{ background: C.bg0, padding: '72px 28px', borderTop: `1px solid ${C.border}` }}>
+      <section style={{ background: C.bg0, padding: isMobile ? '52px 20px' : '72px 28px', borderTop: `1px solid ${C.border}` }}>
         <div style={{ maxWidth: 640, margin: '0 auto', textAlign: 'center' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, justifyContent: 'center', marginBottom: 24 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, justifyContent: 'center', marginBottom: 24, flexWrap: 'wrap' }}>
             <Shield size={16} color={C.green} />
             <span style={f({ fontSize: 13, color: C.t2 })}>All plans include SOC 2 infrastructure and full audit trail</span>
           </div>
-          <h2 style={f({ fontSize: 'clamp(22px, 3vw, 36px)', fontWeight: 800, color: C.t1,
+          <h2 style={f({ fontSize: isMobile ? 22 : 'clamp(22px, 3vw, 36px)', fontWeight: 800, color: C.t1,
             margin: '0 0 16px', letterSpacing: '-0.03em' })}>
             Ready to see the platform?
           </h2>
-          <p style={f({ fontSize: 15, color: C.t2, lineHeight: 1.7, margin: '0 0 32px' })}>
+          <p style={f({ fontSize: isMobile ? 14 : 15, color: C.t2, lineHeight: 1.7, margin: '0 0 32px' })}>
             A 30-minute executive demo shows Vantoryn with your actual ERP data. No commitment, no pressure — just the platform working for your finance operation.
           </p>
           <button onClick={onBookDemo} style={f({
@@ -349,4 +359,3 @@ export default function Pricing({ navigate, onBookDemo }) {
     </div>
   )
 }
-

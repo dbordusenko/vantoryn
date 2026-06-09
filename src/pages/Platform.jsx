@@ -4,6 +4,7 @@ import { ArrowRight, Database, Brain, Target, CheckCircle2,
   AlertTriangle, RefreshCw, SlidersHorizontal, TrendingUp,
   ArrowUpRight, ArrowDownRight, Shield, Zap, Eye } from 'lucide-react'
 import { C, f, FONT } from '../tokens'
+import { useBreakpoint } from '../hooks/useBreakpoint'
 
 /* ─── Architecture Diagram ───────────────────────────────── */
 function ArchDiagram() {
@@ -71,7 +72,7 @@ function ArchDiagram() {
                 </div>
               </div>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: 10 }}>
               {[
                 { icon: <Sparkles size={13} color={C.teal} />,        label: 'Data Unification',       sub: 'Cross-system entity resolution' },
                 { icon: <Activity size={13} color={C.blue} />,         label: 'Predictive Engine',      sub: 'ML forecasting models' },
@@ -106,7 +107,7 @@ function ArchDiagram() {
           textTransform: 'uppercase', textAlign: 'center', marginBottom: 14 })}>
           Finance Leaders Act Faster
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 12 }}>
           {outputs.map(o => (
             <div key={o.label} style={{
               padding: '16px', borderRadius: 12, textAlign: 'center',
@@ -193,6 +194,7 @@ function DashboardPreview({ title, subtitle, color, children }) {
 /* ─── MAIN ───────────────────────────────────────────────── */
 export default function Platform({ navigate, onBookDemo }) {
   const [openMod, setOpenMod] = useState(0)
+  const { isMobile, isTablet } = useBreakpoint()
 
   const modules = [
     {
@@ -343,7 +345,7 @@ export default function Platform({ navigate, onBookDemo }) {
               What your finance team sees every day.
             </h2>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)', gap: 20 }}>
             {/* Screen 1 — KPI */}
             <DashboardPreview title="Executive Overview" subtitle="Real-time financial position" color={C.blue}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -425,7 +427,7 @@ export default function Platform({ navigate, onBookDemo }) {
               Measured outcomes from day one.
             </h2>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: 20 }}>
             {[
               { value: '74%', label: 'Reduction in reporting time', color: C.blue },
               { value: '3.2×', label: 'Faster financial close', color: C.teal },
