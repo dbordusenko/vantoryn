@@ -14,6 +14,8 @@ import LogoShowcase from './pages/LogoShowcase'
 import HealthScore from './pages/HealthScore'
 import ApsDemo from './pages/ApsDemo'
 import Login, { loadSession, clearSession } from './pages/Login'
+import Privacy from './pages/Privacy'
+import Terms from './pages/Terms'
 import VantorynMark from './components/VantorynMark'
 import BookDemoModal from './components/BookDemoModal'
 import WaitlistModal from './components/WaitlistModal'
@@ -32,6 +34,8 @@ const PAGES = {
   logos:     LogoShowcase,
   'health-score': HealthScore,
   'aps-demo': ApsDemo,
+  privacy: Privacy,
+  terms: Terms,
 }
 
 // Pages that require authentication
@@ -46,8 +50,8 @@ function SharedFooter({ navigate }) {
     { label: 'Insights', page: 'insights' },
   ]
   const legalLinks = [
-    { label: 'Privacy Policy', href: '/privacy' },
-    { label: 'Terms of Service', href: '/terms' },
+    { label: 'Privacy Policy', page: 'privacy' },
+    { label: 'Terms of Service', page: 'terms' },
     { label: 'contact@vantoryn.com', href: 'mailto:contact@vantoryn.com' },
   ]
   return (
@@ -79,12 +83,20 @@ function SharedFooter({ navigate }) {
           <span style={f({ fontSize: 12, color: C.t4 })}>© 2026 Vantoryn. All rights reserved.</span>
           <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
             {legalLinks.map(l => (
-              <a key={l.label} href={l.href} style={f({
-                fontSize: 12, color: C.t4, textDecoration: 'none', transition: 'color 0.2s',
-              })}
-              onMouseEnter={e => e.currentTarget.style.color = C.t2}
-              onMouseLeave={e => e.currentTarget.style.color = C.t4}
-              >{l.label}</a>
+              l.href
+                ? <a key={l.label} href={l.href} style={f({
+                    fontSize: 12, color: C.t4, textDecoration: 'none', transition: 'color 0.2s',
+                  })}
+                  onMouseEnter={e => e.currentTarget.style.color = C.t2}
+                  onMouseLeave={e => e.currentTarget.style.color = C.t4}
+                  >{l.label}</a>
+                : <button key={l.label} onClick={() => navigate(l.page)} style={f({
+                    fontSize: 12, color: C.t4, background: 'none', border: 'none',
+                    cursor: 'pointer', padding: 0, transition: 'color 0.2s',
+                  })}
+                  onMouseEnter={e => e.currentTarget.style.color = C.t2}
+                  onMouseLeave={e => e.currentTarget.style.color = C.t4}
+                  >{l.label}</button>
             ))}
           </div>
         </div>
