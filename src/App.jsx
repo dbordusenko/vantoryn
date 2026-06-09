@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from 'react'
+import { usePageMeta } from './hooks/usePageMeta'
 import { BrowserRouter, useNavigate as useRRNav, useLocation } from 'react-router-dom'
 import Nav from './components/Nav'
 import Home from './pages/Home'
@@ -81,6 +82,7 @@ function AppContent() {
     : 'home'
 
   const [page, setPage]           = useState(initialPage)
+  usePageMeta(page)
   const [fadeOut, setFadeOut]     = useState(false)
   const [session, setSession]     = useState(() => loadSession())
   const [showLogin, setShowLogin] = useState(() => AUTH_PAGES.has(urlPage) && !hasSession)
