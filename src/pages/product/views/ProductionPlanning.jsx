@@ -359,21 +359,31 @@ export default function ProductionPlanning() {
   const API = import.meta.env.VITE_APS_API || 'https://192.18.131.82.sslip.io/aps'
   const run = useCallback(async ()=>{
     setRunning(true)
+    const ctrl = new AbortController()
+    const timer = setTimeout(() => ctrl.abort(), 4000)   // 4 s timeout
     try {
       const res = await fetch(`${API}/plan/run`, {
         method:'POST', headers:{'content-type':'application/json'},
         body: JSON.stringify({ weights, time_limit_s:15 }),
+        signal: ctrl.signal,
       })
+      clearTimeout(timer)
       if (!res.ok) throw new Error('backend error')
       const data = await res.json()
       setResult(data); setSource('live')
     } catch {
+      clearTimeout(timer)
       // graceful fallback — KPIs reflect weight slider values
       setResult(buildDynamicMock(weights)); setSource('mock')
     } finally {
       setRunning(false)
     }
   }, [weights])
+
+  // Instant KPI preview when sliders move (no button press needed in demo mode)
+  useEffect(() => {
+    if (source === 'mock') setResult(buildDynamicMock(weights))
+  }, [weights])   // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(()=>{ run() }, [])   // initial load
 
