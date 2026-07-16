@@ -19,6 +19,7 @@ import Terms from './pages/Terms'
 import VantorynMark from './components/VantorynMark'
 import BookDemoModal from './components/BookDemoModal'
 import WaitlistModal from './components/WaitlistModal'
+import FoundingPartnerModal from './components/FoundingPartnerModal'
 import ErrorBoundary from './components/ErrorBoundary'
 import { C, FONT, GLOBAL_STYLES } from './tokens'
 
@@ -123,6 +124,7 @@ function AppContent() {
   const [showLogin, setShowLogin] = useState(() => AUTH_PAGES.has(urlPage) && !hasSession)
   const [showBookDemo, setShowBookDemo] = useState(false)
   const [showWaitlist, setShowWaitlist] = useState(false)
+  const [showFounding, setShowFounding] = useState(false)
 
   // Sync browser back/forward button → state (with auth guard)
   useEffect(() => {
@@ -207,6 +209,7 @@ function AppContent() {
 
       {showBookDemo && <BookDemoModal onClose={() => setShowBookDemo(false)} />}
       {showWaitlist && <WaitlistModal onClose={() => setShowWaitlist(false)} />}
+      {showFounding && <FoundingPartnerModal onClose={() => setShowFounding(false)} />}
 
       <div style={{
         opacity: fadeOut ? 0 : 1,
@@ -220,6 +223,7 @@ function AppContent() {
             session={session}
             onBookDemo={() => setShowBookDemo(true)}
             onWaitlist={() => setShowWaitlist(true)}
+            onFounding={() => setShowFounding(true)}
           />
         </ErrorBoundary>
       </div>

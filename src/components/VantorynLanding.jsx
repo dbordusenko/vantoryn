@@ -438,6 +438,112 @@ function Hero({ navigate, onBookDemo, onWaitlist }) {
 }
 
 /* ─── TRUST BAR ──────────────────────────────────────────── */
+/* ─── FOUNDING PARTNER / BETA ─────────────────────────────── */
+function FoundingPartnerSection({ navigate, onFounding }) {
+  return (
+    <section style={{
+      background: C.bg1, borderTop: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}`,
+      padding: '64px 28px', position: 'relative', overflow: 'hidden',
+    }}>
+      {/* subtle glow */}
+      <div style={{
+        position: 'absolute', top: '-40%', left: '50%', transform: 'translateX(-50%)',
+        width: 700, height: 400, background: `radial-gradient(circle, ${C.blue}12, transparent 70%)`,
+        pointerEvents: 'none',
+      }} />
+      <div style={{ maxWidth: 1160, margin: '0 auto', position: 'relative', zIndex: 1 }}>
+        <div style={{
+          background: C.bg2, border: `1px solid ${C.borderMid}`, borderRadius: 20,
+          padding: '36px 32px',
+          display: 'grid', gridTemplateColumns: 'minmax(0,1.4fr) minmax(0,1fr)',
+          gap: 32, alignItems: 'center',
+        }}
+        className="founding-grid"
+        >
+          <div>
+            <div style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8, padding: '5px 13px',
+              borderRadius: 20, marginBottom: 16,
+              background: `${C.teal}14`, border: `1px solid ${C.teal}38`,
+            }}>
+              <span style={{
+                width: 6, height: 6, borderRadius: '50%', background: C.teal,
+                boxShadow: `0 0 8px ${C.teal}`, animation: 'pulseGreen 2s infinite',
+              }} />
+              <span style={f({ fontSize: 12, color: C.teal, fontWeight: 700, letterSpacing: '0.04em' })}>
+                NOW IN BETA · 8 FOUNDING SEATS
+              </span>
+            </div>
+
+            <h2 style={f({
+              fontSize: 'clamp(24px, 3vw, 34px)', fontWeight: 800, color: C.t1,
+              letterSpacing: '-0.03em', lineHeight: 1.2, margin: '0 0 14px',
+            })}>
+              Help us build it. Lock the price forever.
+            </h2>
+
+            <p style={f({ fontSize: 15, color: C.t2, lineHeight: 1.7, margin: '0 0 22px', maxWidth: 560 })}>
+              We're taking eight finance teams into our first cohort. You shape the roadmap and get
+              <strong style={{ color: C.t1 }}> 50% off year one — locked for as long as you stay</strong>.
+              If you don't have a working plan on your own data in 14 days, we refund it in full.
+            </p>
+
+            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+              <button onClick={onFounding} style={f({
+                fontSize: 14, fontWeight: 700, color: '#fff',
+                background: `linear-gradient(135deg, ${C.blue}, ${C.teal})`,
+                border: 'none', borderRadius: 10, padding: '12px 24px', cursor: 'pointer',
+                display: 'inline-flex', alignItems: 'center', gap: 8,
+                boxShadow: `0 4px 24px ${C.blue}40`, transition: 'all 0.2s',
+              })}
+              onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-1px)'}
+              onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
+              >
+                Apply for a founding seat <ArrowRight size={15} />
+              </button>
+              <button onClick={() => navigate('pricing')} style={f({
+                fontSize: 14, fontWeight: 500, color: C.t2, background: 'transparent',
+                border: `1px solid ${C.borderMid}`, borderRadius: 10, padding: '12px 22px',
+                cursor: 'pointer', transition: 'all 0.2s',
+              })}
+              onMouseEnter={e => { e.currentTarget.style.color = C.t1; e.currentTarget.style.borderColor = C.borderHi }}
+              onMouseLeave={e => { e.currentTarget.style.color = C.t2; e.currentTarget.style.borderColor = C.borderMid }}
+              >
+                See what's included
+              </button>
+            </div>
+          </div>
+
+          {/* what you get / what we ask */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {[
+              { icon: <BadgeCheck size={14} />, color: C.teal,  text: '50% off year one, locked for life' },
+              { icon: <Workflow size={14} />,   color: C.blue,  text: 'Your priorities shape the roadmap' },
+              { icon: <Shield size={14} />,     color: C.green, text: 'Value in 14 days or money back' },
+              { icon: <Users size={14} />,      color: C.purple, text: 'In exchange: a 30-min call every 2 weeks' },
+            ].map(row => (
+              <div key={row.text} style={{
+                display: 'flex', alignItems: 'center', gap: 11,
+                background: C.bg3, border: `1px solid ${C.border}`,
+                borderRadius: 11, padding: '12px 14px',
+              }}>
+                <span style={{ color: row.color, flexShrink: 0, display: 'flex' }}>{row.icon}</span>
+                <span style={f({ fontSize: 13, color: C.t2, lineHeight: 1.4 })}>{row.text}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <style>{`
+        @media (max-width: 860px) {
+          .founding-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
+    </section>
+  )
+}
+
 function TrustBar() {
   return (
     <section style={{
@@ -1162,12 +1268,13 @@ function Footer({ navigate }) {
 }
 
 /* ─── ROOT ───────────────────────────────────────────────── */
-export default function VantorynLanding({ navigate = () => {}, onBookDemo = () => {}, onWaitlist = () => {} }) {
+export default function VantorynLanding({ navigate = () => {}, onBookDemo = () => {}, onWaitlist = () => {}, onFounding = () => {} }) {
   return (
     <div style={{ background: C.bg0, minHeight: '100vh', fontFamily: FONT }}>
       {/* Nav is handled by App.jsx router — no double nav */}
       <Hero navigate={navigate} onBookDemo={onBookDemo} onWaitlist={onWaitlist} />
       <TrustBar />
+      <FoundingPartnerSection navigate={navigate} onFounding={onFounding} />
       <UseCasesSection navigate={navigate} />
       <FinancialAnxietySection navigate={navigate} />
       <ExecutiveBriefingSection />

@@ -148,7 +148,8 @@ function ROICalc({ isMobile }) {
   )
 }
 
-export default function Pricing({ navigate, onBookDemo }) {
+export default function Pricing({ navigate, onBookDemo, onFounding }) {
+  const apply = onFounding ?? onBookDemo
   const [showTable, setShowTable] = useState(false)
   const { isMobile, isTablet } = useBreakpoint()
 
@@ -249,7 +250,7 @@ export default function Pricing({ navigate, onBookDemo }) {
                   ))}
                 </div>
 
-                <button onClick={onBookDemo} style={f({
+                <button onClick={apply} style={f({
                   width: '100%', fontSize: 14, fontWeight: 700,
                   color: plan.highlighted ? '#fff' : C.t1,
                   background: plan.highlighted ? plan.color : 'transparent',
@@ -428,22 +429,35 @@ export default function Pricing({ navigate, onBookDemo }) {
           </div>
           <h2 style={f({ fontSize: isMobile ? 22 : 'clamp(22px, 3vw, 36px)', fontWeight: 800, color: C.t1,
             margin: '0 0 16px', letterSpacing: '-0.03em' })}>
-            Ready to see the platform?
+            Think you're a fit?
           </h2>
           <p style={f({ fontSize: isMobile ? 14 : 15, color: C.t2, lineHeight: 1.7, margin: '0 0 32px' })}>
-            A 30-minute executive demo shows Vantoryn with your actual ERP data. No commitment, no pressure — just the platform working for your finance operation.
+            Applying takes two minutes and commits you to nothing. We reply within two business
+            days — either with a partner call, or an honest no.
           </p>
-          <button onClick={onBookDemo} style={f({
-            fontSize: 15, fontWeight: 700, color: '#fff', background: C.blue,
-            border: 'none', borderRadius: 11, padding: '14px 32px', cursor: 'pointer',
-            display: 'inline-flex', alignItems: 'center', gap: 8, transition: 'all 0.2s',
-            boxShadow: `0 4px 24px ${C.blue}44`,
-          })}
-          onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
-          onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
-          >
-            Book CFO Strategy Demo <ArrowRight size={16} />
-          </button>
+          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <button onClick={apply} style={f({
+              fontSize: 15, fontWeight: 700, color: '#fff', background: C.blue,
+              border: 'none', borderRadius: 11, padding: '14px 32px', cursor: 'pointer',
+              display: 'inline-flex', alignItems: 'center', gap: 8, transition: 'all 0.2s',
+              boxShadow: `0 4px 24px ${C.blue}44`,
+            })}
+            onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
+            onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
+            >
+              Apply as Founding Partner <ArrowRight size={16} />
+            </button>
+            <button onClick={onBookDemo} style={f({
+              fontSize: 15, fontWeight: 500, color: C.t2, background: 'transparent',
+              border: `1px solid ${C.borderMid}`, borderRadius: 11, padding: '14px 28px',
+              cursor: 'pointer', transition: 'all 0.2s',
+            })}
+            onMouseEnter={e => { e.currentTarget.style.color = C.t1; e.currentTarget.style.borderColor = C.borderHi }}
+            onMouseLeave={e => { e.currentTarget.style.color = C.t2; e.currentTarget.style.borderColor = C.borderMid }}
+            >
+              See a demo first
+            </button>
+          </div>
         </div>
       </section>
     </div>

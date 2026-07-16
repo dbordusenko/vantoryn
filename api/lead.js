@@ -105,6 +105,21 @@ export default async function handler(req, res) {
       `🎯 <b>Main pain:</b> ${esc(pain)}`,
       `📈 <b>Score:</b> ${esc(score)}/100`,
     ].join('\n')
+  } else if (type === 'founding') {
+    const { name, email, company, role, teamSize, erp, challenge, timeline } = body
+    text = [
+      `🏆 <b>Founding Partner Application — Vantoryn</b>`, ``,
+      `👤 <b>Name:</b> ${esc(name)}`,
+      `📧 <b>Email:</b> ${esc(email)}`,
+      `🏢 <b>Company:</b> ${esc(company)}`,
+      `💼 <b>Role:</b> ${esc(role)}`,
+      `👥 <b>Finance team:</b> ${esc(teamSize)}`,
+      `🗄 <b>Current system:</b> ${esc(erp)}`,
+      `⏱ <b>Timeline:</b> ${esc(timeline)}`,
+      ``,
+      `🎯 <b>Wants fixed first:</b>`,
+      `${esc(challenge)}`,
+    ].join('\n')
   } else if (type === 'waitlist') {
     const { name, email, company, revenue, role, position } = body
     text = [

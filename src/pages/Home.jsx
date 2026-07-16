@@ -5,7 +5,8 @@
 // For cleanliness we export a thin wrapper that accepts `navigate`.
 import VantorynLanding from '../components/VantorynLanding'
 
-export default function Home({ navigate, onBookDemo, onWaitlist }) {
-  return <VantorynLanding navigate={navigate} onBookDemo={onBookDemo} onWaitlist={onWaitlist} />
+export default function Home({ navigate, onBookDemo, onWaitlist, onFounding }) {
+  return <VantorynLanding navigate={navigate} onBookDemo={onBookDemo}
+    onWaitlist={onWaitlist} onFounding={onFounding} />
 }
 
