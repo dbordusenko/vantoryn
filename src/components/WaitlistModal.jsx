@@ -32,6 +32,8 @@ export default function WaitlistModal({ onClose }) {
   const [errors, setErrors] = useState({})
   const [loading, setLoading] = useState(false)
   const [confirmed, setConfirmed] = useState(null)
+  const [sendError, setSendError] = useState('')
+  const [hp, setHp] = useState('')   // honeypot
 
   const count = getWaitlistCount()
 
@@ -62,10 +64,22 @@ export default function WaitlistModal({ onClose }) {
     ev.preventDefault()
     if (!validate()) return
     setLoading(true)
-    await new Promise(r => setTimeout(r, 900))
-    const result = addToWaitlist(form)
-    setConfirmed(result)
-    setLoading(false)
+    setSendError('')
+    const result = addToWaitlist(form)   // local list drives the position number
+    try {
+      // Actually deliver the signup — localStorage alone never reaches us.
+      const res = await fetch('/api/lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'waitlist', ...form, position: result.position, website: hp }),
+      })
+      if (!res.ok) throw new Error(String(res.status))
+      setConfirmed(result)
+    } catch {
+      setSendError("We couldn't register you just now. Please email contact@vantoryn.com and we'll add you.")
+    } finally {
+      setLoading(false)
+    }
   }
 
   /* ── backdrop + modal shell ── */
@@ -244,6 +258,23 @@ export default function WaitlistModal({ onClose }) {
                     ))}
                   </div>
                 </div>
+
+                {/* honeypot — visually hidden, only bots fill it */}
+                <input
+                  type="text" tabIndex={-1} autoComplete="off" aria-hidden="true"
+                  value={hp} onChange={e => setHp(e.target.value)}
+                  style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, opacity: 0 }}
+                />
+
+                {sendError && (
+                  <div style={f({
+                    fontSize: 12.5, color: C.red, background: `${C.red}12`,
+                    border: `1px solid ${C.red}35`, borderRadius: 8,
+                    padding: '10px 12px', lineHeight: 1.5,
+                  })}>
+                    {sendError}
+                  </div>
+                )}
 
                 {/* Submit */}
                 <button type="submit" disabled={loading} style={f({

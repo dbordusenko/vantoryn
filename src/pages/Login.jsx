@@ -3,12 +3,17 @@ import { C, f, FONT } from '../tokens'
 import { Eye, EyeOff, ArrowLeft, Loader2, Check } from 'lucide-react'
 import VantorynMark from '../components/VantorynMark'
 
-/* ─── built-in demo accounts ──────────────────────────────────────── */
-// ⚠️ DEMO ONLY — remove before connecting real auth backend
-const DEMO_USERS = [
-  { email: 'demo@vantoryn.ai',  password: 'Vantoryn2026', name: 'Demo User',  org: 'Acme Corp' },
-  { email: 'admin@vantoryn.ai', password: 'Admin2026!',   name: 'Dmytro B.',  org: 'Vantoryn'  },
-]
+/* Credentials are checked by /api/login (server-side). They deliberately do NOT
+   live here: anything in this file ships to every visitor in the JS bundle.
+   Emails aren't secret, so reserving them client-side is fine. */
+const RESERVED_EMAILS = ['demo@vantoryn.ai', 'admin@vantoryn.ai']
+
+/* Self-registered demo accounts stay in this browser only. We store a hash so a
+   reused password isn't sitting in localStorage in the clear. */
+async function hashPassword(pwd) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`vantoryn:${pwd}`))
+  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('')
+}
 
 const AUTH_KEY   = 'vantoryn_auth'
 const USERS_KEY  = 'vantoryn_users'
@@ -18,16 +23,16 @@ function getRegisteredUsers() {
 }
 function saveRegisteredUser(user) {
   const users = getRegisteredUsers()
-  users.push(user)
+  // never persist the password — people reuse passwords across sites
+  const { password, ...safe } = user   // eslint-disable-line no-unused-vars
+  users.push(safe)
   localStorage.setItem(USERS_KEY, JSON.stringify(users))
 }
 
 export function saveSession(user) {
-  localStorage.setItem(AUTH_KEY, JSON.stringify({
-    ...user,
-    token: btoa(`${user.email}:${Date.now()}`),
-    at: Date.now(),
-  }))
+  // `user` comes from /api/login and already carries a signed token.
+  const { password, ...safe } = user   // eslint-disable-line no-unused-vars
+  localStorage.setItem(AUTH_KEY, JSON.stringify({ ...safe, at: Date.now() }))
 }
 export function loadSession() {
   try {
@@ -124,19 +129,42 @@ function SignInForm({ onSuccess }) {
     if (!validate()) return
     setLoading(true)
     setErr({ email: '', password: '', general: '' })
-    await new Promise(r => setTimeout(r, 800))
 
-    const allUsers = [...DEMO_USERS, ...getRegisteredUsers()]
-    const user = allUsers.find(
-      u => u.email.toLowerCase() === email.toLowerCase() && u.password === password
-    )
-    if (user) {
-      saveSession(user)
-      onSuccess(user)
-    } else {
-      setErr(e => ({ ...e, general: 'Incorrect email or password' }))
-      setLoading(false)
+    // 1) demo accounts — verified server-side so passwords stay out of the bundle
+    try {
+      const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      })
+      if (res.ok) {
+        const { user } = await res.json()
+        saveSession(user)
+        onSuccess(user)
+        return
+      }
+      if (res.status === 429) {
+        setErr(e => ({ ...e, general: 'Too many attempts. Try again in a minute.' }))
+        setLoading(false)
+        return
+      }
+    } catch {
+      /* network/API unavailable — fall through to locally registered accounts */
     }
+
+    // 2) accounts registered in this browser (hash-compared, never plaintext)
+    const pwdHash = await hashPassword(password)
+    const local = getRegisteredUsers().find(
+      u => u.email.toLowerCase() === email.toLowerCase() && u.passwordHash === pwdHash
+    )
+    if (local) {
+      saveSession(local)
+      onSuccess(local)
+      return
+    }
+
+    setErr(e => ({ ...e, general: 'Incorrect email or password' }))
+    setLoading(false)
   }
 
   return (
@@ -260,14 +288,20 @@ function SignUpForm({ onSuccess }) {
     await new Promise(r => setTimeout(r, 900))
 
     // Check email not already taken
-    const allUsers = [...DEMO_USERS, ...getRegisteredUsers()]
-    if (allUsers.find(u => u.email.toLowerCase() === form.email.toLowerCase())) {
+    const taken = [
+      ...RESERVED_EMAILS.map(email => ({ email })),
+      ...getRegisteredUsers(),
+    ]
+    if (taken.find(u => u.email.toLowerCase() === form.email.toLowerCase())) {
       setErr(e => ({ ...e, general: 'An account with this email already exists' }))
       setLoading(false)
       return
     }
 
-    const newUser = { name: form.name, email: form.email, org: form.org, password: form.password }
+    const newUser = {
+      name: form.name, email: form.email, org: form.org,
+      passwordHash: await hashPassword(form.password),
+    }
     saveRegisteredUser(newUser)
     saveSession(newUser)
     onSuccess(newUser)

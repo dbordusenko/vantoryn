@@ -19,6 +19,9 @@ export default function BookDemoModal({ onClose }) {
   const [form, setForm] = useState({ name: '', email: '', company: '', role: '', size: '' })
   const [slot, setSlot]   = useState(null)
   const [errors, setErrors] = useState({})
+  const [sending, setSending]     = useState(false)
+  const [sendError, setSendError] = useState('')
+  const [hp, setHp] = useState('')   // honeypot — bots fill it, humans never see it
 
   // Close on Escape
   useEffect(() => {
@@ -42,16 +45,24 @@ export default function BookDemoModal({ onClose }) {
   }
 
   async function handleConfirm() {
-    if (!slot) return
-    setStep(3)
-    // Fire-and-forget lead to Telegram
+    if (!slot || sending) return
+    setSending(true)
+    setSendError('')
+    // Only show the confirmation once the lead is actually delivered — a fake
+    // success screen would silently lose the prospect.
     try {
-      await fetch('/api/lead', {
+      const res = await fetch('/api/lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type: 'demo', ...form, slot }),
+        body: JSON.stringify({ type: 'demo', ...form, slot, website: hp }),
       })
-    } catch { /* non-blocking */ }
+      if (!res.ok) throw new Error(String(res.status))
+      setStep(3)
+    } catch {
+      setSendError("We couldn't submit your request. Please email contact@vantoryn.com and we'll set it up.")
+    } finally {
+      setSending(false)
+    }
   }
 
   const inp = (field, placeholder, icon) => (
@@ -236,21 +247,41 @@ export default function BookDemoModal({ onClose }) {
                 onMouseEnter={e => { e.currentTarget.style.borderColor = C.borderMid; e.currentTarget.style.color = C.t1 }}
                 onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.color = C.t2 }}
                 >Back</button>
-                <button onClick={handleConfirm} disabled={!slot} style={f({
+                <button onClick={handleConfirm} disabled={!slot || sending} style={f({
                   flex: 2, padding: '12px', borderRadius: 10,
                   background: slot ? C.blue : C.bg3,
                   border: 'none', color: slot ? '#fff' : C.t4,
-                  fontSize: 14, fontWeight: 700, cursor: slot ? 'pointer' : 'not-allowed',
+                  fontSize: 14, fontWeight: 700,
+                  cursor: !slot || sending ? 'not-allowed' : 'pointer',
+                  opacity: sending ? 0.7 : 1,
                   boxShadow: slot ? `0 0 24px ${C.blueGlow}` : 'none',
                   display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
                   transition: 'all 0.2s',
                 })}
-                onMouseEnter={e => { if (slot) e.currentTarget.style.transform = 'translateY(-1px)' }}
+                onMouseEnter={e => { if (slot && !sending) e.currentTarget.style.transform = 'translateY(-1px)' }}
                 onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
                 >
-                  Confirm booking <ArrowRight size={16} />
+                  {sending ? 'Sending…' : <>Confirm booking <ArrowRight size={16} /></>}
                 </button>
               </div>
+
+              {/* honeypot — visually hidden, only bots fill it */}
+              <input
+                type="text" tabIndex={-1} autoComplete="off"
+                value={hp} onChange={e => setHp(e.target.value)}
+                aria-hidden="true"
+                style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, opacity: 0 }}
+              />
+
+              {sendError && (
+                <div style={f({
+                  fontSize: 12.5, color: C.red, background: `${C.red}12`,
+                  border: `1px solid ${C.red}35`, borderRadius: 8, padding: '10px 12px',
+                  lineHeight: 1.5,
+                })}>
+                  {sendError}
+                </div>
+              )}
             </div>
           )}
 
