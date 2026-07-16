@@ -9,58 +9,65 @@ import { C, FONT, f } from '../../../tokens'
    Used when the APS backend (FastAPI :8000) is not reachable, so the UI always renders. */
 const MOCK_RESULT = {
   status: 'OPTIMAL',
-  objective_value: 206895,
+  objective_value: 381453,
   kpis: {
-    total_cost: 206895, cash_tie_up: 115105, peak_capacity_load_pct: 122.8,
-    on_time_delivery_pct: 100.0, total_setup_min: 105, min_cash_balance: 210547,
+    total_cost: 381453, cash_tie_up: 354296, peak_capacity_load_pct: 106.2,
+    on_time_delivery_pct: 100.0, total_setup_min: 200, min_cash_balance: 366943,
   },
   mps: buildMockMps(),
   capacity_loads: buildMockCapacity(),
   cash_flow: buildMockCash(),
   risks: [
-    { severity:'HIGH', category:'BOTTLENECK', period_index:9, resource_id:'SMT', product_id:null,
-      message:'SMT Line at 122% capacity in period 9 (overtime 6h).' },
-    { severity:'MED', category:'BOTTLENECK', period_index:10, resource_id:'ASSY', product_id:null,
-      message:'Assembly Cell at 103% capacity in period 10 (overtime 4h).' },
+    { severity:'MED', category:'BOTTLENECK', period_index:8, resource_id:'SMT', product_id:null,
+      message:'SMT at 102% capacity in period 8 (overtime 0h).' },
+    { severity:'MED', category:'BOTTLENECK', period_index:9, resource_id:'SMT', product_id:null,
+      message:'SMT at 106% capacity in period 9 (overtime 0h).' },
+    { severity:'MED', category:'BOTTLENECK', period_index:9, resource_id:'ASSY1', product_id:null,
+      message:'ASSY1 at 99% capacity in period 9 (overtime 0h).' },
   ],
   recommendations: [
+    'Substituted RF-CHIP-B for RF-CHIP (773 units, +$696 cost) — primary couldn’t arrive in time; alternate (priority 2) selected.',
     'Resource SMT is a recurring bottleneck (4 periods >95%). Consider a second shift, alternate routing, or load leveling.',
-    'Plan is feasible. Consider reducing safety stock on A-class items to free working capital.',
+    'Resource ASSY1 is a recurring bottleneck (3 periods >95%). Consider a second shift, alternate routing, or load leveling.',
   ],
 }
 function buildMockMps() {
-  const ss = [200,220,240,260,280,300,300,320,340,340,360,380]
+  // mirrors the live demo dataset (IoT manufacturer): Smart Hub Pro ramping demand
+  const demand = [80, 90, 100, 110, 120, 130, 140, 150, 150, 160, 160, 170]
   const rows = []
-  let oh = 120
-  ss.forEach((d,t)=>{
-    const plan = Math.max(0, d - oh + 50)
+  let oh = 90
+  demand.forEach((d,t)=>{
+    const plan = Math.max(0, d - oh + 40)
     oh = oh + plan - d
-    rows.push({ product_id:'SS-100', period_index:t, gross_demand:d,
-      net_requirement:Math.max(0,d+50-oh), planned_order:plan,
-      projected_on_hand:Math.max(0,oh), source:'MAKE' })
+    rows.push({ product_id:'HUB-PRO', period_index:t, gross_demand:d,
+      net_requirement:Math.max(0, d + 40 - oh), planned_order:plan,
+      projected_on_hand:Math.max(0, oh), source:'MAKE' })
   })
   return rows
 }
 function buildMockCapacity() {
-  const smt = [55,62,70,78,85,95,98,108,118,123,115,110]
-  const assy = [48,52,58,63,68,75,82,90,95,100,103,98]
+  const smt   = [62, 68, 74, 80, 86, 92, 97, 102, 106, 106, 99, 95]
+  const assy1 = [58, 63, 70, 75, 82, 88, 92, 96, 99, 97, 94, 90]
+  const assy2 = [55, 60, 66, 72, 78, 84, 90, 95, 98, 96, 92, 88]
   const loads = []
-  smt.forEach((v,t)=>loads.push({ resource_id:'SMT', period_index:t, load_pct:v,
-    required_hours:+(v*0.14).toFixed(1), available_hours:14, overtime_hours:v>100?+( (v-100)*0.14).toFixed(1):0 }))
-  assy.forEach((v,t)=>loads.push({ resource_id:'ASSY', period_index:t, load_pct:v,
-    required_hours:+(v*0.30).toFixed(1), available_hours:30, overtime_hours:v>100?+((v-100)*0.30).toFixed(1):0 }))
+  const push = (id, arr, avail) => arr.forEach((v,t)=>loads.push({
+    resource_id:id, period_index:t, load_pct:v,
+    required_hours:+(v*avail/100).toFixed(1), available_hours:avail,
+    overtime_hours: v>100 ? +((v-100)*avail/100).toFixed(1) : 0,
+  }))
+  push('SMT', smt, 24); push('ASSY1', assy1, 28); push('ASSY2', assy2, 24)
   return loads
 }
 function buildMockCash() {
   const pts = []
-  let cum = 250000
+  let cum = 450000
   for (let t=0;t<12;t++){
-    const cin = t>=4 ? 28000 + t*1500 : 0
-    const cout = 9000 + t*300
+    const cin = t>=6 ? 52000 + t*2600 : 0
+    const cout = 22000 + t*1400
     const net = cin - cout
     cum += net
     pts.push({ period_index:t, cash_in:cin, cash_out:cout, net_cash:net, cumulative_cash:cum,
-      material_purchases:cout*0.45, direct_labor:cout*0.35, overhead:8000, sales_collections:cin })
+      material_purchases:cout*0.45, direct_labor:cout*0.35, overhead:14000, sales_collections:cin })
   }
   return pts
 }
@@ -364,7 +371,8 @@ export default function ProductionPlanning() {
     try {
       const res = await fetch(`${API}/plan/run`, {
         method:'POST', headers:{'content-type':'application/json'},
-        body: JSON.stringify({ weights, time_limit_s:15 }),
+        // save:false — public demo runs must never persist plan versions
+        body: JSON.stringify({ weights, time_limit_s:15, save:false }),
         signal: ctrl.signal,
       })
       clearTimeout(timer)
@@ -427,7 +435,7 @@ export default function ProductionPlanning() {
       <div style={{ display:'grid', gridTemplateColumns:'minmax(0,1fr) 280px', gap:16, alignItems:'start' }}>
         <div style={{ display:'flex', flexDirection:'column', gap:16, minWidth:0 }}>
           <CapacityHeatmap loads={result.capacity_loads}/>
-          <CashWaterfall cash={result.cash_flow} target={210000}/>
+          <CashWaterfall cash={result.cash_flow} target={120000}/>
           <MpsTable mps={result.mps}/>
         </div>
         <div style={{ display:'flex', flexDirection:'column', gap:16 }}>

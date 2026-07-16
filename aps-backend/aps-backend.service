@@ -9,6 +9,10 @@ WorkingDirectory=/home/ubuntu/aps-backend
 Environment=DATABASE_URL=sqlite:////home/ubuntu/aps-backend/aps.db
 Environment=AUTO_SEED=true
 Environment=CORS_ORIGINS=*
+Environment=RATE_LIMIT_RUNS=10
+Environment=RATE_LIMIT_WINDOW_S=60
+# API_KEY lives here (root-only, not in git)
+EnvironmentFile=/etc/aps-backend.env
 ExecStart=/home/ubuntu/aps-backend/.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000
 Restart=always
 RestartSec=5
