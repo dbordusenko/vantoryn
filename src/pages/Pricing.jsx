@@ -7,7 +7,7 @@ import { useBreakpoint } from '../hooks/useBreakpoint'
 const PLANS = [
   {
     id: 'ops', name: 'Finance Operations', color: C.blue,
-    price: 'From $15K', period: 'per year — up to 3 integrations, 1 entity',
+    period: 'Up to 3 integrations · 1 entity',
     tagline: 'For companies automating core finance processes',
     description: 'Close faster, automate reporting, and eliminate manual reconciliation — without replacing your existing ERP.',
     icon: <BarChart3 size={20} />,
@@ -23,12 +23,12 @@ const PLANS = [
       'Self-serve onboarding with guided setup',
       'Email + chat support',
     ],
-    cta: 'Start with Finance Ops',
-    scaleNote: "Scales with your organization's entity count and transaction volume.",
+    cta: 'Apply as Founding Partner',
+    scaleNote: 'Founding Partner rate applies to this tier for as long as you stay with us.',
   },
   {
     id: 'fpa', name: 'FP&A Intelligence', color: C.teal,
-    price: 'From $28K', period: 'per year — unlimited integrations, up to 5 entities',
+    period: 'Unlimited integrations · up to 5 entities',
     tagline: 'For finance teams requiring predictive analytics',
     description: 'Everything in Finance Operations, plus AI-driven forecasting, scenario modeling, and predictive risk detection.',
     icon: <Activity size={20} />,
@@ -46,12 +46,12 @@ const PLANS = [
       'Dedicated onboarding specialist — 2-week deployment',
       'Priority support + CSM',
     ],
-    cta: 'Start with FP&A Intelligence',
-    scaleNote: "Scales with your organization's entity count and transaction volume.",
+    cta: 'Apply as Founding Partner',
+    scaleNote: 'Founding Partner rate applies to this tier for as long as you stay with us.',
   },
   {
     id: 'enterprise', name: 'Enterprise Control', color: C.purple,
-    price: 'Custom', period: 'annual contract — multi-entity, single-tenant',
+    period: 'Multi-entity · single-tenant option',
     tagline: 'For multi-entity enterprises with governance needs',
     description: 'Full platform capabilities with dedicated infrastructure, custom integrations, enterprise SLAs, and compliance support.',
     icon: <Building2 size={20} />,
@@ -67,8 +67,8 @@ const PLANS = [
       'Executive business reviews',
       'SAML SSO + advanced RBAC',
     ],
-    cta: 'Talk to Enterprise Sales',
-    scaleNote: 'Custom pricing based on entity count, transaction volume, and infrastructure requirements.',
+    cta: 'Apply as Founding Partner',
+    scaleNote: 'Scoped to your entity count, volume and infrastructure needs on the partner call.',
   },
 ]
 
@@ -169,18 +169,22 @@ export default function Pricing({ navigate, onBookDemo }) {
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '5px 14px', borderRadius: 20,
             marginBottom: 24, background: `${C.blue}14`, border: `1px solid ${C.blue}35` }}>
             <Zap size={12} color={C.blue} />
-            <span style={f({ fontSize: 12, color: C.blue, fontWeight: 600, letterSpacing: '0.04em' })}>Pricing</span>
+            <span style={f({ fontSize: 12, color: C.blue, fontWeight: 600, letterSpacing: '0.04em' })}>
+              Founding Partner Program · 8 seats
+            </span>
           </div>
           <h1 style={f({ fontSize: isMobile ? 32 : 'clamp(34px, 4vw, 52px)', fontWeight: 800, color: C.t1,
             margin: '0 0 18px', letterSpacing: '-0.035em', lineHeight: 1.1 })}>
-            Strategic platform pricing<br />
+            We're taking on 8 partners<br />
             <span style={{ background: `linear-gradient(135deg, ${C.blue}, ${C.purple})`,
               WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-              for serious finance teams.
+              to build this with us.
             </span>
           </h1>
           <p style={f({ fontSize: isMobile ? 15 : 17, color: C.t2, lineHeight: 1.7, margin: '0 auto' })}>
-            Vantoryn is not a monthly subscription tool. It is financial infrastructure — priced to reflect the value it delivers to your organization.
+            Vantoryn is financial infrastructure, not a monthly subscription tool. Before we open
+            general availability, we're partnering with eight finance teams who help shape the
+            platform — and lock a founding rate for as long as they stay with us.
           </p>
         </div>
       </section>
@@ -221,10 +225,14 @@ export default function Pricing({ navigate, onBookDemo }) {
                 </div>
 
                 <div style={{ marginBottom: 20, paddingBottom: 20, borderBottom: `1px solid ${C.border}` }}>
-                  <div style={f({ fontSize: isMobile ? 28 : 32, fontWeight: 800, color: C.t1, letterSpacing: '-0.03em', marginBottom: 4 })}>
-                    {plan.price}
+                  <div style={{ display: 'inline-flex', alignItems: 'baseline', gap: 8, marginBottom: 8 }}>
+                    <span style={f({ fontSize: isMobile ? 26 : 30, fontWeight: 800, color: plan.color,
+                      letterSpacing: '-0.03em' })}>−50%</span>
+                    <span style={f({ fontSize: 13, color: C.t2, fontWeight: 600 })}>founding rate</span>
                   </div>
-                  <div style={f({ fontSize: 12, color: C.t3 })}>{plan.period}</div>
+                  <div style={f({ fontSize: 12, color: C.t3, lineHeight: 1.5 })}>
+                    Locked for as long as you stay · {plan.period}
+                  </div>
                 </div>
 
                 <p style={f({ fontSize: 13, color: C.t2, lineHeight: 1.65, margin: '0 0 12px' })}>{plan.description}</p>
@@ -258,6 +266,88 @@ export default function Pricing({ navigate, onBookDemo }) {
                 </button>
               </div>
             ))}
+          </div>
+
+          {/* Founding Partner Program — the deal, both directions */}
+          <div style={{
+            marginTop: isMobile ? 32 : 48,
+            background: C.bg2, border: `1px solid ${C.borderMid}`, borderRadius: 20,
+            padding: isMobile ? '24px 20px' : '36px 32px',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8, flexWrap: 'wrap' }}>
+              <Shield size={18} color={C.teal} />
+              <span style={f({ fontSize: 16, fontWeight: 700, color: C.t1 })}>
+                The Founding Partner deal
+              </span>
+            </div>
+            <p style={f({ fontSize: 13, color: C.t2, lineHeight: 1.65, margin: '0 0 24px', maxWidth: 640 })}>
+              A partnership, not a discount. You get economics that never expire; we get the
+              real-world feedback that makes the platform right for finance teams like yours.
+            </p>
+
+            <div style={{ display: 'grid',
+              gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)', gap: isMobile ? 20 : 28 }}>
+              {[
+                {
+                  title: 'What you get', color: C.teal,
+                  items: [
+                    '50% off year one — locked for as long as you stay with us',
+                    'Direct line to the team building it',
+                    'Your priorities shape the roadmap',
+                    'Onboarding led by us, on your data',
+                    'Founding Partner recognition (optional)',
+                  ],
+                },
+                {
+                  title: 'What we ask', color: C.blue,
+                  items: [
+                    'A 30-minute call every two weeks',
+                    'Access to your workflows so we can configure it properly',
+                    'A short case study once you see results',
+                    'One reference call with a future customer',
+                    'Honest feedback — including when it\'s bad',
+                  ],
+                },
+              ].map(col => (
+                <div key={col.title}>
+                  <div style={f({ fontSize: 11, fontWeight: 700, color: col.color,
+                    letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 14 })}>
+                    {col.title}
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                    {col.items.map(item => (
+                      <div key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: 9 }}>
+                        <CheckCircle2 size={13} color={col.color} style={{ flexShrink: 0, marginTop: 3 }} />
+                        <span style={f({ fontSize: 13, color: C.t2, lineHeight: 1.55 })}>{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Risk reversal — the reason to say yes to a new vendor */}
+            <div style={{
+              marginTop: 28, padding: isMobile ? '16px 18px' : '20px 24px',
+              background: `${C.green}0e`, border: `1px solid ${C.green}35`, borderRadius: 14,
+              display: 'flex', alignItems: 'flex-start', gap: 12,
+            }}>
+              <CheckCircle2 size={18} color={C.green} style={{ flexShrink: 0, marginTop: 1 }} />
+              <div>
+                <div style={f({ fontSize: 14, fontWeight: 700, color: C.t1, marginBottom: 4 })}>
+                  Our guarantee: value in 14 days, or your money back
+                </div>
+                <div style={f({ fontSize: 13, color: C.t2, lineHeight: 1.6 })}>
+                  If you don't have a working plan running on your own data within 14 days of
+                  kickoff, we refund year one in full. We're new — the risk should be ours, not yours.
+                </div>
+              </div>
+            </div>
+
+            <div style={f({ fontSize: 12, color: C.t3, marginTop: 18, lineHeight: 1.6 })}>
+              Applications are reviewed in the order received. We're deliberately keeping the first
+              cohort small enough to give every partner real attention.
+            </div>
           </div>
 
           {/* Compare toggle */}
